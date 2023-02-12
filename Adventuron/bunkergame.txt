@@ -1,0 +1,106 @@
+
+game_information {
+    game_name                    = Bunker Blues
+    game_version                 = 1.0.0
+    game_shortname               = UnkerBlues
+    written_by                   = Nate Taylor
+    year_of_release              = 2023
+    copyright_message            = Creative Commons Sharealike
+ }
+ 
+ on_startup {
+     : print "Bunker Blues";
+     : press_any_key ;
+ }
+ 
+ start_at = airLock
+ 
+ strings {
+    dark_room : string "a dark room. You cannot see a thing."; // default
+ }
+ 
+ locations {
+    airLock        : location "Air Lock";
+    mainCorridor   : location "Main Corridor";
+ 
+    canteen        : location "Canteen";
+    kitchen        : location "Kitchen";
+    pantry         : location "Pantry";
+    hydroponics    : location "Hydroponics";
+    storeRoom      : location "Store Room";
+    lounge         : location "Lounge";
+    library        : location "Library";
+    
+    bunkRoom       : location "Bunk Room";
+    closet         : location "Closet";
+    latrines       : location "Latrine";
+    gym            : location "Gym";
+    medBay         : location "Med Bay";
+    
+    WECorridor     : location "West-East Corridor";
+    controlRoom    : location "Control Room";
+    toolRoom       : location "Tool Room";
+    workshop       : location "Workshop";
+    pumpRoom       : location "Pump Room";
+    generator      : location "Generator";
+ }
+ 
+ connections {
+    from, direction, to = [
+       airLock,       south,   mainCorridor,
+       mainCorridor,  south,   WECorridor,
+ 
+       canteen,       east,    mainCorridor,
+       kitchen,       north,   canteen,
+       pantry,        north,   kitchen,
+       hydroponics,   east,    kitchen,
+       storeRoom,     east,    pantry,
+       lounge,        northwest,    mainCorridor,
+       library,       north,   lounge,
+       
+       bunkRoom,      west,    mainCorridor,
+       closet,        west,    bunkRoom,
+       latrines,      south,   bunkRoom,
+       gym,           north,   bunkRoom,
+       medBay,        northeast,  mainCorridor,
+       
+       # Could have SE, SW rooms go off from WE corridor
+       WECorridor,    northeast,  medBay,
+       WECorridor,    northwest,  lounge,
+       controlRoom,   north,      WECorridor, 
+      # - maybe S to armoury 
+       toolRoom,      east,       workshop,
+       workshop,      east,       controlRoom,
+       pumpRoom,      west,       controlRoom
+       generator,     west,       pumpRoom,
+       
+       # add outside here
+    ]
+ }
+ 
+ objects {
+    hose     : object "a hose"       at="airLock";
+    hacksaw  : object "a hacksaw"    at="";
+    battery  : object "a battery"    at=""; # may need to charge
+    extinguisher  : object "a fire extinguisher"    at="";
+    suit     : object "a survival suit"    at="closet";
+    helmet   : object "a survival helmet"    at="";
+    tape     : object "duck tape"    at=""; #maybe peel off
+    cloth    : object "cloth"    at="medBay";
+    bleach   : object "bleach"    at="kitchen";
+    filter   : object "a coffee filter"    at="canteen"; # need to take from coffee machine
+    stick    : object "a glow stick"    at=""; # in panel, maybe used at party & put back
+    WD40     : object "a can of WD40"    at=""; # generic name?
+    torch    : object "a welding torch"    at="workshop"; #nozel - hose melted
+    tank     : object "a tank of oxyfuel"    at="workshop";
+    hand     : object "a severed hand"    at="";
+    # maybe add iodine for radiation
+ # stationary
+    radio    : object "a radio"    at="controlRoom";
+    crewmate : object "a crew member"    at="";
+ }
+ 
+ booleans {
+    lamp_lit : boolean "false";
+ }
+ 
