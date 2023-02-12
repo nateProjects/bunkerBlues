@@ -1,0 +1,84 @@
+
+start_at = airlock
+
+locations {
+   airlock       : location "" header = "Airlock";
+   main_corridor : location "" header = "Main Corridor";
+   canteen       : location "" header = "Canteen";
+   bunk_room     : location "" header = "Bunk Room";
+   closet        : location "" header = "Closet";
+   latrine       : location "" header = "Latrine";
+   gymn          : location "" header = "Gymn";
+   med_bay       : location "" header = "Med Bay";
+   kitchen       : location "" header = "Kitchen";
+   storeroom     : location "" header = "Storeroom";
+   hydroponic    : location "" header = "Hydroponic";
+   pantry        : location "" header = "Pantry";
+   library       : location "" header = "Library";
+   lounge        : location "" header = "Lounge";
+   we_corridor   : location "" header = "WE Corridor";
+   control_room  : location "" header = "Control Room";
+   workshop      : location "" header = "Workshop";
+   tool_room     : location "" header = "Tool Room";
+   generator     : location "" header = "Generator";
+   pump_room     : location "" header = "Pump Room";
+   reservoir     : location "" header = "Reservoir";
+   armoury       : location "" header = "Armoury";
+}
+
+
+connections {
+   from, direction, to = [
+      airlock, south_oneway, main_corridor,
+      main_corridor, north_oneway, airlock,
+      main_corridor, south_oneway, we_corridor,
+      main_corridor, east_oneway, bunk_room,
+      main_corridor, west_oneway, canteen,
+      main_corridor, southeast_oneway, gymn,
+      main_corridor, southwest_oneway, lounge,
+      canteen, south_oneway, kitchen,
+      canteen, east_oneway, main_corridor,
+      bunk_room, south_oneway, latrine,
+      bunk_room, east_oneway, closet,
+      bunk_room, west_oneway, main_corridor,
+      closet, west_oneway, bunk_room,
+      latrine, north_oneway, bunk_room,
+      gymn, south_oneway, med_bay,
+      gymn, west_oneway, main_corridor,
+      med_bay, north_oneway, gymn,
+      med_bay, south_oneway, we_corridor,
+      kitchen, north_oneway, canteen,
+      kitchen, south_oneway, pantry,
+      kitchen, west_oneway, storeroom,
+      storeroom, south_oneway, hydroponic,
+      storeroom, east_oneway, kitchen,
+      hydroponic, north_oneway, storeroom,
+      hydroponic, south_oneway, tool_room,
+      hydroponic, east_oneway, pantry,
+      pantry, north_oneway, kitchen,
+      pantry, west_oneway, hydroponic,
+      lounge, east_oneway, main_corridor,
+      we_corridor, north_oneway, main_corridor,
+      we_corridor, south_oneway, control_room,
+      we_corridor, east_oneway, med_bay,
+      we_corridor, southeast_oneway, generator,
+      we_corridor, southwest_oneway, workshop,
+      control_room, north_oneway, we_corridor,
+      control_room, south_oneway, armoury,
+      control_room, east_oneway, generator,
+      control_room, west_oneway, workshop,
+      workshop, north_oneway, we_corridor,
+      workshop, east_oneway, control_room,
+      workshop, west_oneway, tool_room,
+      tool_room, north_oneway, hydroponic,
+      generator, north_oneway, we_corridor,
+      generator, east_oneway, pump_room,
+      generator, west_oneway, control_room,
+      pump_room, west_oneway, generator,
+      pump_room, up_oneway, reservoir,
+      reservoir, down_oneway, pump_room,
+      armoury, north_oneway, control_room,
+   ]
+}
+
+

@@ -152,6 +152,8 @@ part Tool Room
 
 There is a room called Tool Room.
 
+A WD40 is a thing in Tool Room.
+
 part Generator
 
 There is a room called Generator.

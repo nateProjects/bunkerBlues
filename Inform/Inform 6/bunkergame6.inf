@@ -200,6 +200,10 @@ Object  ToolRoom "Tool Room"
         n_to Hydroponic,
    has  light;
 
+Object ->  WD40 "WD40"
+  with  name 'WD40',
+        description "WD40";
+
 Object  Generator "Generator"
   with  description
             "",
