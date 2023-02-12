@@ -1,0 +1,131 @@
+Walkthrough -
+
+What about old battery puzzle? Tin foil, battery & something
+
+What about fix glass on helmet puzzle? - epoxy or duct tape
+
+Still need fire extinguisher? Ammonia? (as alt. to bot)
+
+Any rooms not used?
+
+Puzzles -
+	internal door
+	oxygen quickly (or maybe not - back space could be shut off)
+	lighting solution - main corridor has emergency, no where else
+	fumes solution
+	radiation solution
+	flooding solution
+	electricity solution
+	food solution
+	security solution? - could bot also do that?
+	radio solution - maybe gate is radio controlled?
+		or if just set inside could get help
+	rats solution - could also do inside - could make trail of dust with brush to get bot to kill
+	rover solution - if inside could step outside to arrival of help
+
+Dangers (some with pseudo count downs) -
+	oxygen
+	fumes
+	darkness
+	radiation
+	electricity
+	rats
+	bot - if move outside of corridor in dark it zaps you
+	maybe danger with tank & flooding
+
+Airlock -
+Survival suit (without helmet)
+Emergency procedures (held with paperclip)
+	Take Suit, Wear Suit
+	Examine (Door) Panel
+	Take (Remove) Paperclip, Use / Insert Paperclip
+Bunk Room / Closet
+	Examine Jacket - won't fit over suit
+	Take Code Book
+Latrine
+	Take Toilet Brush
+Main Corridor
+	Take light stick
+	Shake stick - will need to heat later
+	S - Says there is gas need to have mask on
+Canteen
+	Examine Coffee Maker
+	Take (Coffee) Filter
+Kitchen
+	Bread knife
+Hydroponics
+	Take Bonsai
+Med Bay
+	Take Pestle
+	Crush Bonsai (Wood Pulp)
+Tools Room - maybe can get to, but not beyond due to earthquake
+	Take WD40 - solvent / lubricant
+Gym - earthquake caused fire, he got trapped under equipment
+	Use WD40 (on helmet)
+	Take Helmet - (off dead guy)
+	Put Filter In Helmet
+	Put Charcoal In Helmet
+	Cut (Crewman's) Wrist - presuming you mean the crewman's wrist ...
+	Take (Crewman's) hand
+
+Somewhere in here take board
+
+Now can go Into WE Corridor etc.
+WE Corridor - need to pry open to let bot through
+	Where do we get crowbar?
+	PRY OPEN DOOR (with crowbar) / force door etc.
+Control Room - maybe see that intake blocked? see radio
+	Maybe still need to press buttons either way
+Armoury - encounter rats, one gets out bot kills it, but can't get over door lip
+	USE (/ SCAN / SHOW / PLACE) HAND
+	PLACE (/ PROP / LEAN) BOARD - maybe dropping board should be sufficient
+	WAIT - or go do other stuff
+	TAKE WEAPON
+Pump room & Reservoir - 
+	SHOOT WINDOW
+	REMOVE HELMET - or otherwise filter turns to mush!
+	ENTER (/ CLIMB THROUGH) WINDOW
+	UNBLOCK (/ CLEAR) BLOCKAGE (/ PIPE)
+Control Room
+	Start Generator - maybe need hand for this
+
+Air pump - needs handle fixed, then can use crowbar on it
+	TAKE KNOB
+		Move earlier -
+		Take Hose / Detach Hose - from other room
+		Take tank - from other room (blocked off?)
+		Take nozzle
+		Attach Hose (to nozzle)
+		Attach Hose (to tank)
+		Turn 'dial' (to acetylene) (or to oxygen to get air into suit, attach to suit first)
+	WELD KNOB
+	Attach (/ Combine / Fasten / Wedge / Lever) Crowbar with / to Knob
+	TURN (/ Crank / Lever) Knob / Crowbar
+		One way removes smoke - where is this blocking?
+		Other way works for filtering air - no need to worry anymore
+
+Use radio - with codebook - get help
+	TURN RADIO ON
+	TYPE CODE
+	TYPE CODE - too staticy to make out your words
+
+Storeroom
+	Get food if just for score - maybe encouraged to pack on radio
+
+Air Lock
+	OPEN (/ EXTERNAL) DOOR (maybe code for doing so)
+
+When light begins to fail (after x turns without fixing) -
+	Need to heat stick on oven (does this require electricity - maybe not)
+	Must go slow enough to give you chance to find solution
+	(although electricity will fix)
+
+When air begins to fail (after x turns without fixing) -
+	Need to rig exhaust? maybe electricity will be enough?
+	Alternatively fill suit with air from welding torch to last longer
+
+End -
+Leave compound
+
+Maybe if don't wear emergency kit you can't carry as much (hard mode)
+If don't use charcoal can maybe accomplish same effect briefly
