@@ -19,9 +19,7 @@
 			<dock index="0" id="4" port="e" />
 			<dock index="1" id="2" port="w" />
 		</line>
-		<room id="6" name="Bunk Room" subtitle="" x="64" y="64" w="96" h="64" region="NoRegion" handDrawn="no" allcornersequal="yes" ellipse="no" roundedCorners="no" octagonal="no" cornerTopLeft="15" cornerTopRight="15" cornerBottomLeft="15" cornerBottomRight="15" borderstyle="Solid" description="" roomFill="" secondFill="" secondFillLocation="Bottom" roomBorder="" roomLargeText="" roomSubtitleColor="" roomSmallText="" ZOrder="0">
-			<objects>Hose?</objects>
-		</room>
+		<room id="6" name="Bunk Room" subtitle="" x="64" y="64" w="96" h="64" region="NoRegion" handDrawn="no" allcornersequal="yes" ellipse="no" roundedCorners="no" octagonal="no" cornerTopLeft="15" cornerTopRight="15" cornerBottomLeft="15" cornerBottomRight="15" borderstyle="Solid" description="" roomFill="" secondFill="" secondFillLocation="Bottom" roomBorder="" roomLargeText="" roomSubtitleColor="" roomSmallText="" ZOrder="0" />
 		<room id="7" name="Closet" subtitle="" x="224" y="64" w="96" h="64" region="NoRegion" handDrawn="no" allcornersequal="yes" ellipse="no" roundedCorners="no" octagonal="no" cornerTopLeft="15" cornerTopRight="15" cornerBottomLeft="15" cornerBottomRight="15" borderstyle="Solid" description="" roomFill="" secondFill="" secondFillLocation="Bottom" roomBorder="" roomLargeText="" roomSubtitleColor="" roomSmallText="" ZOrder="0">
 			<objects>Code Book</objects>
 		</room>
@@ -56,7 +54,7 @@
 			<objects>Bonsai Tree</objects>
 		</room>
 		<room id="17" name="Pantry" subtitle="" x="-256" y="320" w="96" h="64" region="NoRegion" handDrawn="no" allcornersequal="yes" ellipse="no" roundedCorners="no" octagonal="no" cornerTopLeft="15" cornerTopRight="15" cornerBottomLeft="15" cornerBottomRight="15" borderstyle="Solid" description="" roomFill="" secondFill="" secondFillLocation="Bottom" roomBorder="" roomLargeText="" roomSubtitleColor="" roomSmallText="" ZOrder="0">
-			<objects>Hose?</objects>
+			<objects>Hose</objects>
 		</room>
 		<line id="18" name="" description="">
 			<dock index="0" id="4" port="s" />
@@ -114,11 +112,11 @@
 			<dock index="0" id="31" port="w" />
 			<dock index="1" id="32" port="e" />
 		</line>
-		<line id="35" name="" description="" flow="oneWay">
+		<line id="35" name="" description="">
 			<dock index="0" id="31" port="e" />
 			<dock index="1" id="30" port="w" />
 		</line>
-		<line id="36" name="" description="" flow="oneWay">
+		<line id="36" name="" description="">
 			<dock index="0" id="28" port="s" />
 			<dock index="1" id="30" port="n" />
 		</line>

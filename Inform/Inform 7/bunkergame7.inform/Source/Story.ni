@@ -1,4 +1,4 @@
-"A Trizbort Map" by "A Trizbort User"
+"bunkermap" by "A Trizbort User"
 
 Volume Trizbort generated map
 
@@ -35,8 +35,6 @@ South of Canteen is Kitchen.
 part Bunk Room
 
 There is a room called Bunk Room.
-
-A Hose is a thing in Bunk Room. It is privately-named. The printed name of it is "Hose?". Understand "Hose" as Hose.
 
 South of Bunk Room is Latrine.
 East of Bunk Room is Closet.
@@ -103,7 +101,7 @@ part Pantry
 
 There is a room called Pantry.
 
-A Hose2 is a thing in Pantry. It is privately-named. The printed name of it is "Hose?". Understand "Hose" as Hose2.
+A Hose is a thing in Pantry.
 
 part Library
 
@@ -121,7 +119,7 @@ part WE Corridor
 
 There is a room called WE Corridor.
 
-South of WE Corridor is Control Room. North of Control Room is nowhere.
+South of WE Corridor is Control Room.
 East of WE Corridor is Med Bay. West of Med Bay is nowhere.
 Southeast of WE Corridor is Generator. Northwest of Generator is nowhere.
 Southwest of WE Corridor is Workshop. Northeast of Workshop is nowhere.
@@ -136,6 +134,7 @@ A Radio is a thing in Control Room.
 
 South of Control Room is Armoury.
 East of Control Room is Generator.
+West of Control Room is Workshop.
 
 Instead of going south from Control Room, block conditional exits.
 
@@ -147,7 +146,6 @@ A Nozzle is a thing in Workshop.
 A Gas Tank is a thing in Workshop.
 
 North of Workshop is WE Corridor.
-East of Workshop is Control Room. West of Control Room is nowhere.
 West of Workshop is Tool Room. East of Tool Room is nowhere.
 
 part Tool Room

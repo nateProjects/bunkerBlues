@@ -1,4 +1,4 @@
-Constant Story "A Trizbort Map";
+Constant Story "bunkermap";
 Constant Headline "^By A Trizbort User^^^";
 
 Include "Parser";
@@ -47,10 +47,6 @@ Object  BunkRoom "Bunk Room"
         e_to Closet,
         w_to MainCorridor,
    has  light;
-
-Object ->  Hose "Hose"
-  with  name 'Hose',
-        description "Hose?";
 
 Object  Closet "Closet"
   with  description
@@ -140,9 +136,9 @@ Object  Pantry "Pantry"
         w_to Hydroponic,
    has  light;
 
-Object ->  Hose2 "Hose"
+Object ->  Hose "Hose"
   with  name 'Hose',
-        description "Hose?";
+        description "Hose";
 
 Object  Library "Library"
   with  description
@@ -172,8 +168,10 @@ Object  WECorridor "WE Corridor"
 Object  ControlRoom "Control Room"
   with  description
             "",
+        n_to WECorridor,
         s_to Armoury,
         e_to Generator,
+        w_to Workshop,
    has  light;
 
 Object ->  Radio "Radio"
