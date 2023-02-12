@@ -1,0 +1,254 @@
+Constant Story "A Trizbort Map";
+Constant Headline "^By A Trizbort User^^^";
+
+Include "Parser";
+Include "VerbLib";
+
+Object  Airlock "Airlock"
+  with  description
+            "",
+        s_to MainCorridor,
+   has  light;
+
+Object ->  Paperclip "Paperclip"
+  with  name 'Paperclip',
+        description "Paperclip";
+
+Object  MainCorridor "Main Corridor"
+  with  description
+            "",
+        n_to Airlock,
+        s_to WECorridor,
+        e_to BunkRoom,
+        w_to Canteen,
+        se_to Gymn,
+        sw_to Lounge,
+   has  light;
+
+Object ->  LightStick "Light Stick"
+  with  name 'Light' 'Stick',
+        description "Light Stick";
+
+Object  Canteen "Canteen"
+  with  description
+            "",
+        s_to Kitchen,
+        e_to MainCorridor,
+   has  light;
+
+Object ->  CoffeeFilter "Coffee Filter"
+  with  name 'Coffee' 'Filter',
+        description "Coffee Filter";
+
+Object  BunkRoom "Bunk Room"
+  with  description
+            "",
+        s_to Latrine,
+        e_to Closet,
+        w_to MainCorridor,
+   has  light;
+
+Object ->  Hose "Hose"
+  with  name 'Hose',
+        description "Hose?";
+
+Object  Closet "Closet"
+  with  description
+            "",
+        w_to BunkRoom,
+   has  light;
+
+Object ->  CodeBook "Code Book"
+  with  name 'Code' 'Book',
+        description "Code Book";
+
+Object  Latrine "Latrine"
+  with  description
+            "",
+        n_to BunkRoom,
+   has  light;
+
+Object ->  ToiletBrush "Toilet Brush"
+  with  name 'Toilet' 'Brush',
+        description "Toilet Brush";
+
+Object  Gymn "Gymn"
+  with  description
+            "",
+        s_to MedBay,
+        w_to MainCorridor,
+   has  light;
+
+Object ->  Helmet "Helmet"
+  with  name 'Helmet',
+        description "Helmet";
+
+Object ->  Hand "Hand"
+  with  name 'Hand',
+        description "Hand";
+
+Object  MedBay "Med Bay"
+  with  description
+            "",
+        n_to Gymn,
+        s_to WECorridor,
+   has  light;
+
+Object ->  Pestle "Pestle"
+  with  name 'Pestle',
+        description "Pestle";
+
+Object  Kitchen "Kitchen"
+  with  description
+            "",
+        n_to Canteen,
+        s_to Pantry,
+        w_to Storeroom,
+   has  light;
+
+Object ->  BreadKnife "Bread Knife"
+  with  name 'Bread' 'Knife',
+        description "Bread Knife";
+
+Object  Storeroom "Storeroom"
+  with  description
+            "",
+        s_to Hydroponic,
+        e_to Kitchen,
+   has  light;
+
+Object ->  Crowbar "Crowbar"
+  with  name 'Crowbar',
+        description "Crowbar";
+
+Object  Hydroponic "Hydroponic"
+  with  description
+            "",
+        n_to Storeroom,
+        s_to ToolRoom,
+        e_to Pantry,
+   has  light;
+
+Object ->  BonsaiTree "Bonsai Tree"
+  with  name 'Bonsai' 'Tree',
+        description "Bonsai Tree";
+
+Object  Pantry "Pantry"
+  with  description
+            "",
+        n_to Kitchen,
+        w_to Hydroponic,
+   has  light;
+
+Object ->  Hose2 "Hose"
+  with  name 'Hose',
+        description "Hose?";
+
+Object  Library "Library"
+  with  description
+            "",
+   has  light;
+
+Object ->  BoardShelf "Board Shelf"
+  with  name 'Board' 'Shelf',
+        description "Board (Shelf)";
+
+Object  Lounge "Lounge"
+  with  description
+            "",
+        e_to MainCorridor,
+   has  light;
+
+Object  WECorridor "WE Corridor"
+  with  description
+            "",
+        n_to MainCorridor,
+        s_to ControlRoom,
+        e_to MedBay,
+        se_to Generator,
+        sw_to Workshop,
+   has  light;
+
+Object  ControlRoom "Control Room"
+  with  description
+            "",
+        s_to Armoury,
+        e_to Generator,
+   has  light;
+
+Object ->  Radio "Radio"
+  with  name 'Radio',
+        description "Radio";
+
+Object  Workshop "Workshop"
+  with  description
+            "",
+        n_to WECorridor,
+        e_to ControlRoom,
+        w_to ToolRoom,
+   has  light;
+
+Object ->  Nozzle "Nozzle"
+  with  name 'Nozzle',
+        description "Nozzle";
+
+Object ->  GasTank "Gas Tank"
+  with  name 'Gas' 'Tank',
+        description "Gas Tank";
+
+Object  ToolRoom "Tool Room"
+  with  description
+            "",
+        n_to Hydroponic,
+   has  light;
+
+Object  Generator "Generator"
+  with  description
+            "",
+        n_to WECorridor,
+        e_to PumpRoom,
+        w_to ControlRoom,
+   has  light;
+
+Object ->  Switch "Switch"
+  with  name 'Switch',
+        description "Switch";
+
+Object  PumpRoom "Pump Room"
+  with  description
+            "",
+        w_to Generator,
+        u_to Reservoir,
+   has  light;
+
+Object ->  Knob "Knob"
+  with  name 'Knob',
+        description "Knob";
+
+Object  Reservoir "Reservoir"
+  with  description
+            "",
+        d_to PumpRoom,
+   has  light;
+
+Object ->  Pipe "Pipe"
+  with  name 'Pipe',
+        description "Pipe";
+
+Object  Armoury "Armoury"
+  with  description
+            "",
+        n_to ControlRoom,
+   has  light;
+
+Object ->  Weapon "Weapon"
+  with  name 'Weapon',
+        description "Weapon";
+
+[ Initialise;
+    location = Airlock;
+    ! "^^Your opening paragraph here...^^";
+];
+
+Include "Grammar";
+
