@@ -57,6 +57,8 @@ connections {
       hydroponic, east_oneway, pantry,
       pantry, north_oneway, kitchen,
       pantry, west_oneway, hydroponic,
+      library, south_oneway, lounge,
+      lounge, north_oneway, library,
       lounge, east_oneway, main_corridor,
       we_corridor, north_oneway, main_corridor,
       we_corridor, south_oneway, control_room,

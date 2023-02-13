@@ -143,6 +143,7 @@ Object ->  Hose "Hose"
 Object  Library "Library"
   with  description
             "",
+        s_to Lounge,
    has  light;
 
 Object ->  BoardShelf "Board Shelf"
@@ -152,6 +153,7 @@ Object ->  BoardShelf "Board Shelf"
 Object  Lounge "Lounge"
   with  description
             "",
+        n_to Library,
         e_to MainCorridor,
    has  light;
 

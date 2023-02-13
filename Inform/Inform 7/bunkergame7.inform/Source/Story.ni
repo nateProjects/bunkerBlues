@@ -109,6 +109,8 @@ There is a room called Library.
 
 A Board Shelf is a thing in Library. It is privately-named. The printed name of it is "Board (Shelf)". Understand "Board" and "Shelf" as Board Shelf.
 
+South of Library is Lounge.
+
 part Lounge
 
 There is a room called Lounge.
