@@ -8,11 +8,11 @@ locations {
    bunk_room     : location "" header = "Bunk Room";
    closet        : location "" header = "Closet";
    latrine       : location "" header = "Latrine";
-   gymn          : location "" header = "Gymn";
+   gym           : location "" header = "Gym";
    med_bay       : location "" header = "Med Bay";
    kitchen       : location "" header = "Kitchen";
    storeroom     : location "" header = "Storeroom";
-   hydroponic    : location "" header = "Hydroponic";
+   hydroponic    : location "" header = "Hydroponics";
    pantry        : location "" header = "Pantry";
    library       : location "" header = "Library";
    lounge        : location "" header = "Lounge";
@@ -34,7 +34,7 @@ connections {
       main_corridor, south_oneway, we_corridor,
       main_corridor, east_oneway, bunk_room,
       main_corridor, west_oneway, canteen,
-      main_corridor, southeast_oneway, gymn,
+      main_corridor, southeast_oneway, gym,
       main_corridor, southwest_oneway, lounge,
       canteen, south_oneway, kitchen,
       canteen, east_oneway, main_corridor,
@@ -43,9 +43,9 @@ connections {
       bunk_room, west_oneway, main_corridor,
       closet, west_oneway, bunk_room,
       latrine, north_oneway, bunk_room,
-      gymn, south_oneway, med_bay,
-      gymn, west_oneway, main_corridor,
-      med_bay, north_oneway, gymn,
+      gym, south_oneway, med_bay,
+      gym, west_oneway, main_corridor,
+      med_bay, north_oneway, gym,
       med_bay, south_oneway, we_corridor,
       kitchen, north_oneway, canteen,
       kitchen, south_oneway, pantry,
@@ -84,3 +84,29 @@ connections {
 }
 
 
+ objects {
+    paper    : object "a paper"    at="airlock";
+    paperclip     : object "a paperclip"       at="airlock";
+    suit     : object "a survival suit"    at="airlock";
+    pack     : object "a pack"    at="airlock";
+
+    stick    : object "a glow stick"    at="main_corridor";
+    filter   : object "a coffee filter"    at="canteen"; # need to take from coffee machine
+    book     : object "a code book"    at="closet";
+    knife    : object "a bread knife"    at="kitchen";
+    crowbar  : object "a crowbar"    at="storeroom";
+    brush    : object "a toilet brush"    at="latrine";
+    helmet   : object "a survival helmet"    at="gym";
+    hand     : object "a severed hand"    at="gym";
+    pestle   : object "a pestle"    at="med_bay";
+    tree     : object "a bonsai tree"    at="hydroponic";
+    hose     : object "a hose"    at="pantry";
+    shelf    : object "a shelf"    at="library";
+    torch    : object "a welding torch"    at="workshop"; #nozel - hose melted
+    tank     : object "a tank of oxyfuel"    at="workshop";
+    WD40     : object "a can of WD40"    at="tool_room"; # generic name?
+    weapon   : object "a weapon"    at="armoury";
+ # stationary
+    radio    : object "a radio"    at="control_room";
+    crewmate : object "a crew member"    at="gym";
+ }

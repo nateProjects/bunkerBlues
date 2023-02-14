@@ -17,9 +17,9 @@ E (Bunk Room)
 E (Closet)
 	EXAMINE JACKET
 	TAKE (code) BOOK
-S (Latrine)
+W, S (Latrine)
 	TAKE (toilet) BRUSH
-N, W, W, W (Canteen)
+N, W, W (Canteen)
 	EXAMINE (coffee) MAKER
 	TAKE FILTER
 S (Kitchen)
@@ -34,11 +34,11 @@ S (Tool Room)
 	TAKE WD40 (or generic name)
 N, N (Storeroom)
 	TAKE CROWBAR
-E,E,SW (Lounge)
+E, N, E, SW (Lounge)
 N (Library)
 	PULL (out loose) SHELF
 	TAKE SHELF
-S,NE,SE (Gym - Dead body here, trapped under equipment)
+S, E, SE (Gym - Dead body here, trapped under equipment)
 	EXAMINE BODY
 	SPRAY HELMET
 	TAKE HELMET
@@ -52,7 +52,7 @@ S (Med Bay)
 	TAKE CHARCOAL
 	INSERT CHARCOAL (into filter)
 	EXAMINE WINDOW
-N,NW (Main Corridor)
+N, W (Main Corridor)
 	EXAMINE (clean) BOT
 S (WE Corridor)
 PRY DOOR (with crowbar to let in bot)	
@@ -81,7 +81,7 @@ W, W (Control Room)
 	TURN RADIO (on)
 	TYPE (signal) CODE
 	TYPE (door) CODE
-N, N (Airlock)
+N, N, N (Airlock)
 	OPEN (external) DOOR
 N (Outside - where you are rescued)
 

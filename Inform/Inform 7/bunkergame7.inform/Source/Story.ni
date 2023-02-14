@@ -21,7 +21,7 @@ A Light Stick is a thing in Main Corridor.
 South of Main Corridor is WE Corridor.
 East of Main Corridor is Bunk Room.
 West of Main Corridor is Canteen.
-Southeast of Main Corridor is Gymn. Northwest of Gymn is nowhere.
+Southeast of Main Corridor is Gym. Northwest of Gym is nowhere.
 Southwest of Main Corridor is Lounge. Northeast of Lounge is nowhere.
 
 part Canteen
@@ -51,15 +51,15 @@ There is a room called Latrine.
 
 A Toilet Brush is a thing in Latrine.
 
-part Gymn
+part Gym
 
-There is a room called Gymn.
+There is a room called Gym.
 
-A Helmet is a thing in Gymn.
-A Hand is a thing in Gymn.
+A Helmet is a thing in Gym.
+A Hand is a thing in Gym.
 
-South of Gymn is Med Bay.
-West of Gymn is Main Corridor.
+South of Gym is Med Bay.
+West of Gym is Main Corridor.
 
 part Med Bay
 
@@ -86,16 +86,16 @@ There is a room called Storeroom.
 
 A Crowbar is a thing in Storeroom.
 
-South of Storeroom is Hydroponic.
+South of Storeroom is Hydroponics.
 
-part Hydroponic
+part Hydroponics
 
-There is a room called Hydroponic.
+There is a room called Hydroponics.
 
-A Bonsai Tree is a thing in Hydroponic.
+A Bonsai Tree is a thing in Hydroponics.
 
-South of Hydroponic is Tool Room.
-East of Hydroponic is Pantry.
+South of Hydroponics is Tool Room.
+East of Hydroponics is Pantry.
 
 part Pantry
 
