@@ -1,8 +1,13 @@
-Constant Story "bunkermap";
-Constant Headline "^By A Trizbort User^^^";
+Constant Story "Bunker Blues";
+Constant Headline "^By Nate^^";
 
 Include "Parser";
 Include "VerbLib";
+
+Object  Suit "Survival Suit" selfobj
+  with  name 'Suit' 'Survival',
+        description "Survival Suit"
+  has   clothing;
 
 Object  Airlock "Airlock"
   with  description
@@ -10,9 +15,24 @@ Object  Airlock "Airlock"
         s_to MainCorridor,
    has  light;
 
-Object ->  Paperclip "Paperclip"
+Object -> Pack "Emergency Pack"
+  with  name 'Pack',
+        description "Emergency Pack"
+  has   clothing container openable;
+
+Object -> -> Paper "Paper"
+    with name 'Papers' 'Paper',
+    before [; Examine:
+         print "As you look at the papers the paperclip holding them together falls to the floor.";
+         move paperclip to location;
+         return true;
+        ],    
+;
+
+Object Paperclip "Paperclip"
   with  name 'Paperclip',
-        description "Paperclip";
+        description "Paperclip"
+;        
 
 Object  MainCorridor "Main Corridor"
   with  description
@@ -34,7 +54,7 @@ Object  Canteen "Canteen"
             "Exits: E,S",
         s_to Kitchen,
         e_to MainCorridor,
-   has  light;
+;
 
 Object ->  CoffeeFilter "Coffee Filter"
   with  name 'Coffee' 'Filter',
@@ -46,13 +66,13 @@ Object  BunkRoom "Bunk Room"
         s_to Latrine,
         e_to Closet,
         w_to MainCorridor,
-   has  light;
+;
 
 Object  Closet "Closet"
   with  description
             "Exits: W",
         w_to BunkRoom,
-   has  light;
+;
 
 Object ->  CodeBook "Code Book"
   with  name 'Code' 'Book',
@@ -62,7 +82,7 @@ Object  Latrine "Latrine"
   with  description
             "Exits: N",
         n_to BunkRoom,
-   has  light;
+;
 
 Object ->  ToiletBrush "Toilet Brush"
   with  name 'Toilet' 'Brush',
@@ -73,7 +93,7 @@ Object  Gym "Gym"
             "Exits: S,W",
         s_to MedBay,
         w_to MainCorridor,
-   has  light;
+;
 
 Object ->  Helmet "Helmet"
   with  name 'Helmet',
@@ -88,7 +108,7 @@ Object  MedBay "Med Bay"
             "Exits: N,S",
         n_to Gym,
         s_to WECorridor,
-   has  light;
+has light;
 
 Object ->  Pestle "Pestle"
   with  name 'Pestle',
@@ -100,7 +120,7 @@ Object  Kitchen "Kitchen"
         n_to Canteen,
         s_to Pantry,
         w_to Storeroom,
-   has  light;
+;
 
 Object ->  BreadKnife "Bread Knife"
   with  name 'Bread' 'Knife',
@@ -111,7 +131,7 @@ Object  Storeroom "Storeroom"
             "Exits: S,E",
         s_to Hydroponic,
         e_to Kitchen,
-   has  light;
+;
 
 Object ->  Crowbar "Crowbar"
   with  name 'Crowbar',
@@ -123,7 +143,7 @@ Object  Hydroponic "Hydroponics"
         n_to Storeroom,
         s_to ToolRoom,
         e_to Pantry,
-   has  light;
+;
 
 Object ->  BonsaiTree "Bonsai Tree"
   with  name 'Bonsai' 'Tree',
@@ -134,7 +154,7 @@ Object  Pantry "Pantry"
             "Exits: N,W",
         n_to Kitchen,
         w_to Hydroponic,
-   has  light;
+;
 
 Object ->  Hose "Hose"
   with  name 'Hose',
@@ -144,7 +164,7 @@ Object  Library "Library"
   with  description
             "Exits: S",
         s_to Lounge,
-   has  light;
+;
 
 Object ->  BoardShelf "Board Shelf"
   with  name 'Board' 'Shelf',
@@ -155,7 +175,7 @@ Object  Lounge "Lounge"
             "Exits: N,E",
         n_to Library,
         e_to MainCorridor,
-   has  light;
+;
 
 Object  WECorridor "WE Corridor"
   with  description

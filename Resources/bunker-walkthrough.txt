@@ -10,7 +10,6 @@ Airlock
 	EXAMINE PANEL
 	INSERT PAPERCLIP (into panel - door opens)
 S (Main Corridor)
-Main Corridor
 	TAKE (glow) STICK (without light the bot will think you are vermin)
 	SHAKE STICK (will need to reheat later)
 E (Bunk Room)
@@ -27,7 +26,7 @@ S (Kitchen)
 S (Pantry)
 	EXAMINE HOSE
 	TURN (off) VALVE
-TAKE HOSE
+	TAKE HOSE
 W (Hydroponics)
 	TAKE (bonsai) TREE
 S (Tool Room)
@@ -55,7 +54,7 @@ S (Med Bay)
 N, W (Main Corridor)
 	EXAMINE (clean) BOT
 S (WE Corridor)
-PRY DOOR (with crowbar to let in bot)	
+	PRY DOOR (with crowbar to let in bot)	
 S (Control Room)
 	LEAN SHELF (maybe dropping should be sufficient)
 	WAIT
