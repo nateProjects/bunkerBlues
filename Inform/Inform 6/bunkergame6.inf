@@ -1,8 +1,77 @@
-Constant Story "Bunker Blues";
-Constant Headline "^By Nate^^";
+!% -~S
+!% $OMIT_UNUSED_ROUTINES=1
+!% $ZCODE_LESS_DICT_DATA=1
 
-Include "Parser";
-Include "VerbLib";
+! The very first lines of the main source code file for a game can
+! contain compiler options, like the lines above. -~S disables
+! strict error checking. This is otherwise used in z5 and z8 games by
+! default. While useful for debugging, it adds ~10 KB to the story file
+! size and it makes the game slower.
+! $OMIT_UNUSED_ROUTINES=1 makes the compiler remove all routines which
+! aren't used. This can save some space.
+! $ZCODE_LESS_DICT_DATA=1 removes an empty data byte for every dictionary word.
+
+Constant Story      "Minimal";
+Constant Headline   "^A sample game which uses PunyInform.^";
+
+! Uncomment ONE of the two following lines, to show either time or score/turns
+! Leaving both commented out makes the library bigger.
+!Constant STATUSLINE_TIME; Statusline time;
+Constant STATUSLINE_SCORE; Statusline score;
+
+! Comment out to keep track of score
+! The value is what will be shown as the score on statusline in z3
+Constant NO_SCORE = 0;
+
+! Customize the statusline in z5+ (will have no effect in z3)
+!Constant OPTIONAL_SL_NO_SCORE;
+!Constant OPTIONAL_SL_NO_MOVES;
+
+! Uncomment to add optional features to PunyInform
+!Constant DEBUG;
+!Constant CUSTOM_ABBREVIATIONS;
+!Constant CUSTOM_PLAYER_OBJECT = myPlayerObj;
+Constant OPTIONAL_NO_DARKNESS;
+!Constant OPTIONAL_ALLOW_WRITTEN_NUMBERS;
+!Constant OPTIONAL_EXTENDED_METAVERBS;
+!Constant OPTIONAL_EXTENDED_VERBSET;
+!Constant OPTIONAL_FLEXIBLE_INVENTORY;
+!Constant OPTIONAL_PRINT_SCENERY_CONTENTS;
+!Constant OPTIONAL_SCORED;
+!Constant OPTIONAL_FULL_SCORE; ! Comment out NO_SCORE when uncommenting this
+!Constant OPTIONAL_FULL_DIRECTIONS;
+!Constant OPTIONAL_SIMPLE_DOORS;
+!Constant OPTIONAL_SHIP_DIRECTIONS;
+!Constant OPTIONAL_GUESS_MISSING_NOUN;
+!Constant OPTIONAL_MANUAL_SCOPE;
+!Constant OPTIONAL_MANUAL_REACTIVE;
+!Constant OPTIONAL_ORDERED_TIMERS;
+!Constant OPTIONAL_PROVIDE_UNDO;
+!Constant OPTIONAL_REACTIVE_PARSE_NAME;
+!Constant RUNTIME_ERRORS = 0; ! 0, 1 or 2. 0 = smallest file, 2 = most info
+
+! Define any library constants you need here, like MAX_SCORE, AMUSING_PROVIDED,
+! MAX_CARRIED, SACK_OBJECT,  etc.
+
+Constant INITIAL_LOCATION_VALUE = Airlock;
+
+Include "globals.h";
+
+! Define your attributes, common properties and global variables here, if any
+
+! Define the entry point routines you need here, like Amusing, DarkToDark etc.
+
+! Uncomment to add PunyLib extensions
+!Include "ext_menu.h";
+!Include "ext_flags.h";
+!Include "ext_talk_menu.h"; ! Note: Also include ext_flags.h to allow use of flags
+!Include "ext_quote_box.h";
+!Include "ext_cheap_scenery.h";
+
+Include "puny.h";
+
+! Uncomment to add PunyLib extensions
+!Include "ext_waittime.h";
 
 Object  Suit "Survival Suit" selfobj
   with  name 'Suit' 'Survival',
@@ -12,8 +81,8 @@ Object  Suit "Survival Suit" selfobj
 Object  Airlock "Airlock"
   with  description
             "Exits: S",
-        s_to MainCorridor,
-   has  light;
+!        s_to MainCorridor,
+;
 
 Object -> Pack "Emergency Pack"
   with  name 'Pack',
@@ -21,18 +90,44 @@ Object -> Pack "Emergency Pack"
   has   clothing container openable;
 
 Object -> -> Paper "Paper"
-    with name 'Papers' 'Paper',
-    before [; Examine:
-         print "As you look at the papers the paperclip holding them together falls to the floor.";
-         move paperclip to location;
-         return true;
-        ],    
+with name 'Papers' 'Paper',
+description [;
+if (self.read_once == false) {
+    self.read_once = true;
+    move paperclip to location;
+    "As you look at the papers the paperclip holding them together falls to the floor.";
+}
+else
+"It is instructions on how to ...";
+],
+read_once false, ! has the player examined the paper?
 ;
 
 Object Paperclip "Paperclip"
   with  name 'Paperclip',
         description "Paperclip"
-;        
+;       
+
+Object Panel "panel" Airlock
+    with   name "panel",
+       after [;
+           Receive: 
+           if (noun == paperclip) remove noun;
+               print_ret (The) noun, " repairs the circuit.";
+       ],
+ has scenery container openable;
+
+Object Internal_Door "internal door"
+       with    name "internal" "door",
+               description
+               "The internal door is made of metal.",
+       when_open    "The internal door is open.",
+       when_closed    "The internal door is closed.",
+       door_to        [; if (location==Airlock) return MainCorridor; return Airlock; ],
+       door_dir    [; if (location==Airlock) return s_to; return n_to; ],
+       found_in    Airlock MainCorridor,
+       ! with_key    small_key,
+       has         static door openable lockable locked;
 
 Object  MainCorridor "Main Corridor"
   with  description
@@ -43,7 +138,7 @@ Object  MainCorridor "Main Corridor"
         w_to Canteen,
         se_to Gym,
         sw_to Lounge,
-   has  light;
+;
 
 Object ->  LightStick "Light Stick"
   with  name 'Light' 'Stick',
@@ -108,7 +203,7 @@ Object  MedBay "Med Bay"
             "Exits: N,S",
         n_to Gym,
         s_to WECorridor,
-has light;
+;
 
 Object ->  Pestle "Pestle"
   with  name 'Pestle',
@@ -185,7 +280,7 @@ Object  WECorridor "WE Corridor"
         e_to MedBay,
         se_to Generator,
         sw_to Workshop,
-   has  light;
+;
 
 Object  ControlRoom "Control Room"
   with  description
@@ -194,7 +289,7 @@ Object  ControlRoom "Control Room"
         s_to Armoury,
         e_to Generator,
         w_to Workshop,
-   has  light;
+;
 
 Object ->  Radio "Radio"
   with  name 'Radio',
@@ -206,7 +301,7 @@ Object  Workshop "Workshop"
         n_to WECorridor,
         e_to ControlRoom,
         w_to ToolRoom,
-   has  light;
+;
 
 Object ->  Nozzle "Nozzle"
   with  name 'Nozzle',
@@ -220,7 +315,7 @@ Object  ToolRoom "Tool Room"
   with  description
             "Exits: N",
         n_to Hydroponic,
-   has  light;
+;
 
 Object ->  WD40 "WD40"
   with  name 'WD40',
@@ -232,7 +327,7 @@ Object  Generator "Generator"
         n_to WECorridor,
         e_to PumpRoom,
         w_to ControlRoom,
-   has  light;
+;
 
 Object ->  Switch "Switch"
   with  name 'Switch',
@@ -243,7 +338,7 @@ Object  PumpRoom "Pump Room"
             "Exits: W,D",
         w_to Generator,
         d_to Reservoir,
-   has  light;
+;
 
 Object ->  Knob "Knob"
   with  name 'Knob',
@@ -253,7 +348,7 @@ Object  Reservoir "Reservoir"
   with  description
             "Exits: U",
         u_to PumpRoom,
-   has  light;
+;
 
 Object ->  Pipe "Pipe"
   with  name 'Pipe',
@@ -263,16 +358,14 @@ Object  Armoury "Armoury"
   with  description
             "Exits: N",
         n_to ControlRoom,
-   has  light;
+;
 
 Object ->  Weapon "Weapon"
   with  name 'Weapon',
         description "Weapon";
 
+
 [ Initialise;
     location = Airlock;
     ! "^^Your opening paragraph here...^^";
 ];
-
-Include "Grammar";
-
