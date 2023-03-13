@@ -1,0 +1,374 @@
+!% -~S
+!% $OMIT_UNUSED_ROUTINES=1
+!% $ZCODE_LESS_DICT_DATA=1
+
+! The very first lines of the main source code file for a game can
+! contain compiler options, like the lines above. -~S disables
+! strict error checking. This is otherwise used in z5 and z8 games by
+! default. While useful for debugging, it adds ~10 KB to the story file
+! size and it makes the game slower.
+! $OMIT_UNUSED_ROUTINES=1 makes the compiler remove all routines which
+! aren't used. This can save some space.
+! $ZCODE_LESS_DICT_DATA=1 removes an empty data byte for every dictionary word.
+
+Constant Story      "Bunker Blues";
+Constant Headline   "^A game which uses PunyInform.^";
+
+! Uncomment ONE of the two following lines, to show either time or score/turns
+! Leaving both commented out makes the library bigger.
+!Constant STATUSLINE_TIME; Statusline time;
+Constant STATUSLINE_SCORE; Statusline score;
+
+! Comment out to keep track of score
+! The value is what will be shown as the score on statusline in z3
+Constant NO_SCORE = 0;
+
+! Customize the statusline in z5+ (will have no effect in z3)
+!Constant OPTIONAL_SL_NO_SCORE;
+!Constant OPTIONAL_SL_NO_MOVES;
+
+! Uncomment to add optional features to PunyInform
+!Constant DEBUG;
+!Constant CUSTOM_ABBREVIATIONS;
+!Constant CUSTOM_PLAYER_OBJECT = myPlayerObj;
+Constant OPTIONAL_NO_DARKNESS;
+!Constant OPTIONAL_ALLOW_WRITTEN_NUMBERS;
+!Constant OPTIONAL_EXTENDED_METAVERBS;
+!Constant OPTIONAL_EXTENDED_VERBSET;
+!Constant OPTIONAL_FLEXIBLE_INVENTORY;
+!Constant OPTIONAL_PRINT_SCENERY_CONTENTS;
+!Constant OPTIONAL_SCORED;
+!Constant OPTIONAL_FULL_SCORE; ! Comment out NO_SCORE when uncommenting this
+Constant OPTIONAL_FULL_DIRECTIONS;
+Constant OPTIONAL_SIMPLE_DOORS;
+!Constant OPTIONAL_SHIP_DIRECTIONS;
+!Constant OPTIONAL_GUESS_MISSING_NOUN;
+!Constant OPTIONAL_MANUAL_SCOPE;
+!Constant OPTIONAL_MANUAL_REACTIVE;
+!Constant OPTIONAL_ORDERED_TIMERS;
+!Constant OPTIONAL_PROVIDE_UNDO;
+!Constant OPTIONAL_REACTIVE_PARSE_NAME;
+!Constant RUNTIME_ERRORS = 0; ! 0, 1 or 2. 0 = smallest file, 2 = most info
+
+! Define any library constants you need here, like MAX_SCORE, AMUSING_PROVIDED,
+! MAX_CARRIED, SACK_OBJECT,  etc.
+
+Constant INITIAL_LOCATION_VALUE = Airlock;
+
+Include "globals.h";
+
+! Define your attributes, common properties and global variables here, if any
+
+! Define the entry point routines you need here, like Amusing, DarkToDark etc.
+
+! Uncomment to add PunyLib extensions
+!Include "ext_menu.h";
+!Include "ext_flags.h";
+!Include "ext_talk_menu.h"; ! Note: Also include ext_flags.h to allow use of flags
+!Include "ext_quote_box.h";
+!Include "ext_cheap_scenery.h";
+
+Include "puny.h";
+
+! Uncomment to add PunyLib extensions
+!Include "ext_waittime.h";
+
+Object  Suit "Survival Suit" selfobj
+  with  name 'Suit' 'Survival',
+        description "Survival Suit"
+  has   clothing;
+
+Object  Airlock "Airlock"
+  with  description "You are standing in a dimly lit airlock of a fallout shelter. You hear the faint hum of the emergency light, and an acrid smell from the fire you escaped lingers in the air.^^As you look around the otherwise sterile room, you notice a small control panel on the wall to your left, next to the internal door.",
+        s_to Internal_Door,
+;
+
+Object -> Internal_Door  "internal door"
+       with    name "internal" "door",
+               description
+               "The internal door is made of metal.",
+        door_dir (n_to) (s_to),
+        found_in Airlock MainCorridor,
+    has static door openable locked;
+
+Object -> Pack "Emergency Pack"
+  with  name 'Pack',
+        description "Emergency Pack"
+  has   clothing container openable;
+
+Object -> -> Paper "Paper"
+with name 'Papers' 'Paper',
+description [;
+if (self.read_once == false) {
+    self.read_once = true;
+    move paperclip to location;
+    "As you look at the papers the paperclip holding them together falls to the floor.";
+}
+else
+"It is instructions on how to ...";
+],
+read_once false, ! has the player examined the paper?
+;
+
+Object Paperclip "Paperclip"
+  with  name 'Paperclip',
+        description "Paperclip"
+;       
+
+Object Panel "panel" Airlock
+    with   name "panel",
+       after [;
+           Receive: 
+           if (noun == paperclip) { remove noun;
+                give Internal_Door ~locked;
+                ! add it opening
+               print_ret (The) noun, " repairs the circuit.";
+            }
+       ],
+    s_to Internal_Door,
+ has scenery container openable;
+
+Object  MainCorridor "Main Corridor"
+  with  description
+            "You find yourself in a long hallway, with rows of doors on either side.^^Exits: N,S,W,E,SE,SW",
+        n_to Airlock,
+        s_to WECorridor,
+        e_to BunkRoom,
+        w_to Canteen,
+        se_to Gym,
+        sw_to Lounge,
+;
+
+Object ->  LightStick "Light Stick"
+  with  name 'Light' 'Stick',
+        description "Light Stick";
+
+Object  Canteen "Canteen"
+  with  description
+            "Exits: E,S",
+        s_to Kitchen,
+        e_to MainCorridor,
+;
+
+Object ->  CoffeeFilter "Coffee Filter"
+  with  name 'Coffee' 'Filter',
+        description "Coffee Filter";
+
+Object  BunkRoom "Bunk Room"
+  with  description
+            "Exits: S,W,E",
+        s_to Latrine,
+        e_to Closet,
+        w_to MainCorridor,
+;
+
+Object  Closet "Closet"
+  with  description
+            "Exits: W",
+        w_to BunkRoom,
+;
+
+Object ->  CodeBook "Code Book"
+  with  name 'Code' 'Book',
+        description "Code Book";
+
+Object  Latrine "Latrine"
+  with  description
+            "Exits: N",
+        n_to BunkRoom,
+;
+
+Object ->  ToiletBrush "Toilet Brush"
+  with  name 'Toilet' 'Brush',
+        description "Toilet Brush";
+
+Object  Gym "Gym"
+  with  description
+            "Exits: S,W",
+        s_to MedBay,
+        w_to MainCorridor,
+;
+
+Object ->  Helmet "Helmet"
+  with  name 'Helmet',
+        description "Helmet";
+
+Object ->  Hand "Hand"
+  with  name 'Hand',
+        description "Hand";
+
+Object  MedBay "Med Bay"
+  with  description
+            "Exits: N,S",
+        n_to Gym,
+        s_to WECorridor,
+;
+
+Object ->  Pestle "Pestle"
+  with  name 'Pestle',
+        description "Pestle";
+
+Object  Kitchen "Kitchen"
+  with  description
+            "Exits: N,S,W",
+        n_to Canteen,
+        s_to Pantry,
+        w_to Storeroom,
+;
+
+Object ->  BreadKnife "Bread Knife"
+  with  name 'Bread' 'Knife',
+        description "Bread Knife";
+
+Object  Storeroom "Storeroom"
+  with  description
+            "Exits: S,E",
+        s_to Hydroponic,
+        e_to Kitchen,
+;
+
+Object ->  Crowbar "Crowbar"
+  with  name 'Crowbar',
+        description "Crowbar";
+
+Object  Hydroponic "Hydroponics"
+  with  description
+            "Exits: N,S,E",
+        n_to Storeroom,
+        s_to ToolRoom,
+        e_to Pantry,
+;
+
+Object ->  BonsaiTree "Bonsai Tree"
+  with  name 'Bonsai' 'Tree',
+        description "Bonsai Tree";
+
+Object  Pantry "Pantry"
+  with  description
+            "Exits: N,W",
+        n_to Kitchen,
+        w_to Hydroponic,
+;
+
+Object ->  Hose "Hose"
+  with  name 'Hose',
+        description "Hose";
+
+Object  Library "Library"
+  with  description
+            "Exits: S",
+        s_to Lounge,
+;
+
+Object ->  BoardShelf "Board Shelf"
+  with  name 'Board' 'Shelf',
+        description "Board (Shelf)";
+
+Object  Lounge "Lounge"
+  with  description
+            "Exits: N,E",
+        n_to Library,
+        e_to MainCorridor,
+;
+
+Object  WECorridor "WE Corridor"
+  with  description
+            "Exits: N,S,E,SW,SE",
+        n_to MainCorridor,
+        s_to ControlRoom,
+        e_to MedBay,
+        se_to Generator,
+        sw_to Workshop,
+;
+
+Object  ControlRoom "Control Room"
+  with  description
+            "Exits: N,S,W,E",
+        n_to WECorridor,
+        s_to Armoury,
+        e_to Generator,
+        w_to Workshop,
+;
+
+Object ->  Radio "Radio"
+  with  name 'Radio',
+        description "Radio";
+
+Object  Workshop "Workshop"
+  with  description
+            "Exits: N,W,E",
+        n_to WECorridor,
+        e_to ControlRoom,
+        w_to ToolRoom,
+;
+
+Object ->  Nozzle "Nozzle"
+  with  name 'Nozzle',
+        description "Nozzle";
+
+Object ->  GasTank "Gas Tank"
+  with  name 'Gas' 'Tank',
+        description "Gas Tank";
+
+Object  ToolRoom "Tool Room"
+  with  description
+            "Exits: N",
+        n_to Hydroponic,
+;
+
+Object ->  WD40 "WD40"
+  with  name 'WD40',
+        description "WD40";
+
+Object  Generator "Generator"
+  with  description
+            "Exits: N,W,E",
+        n_to WECorridor,
+        e_to PumpRoom,
+        w_to ControlRoom,
+;
+
+Object ->  Switch "Switch"
+  with  name 'Switch',
+        description "Switch";
+
+Object  PumpRoom "Pump Room"
+  with  description
+            "Exits: W,D",
+        w_to Generator,
+        d_to Reservoir,
+;
+
+Object ->  Knob "Knob"
+  with  name 'Knob',
+        description "Knob";
+
+Object  Reservoir "Reservoir"
+  with  description
+            "Exits: U",
+        u_to PumpRoom,
+;
+
+Object ->  Pipe "Pipe"
+  with  name 'Pipe',
+        description "Pipe";
+
+Object  Armoury "Armoury"
+  with  description
+            "Exits: N",
+        n_to ControlRoom,
+;
+
+Object ->  Weapon "Weapon"
+  with  name 'Weapon',
+        description "Weapon";
+
+
+[ Initialise;
+    location = Airlock;
+     "^You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead. ^^
+
+You're not sure how many hours It has been since Joe pushed you in the airlock, and you passed out through the effects of the smoke from the fire. He said he was still going to try to put out it, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it. ^^
+
+But the air in here won't last forever, the survival suit you threw on had no helmet, and there is no way to open to the external door without electricity, even if you dared to enter the wasteland without more protection..^";
+];
