@@ -31,7 +31,7 @@ Constant NO_SCORE = 0;
 !Constant DEBUG;
 !Constant CUSTOM_ABBREVIATIONS;
 !Constant CUSTOM_PLAYER_OBJECT = myPlayerObj;
-Constant OPTIONAL_NO_DARKNESS;
+!Constant OPTIONAL_NO_DARKNESS;
 !Constant OPTIONAL_ALLOW_WRITTEN_NUMBERS;
 !Constant OPTIONAL_EXTENDED_METAVERBS;
 !Constant OPTIONAL_EXTENDED_VERBSET;
@@ -81,6 +81,7 @@ Object  Suit "Survival Suit" selfobj
 Object  Airlock "Airlock"
   with  description "You are standing in a dimly lit airlock of a fallout shelter. You hear the faint hum of the emergency light, and an acrid smell from the fire you escaped lingers in the air.^^As you look around the otherwise sterile room, you notice a small control panel on the wall to your left, next to the internal door.",
         s_to Internal_Door,
+        has light
 ;
 
 Object -> Internal_Door  "internal door"
@@ -137,11 +138,13 @@ Object  MainCorridor "Main Corridor"
         w_to Canteen,
         se_to Gym,
         sw_to Lounge,
+        has light
 ;
 
-Object ->  LightStick "Light Stick"
+Object ->  stick "Light Stick"
   with  name 'Light' 'Stick',
-        description "Light Stick";
+        description "Light Stick"
+;
 
 Object  Canteen "Canteen"
   with  description
@@ -150,7 +153,21 @@ Object  Canteen "Canteen"
         e_to MainCorridor,
 ;
 
-Object ->  CoffeeFilter "Coffee Filter"
+Object -> Maker "Coffee Maker"
+  with name 'Coffee' 'Maker',
+    description [;
+    if (self.read_once == false) {
+        self.read_once = true;
+        move Filter to location;
+        "Examining the Coffee Maker reveals a circular paper coffee filter.";
+    }
+    else
+    "It is a Coffee Maker ...";
+    ],
+    read_once false, ! has the player examined the maker?
+;
+
+Object ->  Filter "Coffee Filter"
   with  name 'Coffee' 'Filter',
         description "Coffee Filter";
 
@@ -168,7 +185,21 @@ Object  Closet "Closet"
         w_to BunkRoom,
 ;
 
-Object ->  CodeBook "Code Book"
+Object -> Jacket "Jacket"
+  with name 'Jacket',
+    description [;
+    if (self.read_once == false) {
+        self.read_once = true;
+        move CodeBook to location;
+        "As you look inside the jacket a small notebook falls from one of the pockets.";
+    }
+    else
+    "It is Bob's jacket ...";
+    ],
+    read_once false, ! has the player examined the jacket?
+;
+
+Object CodeBook "Code Book"
   with  name 'Code' 'Book',
         description "Code Book";
 
@@ -187,6 +218,7 @@ Object  Gym "Gym"
             "Exits: S,W",
         s_to MedBay,
         w_to MainCorridor,
+        has light,
 ;
 
 Object ->  Helmet "Helmet"
@@ -195,7 +227,19 @@ Object ->  Helmet "Helmet"
 
 Object ->  Hand "Hand"
   with  name 'Hand',
-        description "Hand";
+        description "Hand",
+before [;
+Cut: 
+    print "before cut";
+	! if (noun == hand) 
+	! do this;
+],
+after [;
+Cut:
+    print "after cut";
+	! do that
+],
+;
 
 Object  MedBay "Med Bay"
   with  description
@@ -239,8 +283,8 @@ Object  Hydroponic "Hydroponics"
         e_to Pantry,
 ;
 
-Object ->  BonsaiTree "Bonsai Tree"
-  with  name 'Bonsai' 'Tree',
+Object ->  Tree "Bonsai Tree"
+  with  name 'Bonsai' 'Tree' 'Wood',
         description "Bonsai Tree";
 
 Object  Pantry "Pantry"
@@ -260,7 +304,7 @@ Object  Library "Library"
         s_to Lounge,
 ;
 
-Object ->  BoardShelf "Board Shelf"
+Object ->  Board "Board Shelf"
   with  name 'Board' 'Shelf',
         description "Board (Shelf)";
 
@@ -359,16 +403,112 @@ Object  Armoury "Armoury"
         n_to ControlRoom,
 ;
 
-Object ->  Weapon "Weapon"
+Object ->  Weapon "Weapon" ! just call it something!
   with  name 'Weapon',
         description "Weapon";
 
 
 [ Initialise;
-    location = Airlock;
+    location = Gym;
      "^You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead. ^^
 
 You're not sure how many hours It has been since Joe pushed you in the airlock, and you passed out through the effects of the smoke from the fire. He said he was still going to try to put out it, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it. ^^
 
 But the air in here won't last forever, the survival suit you threw on had no helmet, and there is no way to open to the external door without electricity, even if you dared to enter the wasteland without more protection..^";
 ];
+
+[ ShakeSub;
+    if (noun==stick) {
+	print "The stick lights up.";
+       give stick light;
+    ! add it as a source of light
+    }
+];
+
+[ SpraySub;
+    if (noun==helmet) {
+    ! what if they type suit?
+    }
+];
+
+[ LeverSub;
+    if (noun==door) { ! which door?
+    ! 
+    }
+];
+
+[ ShootSub;
+    if (noun==weapon) {
+    ! add rifle etc. to synonyms
+    }
+];
+
+[ LeanSub;
+    if (noun==board) {
+    ! where are you laying it?
+    }
+];
+
+[ TypeSub;
+    ! say this or that
+];
+
+[ WeldSub;
+    ! make sure have what you need
+];
+
+[ UnblockSub;
+    ! pipe
+];
+
+[ CrushSub;
+    if (noun==tree) {
+    ! in pestle
+    ! remember to make charcoal appear & tree disappear
+    }
+];
+
+[ ScanSub;
+    if (noun==hand) {
+    ! hand
+    }
+];
+
+Verb "shake" "jiggle" "wave"
+	*   noun    -> Shake;
+
+! Verb "saw" "sever" ! cut already in vocab?
+!	*   noun    -> Cut;
+
+! attach already in vocab?
+
+Verb "spray" "apply" ! use on?
+	*   noun    -> Spray;
+
+Verb "lever" "wedge" ! pry? crank? move with?
+	*   noun    -> Lever;
+
+Verb "shoot" "fire"
+	*   noun    -> Shoot;
+
+Verb "lean" "lay" ! ramp?
+	*   noun    -> Lean;
+
+! Verb "type" "write" ! enter? copy?
+!	*   noun    -> Type;
+! already both in vocab
+
+Verb "crush" "pound" "mix"
+	*   noun    -> Crush;
+
+Verb "weld" "fuse" "bond" "meld" "melt" "solder" ! attach/connect/join
+	*   noun    -> Weld;
+
+Verb "unblock" "empty" ! clear & clean in vocab
+	*   noun    -> Unblock;
+
+! Verb "scan" "hold" ! "press" already in vocab
+!	*   noun    -> Scan;
+
+! TODO: should have help with unique verbs list
+! TODO: should have routines & verbs in same order & completion order
