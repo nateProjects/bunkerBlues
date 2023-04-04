@@ -53,9 +53,15 @@ Constant OPTIONAL_SIMPLE_DOORS;
 ! Define any library constants you need here, like MAX_SCORE, AMUSING_PROVIDED,
 ! MAX_CARRIED, SACK_OBJECT,  etc.
 
+Constant FILTER_STATUS 0;
+Constant ELECTRICITY_STATUS 0;
+Constant HOSE_STATUS 0; ! attached
+Global OVEN_STATUS = 0; ! off
 Constant INITIAL_LOCATION_VALUE = Airlock;
-
+ 
 Include "globals.h";
+
+
 
 ! Define your attributes, common properties and global variables here, if any
 
@@ -218,7 +224,6 @@ Object  Gym "Gym"
             "Exits: S,W",
         s_to MedBay,
         w_to MainCorridor,
-        has light,
 ;
 
 Object ->  Helmet "Helmet"
@@ -293,6 +298,21 @@ Object  Pantry "Pantry"
         n_to Kitchen,
         w_to Hydroponic,
 ;
+
+Object ->  Oven "Oven"
+  with  name 'Oven',
+        description "Oven",
+    after [;
+    SwitchOn: 
+      if (HOSE_STATUS==1) { ! hose is detached
+        print "you are dead";
+      } 
+    return true;
+    SwitchOff: OVEN_STATUS = 1;
+      print "you aren't dead";
+    return true;
+],
+ has switchable;
 
 Object ->  Hose "Hose"
   with  name 'Hose',
@@ -407,9 +427,8 @@ Object ->  Weapon "Weapon" ! just call it something!
   with  name 'Weapon',
         description "Weapon";
 
-
 [ Initialise;
-    location = Gym;
+    location = Airlock;
      "^You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead. ^^
 
 You're not sure how many hours It has been since Joe pushed you in the airlock, and you passed out through the effects of the smoke from the fire. He said he was still going to try to put out it, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it. ^^
