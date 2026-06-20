@@ -681,7 +681,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
     print_ret "You cannot attach that to anything here.";
 ];
 
-[ TurnSub;
+[ RotateSub;
     if (noun == Valve) {
         if (Valve has on) {
             give Valve ~on;
@@ -733,7 +733,7 @@ Verb "shake" "jiggle" "wave"
 Verb "spray" "apply" ! use on?
 	*   noun    -> Spray;
 
-Verb "lever" "wedge" ! pry? crank? move with?
+Verb "lever" "wedge" "pry" "prise" "force" "jimmy"
 	*   noun    -> Lever;
 
 Verb "shoot" "fire"
@@ -758,10 +758,16 @@ Verb "unblock" "empty" ! clear & clean in vocab
 Verb "scan"
 	*   noun    -> Scan;
 
-Extend "turn"
-	*   noun    -> Turn;
+Extend "turn" first
+	*   noun    -> Rotate;
 
-Verb "attach" "connect" "fasten"
+Extend "attach" first
+	*   noun    -> Attach;
+
+Extend "fasten" first
+	*   noun    -> Attach;
+
+Verb "connect"
 	*   noun    -> Attach;
 
 ! TODO: should have help with unique verbs list
