@@ -2,8 +2,7 @@
 !% $OMIT_UNUSED_ROUTINES=1
 !% $ZCODE_LESS_DICT_DATA=1
 
-! VERSION 0.9.0
-! 1.0.0 - Tibbles remarks, food/score bonus, light fallback, filter fallback, bag inventory, more synonyms
+! VERSION 1.0.0
 
 ! The very first lines of the main source code file for a game can
 ! contain compiler options, like the lines above. -~S disables
@@ -52,8 +51,8 @@ Constant OPTIONAL_SIMPLE_DOORS;
 !Constant OPTIONAL_REACTIVE_PARSE_NAME;
 !Constant RUNTIME_ERRORS = 0; ! 0, 1 or 2. 0 = smallest file, 2 = most info
 
-! Define any library constants you need here, like MAX_SCORE, AMUSING_PROVIDED,
-! MAX_CARRIED, SACK_OBJECT,  etc.
+Constant MAX_CARRIED = 5;
+Constant SACK_OBJECT = Pack;
 
 Global FILTER_STATUS = 0;       ! 1 = charcoal filter complete (air safe)
 Global ELECTRICITY_STATUS = 0;  ! 1 = generator on
@@ -602,7 +601,7 @@ Object ->  GasTank "Gas Tank"
 
 Object ->  Dial "Dial"
   with  name 'Dial',
-        description "A dial controlling the gas mix. It can be set to acetylene for welding, or oxygen for emergency air."
+        description "A dial controlling the gas mix. Set it to acetylene to prime the rig for welding."
   has   static switchable;
 
 Object  ToolRoom "Tool Room"
