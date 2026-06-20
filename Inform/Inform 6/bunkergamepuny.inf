@@ -80,6 +80,12 @@ Global KNOB_WELDED_ON = 0;      ! 1 = knob welded onto pump handle
 Global CROWBAR_LEVER = 0;       ! 1 = crowbar attached to knob as lever
 Global PUMP_REVERSED = 0;       ! 1 = pump reversed, air circulating
 
+! 0.8.0 hazard state
+Global AIR_TURNS = 100;         ! turns before smoke kills player
+Global STICK_TURNS = 0;         ! turns remaining on glow stick (0 = not active)
+Global RATS_ALIVE = 1;          ! 1 = armoury infested with rats
+Global BOT_WAIT = 0;            ! turns spent in ControlRoom with shelf leaned
+
 Constant INITIAL_LOCATION_VALUE = Airlock;
  
 Include "globals.h";
@@ -314,7 +320,7 @@ Object ->  Helmet "Helmet"
                 move noun to player;
                 print_ret "That does not belong in the helmet.";
         ],
-  has   static container clothing;
+  has   static container open clothing;
 
 Object ->  Hand "Hand"
   with  name 'Hand',
@@ -394,18 +400,35 @@ Object  Pantry "Pantry"
 
 Object ->  Oven "Oven"
   with  name 'Oven',
-        description "A battered institutional gas oven, its enamel stained and chipped. The rubber hose connecting it to the supply pipe snakes out from behind.",
-    after [;
-    SwitchOn: 
-      if (HOSE_STATUS==1) { ! hose is detached
-        print "you are dead";
-      } 
-    return true;
-    SwitchOff: OVEN_STATUS = 1;
-      print "you aren't dead";
-    return true;
-],
- has switchable;
+        description [;
+            if (OVEN_STATUS == 1)
+                "A battered institutional gas oven, its enamel stained and chipped. The burners are lit and the hob is hot.";
+            "A battered institutional gas oven, its enamel stained and chipped. The rubber hose connecting it to the supply pipe snakes out from behind.";
+        ],
+        before [;
+            SwitchOn:
+                if (HOSE_STATUS == 1) {
+                    "The gas hose is not connected -- reattach it to the oven before turning it on.";
+                }
+                OVEN_STATUS = 1;
+                print_ret "You light the oven. The burners catch with a soft whump.";
+            SwitchOff:
+                OVEN_STATUS = 0;
+                print_ret "You turn off the oven. The burners die.";
+        ],
+        after [;
+            Receive:
+                if (noun == stick) {
+                    if (OVEN_STATUS == 0) { move noun to player; "The oven is not on -- light it first."; }
+                    give stick light;
+                    STICK_TURNS = 100;
+                    move noun to player;
+                    print_ret "You hold the glow stick over the hot hob for a moment. It flares back to full brightness.";
+                }
+                move noun to player;
+                print_ret "That does not belong on the oven.";
+        ],
+  has   switchable supporter;
 
 Object ->  Hose "Hose"
   with  name 'Hose',
@@ -465,9 +488,24 @@ Object  ControlRoom "Control Room"
   with  description
             "Banks of monitors and instrument panels cover every surface, most of them dark, a handful still cycling through error messages or static. This room controlled everything - communications, life support, security - and it will again, once the power is back on.^^Exits: N, S, W, E",
         n_to WECorridor,
-        s_to Armoury,
+        s_to [;
+            if (RATS_ALIVE == 1) {
+                "You push the door open a crack -- a seething mass of large, aggressive rodents hurls itself at the gap. You slam it shut.";
+            }
+            return Armoury;
+        ],
         e_to Generator,
         w_to Workshop,
+        each_turn [;
+            if (SHELF_LEANED == 0 || RATS_ALIVE == 0 || CORRIDOR_DOOR_PRIED == 0) return;
+            BOT_WAIT++;
+            if (BOT_WAIT == 1)
+                print "^The cleaning bot rolls south through the pried door, its sensors scanning.^";
+            if (BOT_WAIT == 2) {
+                RATS_ALIVE = 0;
+                print "^Sharp electrical zaps drift through from the armoury. Then silence. The bot trundles back, satisfied.^";
+            }
+        ],
 ;
 
 Object ->  Radio "Radio"
@@ -510,9 +548,31 @@ Object  Generator "Generator"
   with  description
             "The bunker's main generator dominates this room, its bulk trailing cables and conduits that run up to the ceiling and along every wall. A master switch and a biometric hand scanner are mounted on a panel nearby, both dormant without power.^^Exits: N, W, E",
         n_to WECorridor,
-        e_to PumpRoom,
+        e_to [;
+            if (PIPE_CLEAR == 0) {
+                if (WINDOW_BROKEN == 0)
+                    "The pump room door is sealed -- water is pressing hard against it from the other side. You need another way in.";
+                "The pump room door is still sealed by flood pressure. Clear the pipe first.";
+            }
+            return PumpRoom;
+        ],
         w_to ControlRoom,
 ;
+
+Object -> GenWindow "window"
+  with  name 'window',
+        description [;
+            if (WINDOW_BROKEN == 1)
+                "The window has been shot out, leaving a jagged opening into the pump room.";
+            "A small window set into the east wall, looking into the pump room beyond.";
+        ],
+        before [;
+            Enter:
+                if (WINDOW_BROKEN == 0) "The window is intact. You cannot climb through it.";
+                PlayerTo(PumpRoom);
+                print_ret "You squeeze through the broken window frame and drop into the pump room.";
+        ],
+  has   static;
 
 Object ->  Scanner "scanner"
   with  name 'Scanner' 'biometric',
@@ -529,11 +589,30 @@ Object  PumpRoom "Pump Room"
             "Pipework and pumping machinery crowd this damp utility room, the metalwork orange with corrosion in places and the floor slick with condensation. The main air pump stands at the centre of it all, its control knob snapped clean off at the stem.^^Exits: W, D",
         w_to Generator,
         d_to Reservoir,
+        each_turn [;
+            if (PIPE_CLEAR == 1) return;
+            if (Helmet in player && CHARCOAL_IN_FILTER == 1) {
+                CHARCOAL_IN_FILTER = 0;
+                FILTER_STATUS = 0;
+                remove Charcoal;
+                print "^The floodwater soaks into the helmet's filter, turning the charcoal to mush. Your smoke filter is ruined.^";
+            }
+        ],
 ;
 
 Object ->  PumpWindow "window"
   with  name 'window',
-        description "A small window set into the wall. It looks like it could be shot out."
+        description [;
+            if (WINDOW_BROKEN == 1)
+                "The window has been shot out, leaving a jagged opening into the generator room.";
+            "A small window set into the wall. It looks like it could be shot out.";
+        ],
+        before [;
+            Enter:
+                if (WINDOW_BROKEN == 0) "The window is intact.";
+                PlayerTo(Generator);
+                print_ret "You haul yourself back through the window into the generator room.";
+        ],
   has   static;
 
 Object ->  Knob "Knob"
@@ -565,8 +644,37 @@ Object  Outside "Outside"
         s_to External_Door,
   has   light;
 
+Object AirDaemon "air daemon"
+    with daemon [;
+        ! Glow stick countdown
+        if (STICK_TURNS > 0) {
+            STICK_TURNS--;
+            if (STICK_TURNS == 50)
+                print "^The glow stick is beginning to fade.^";
+            if (STICK_TURNS == 0) {
+                give stick ~light;
+                print "^The glow stick flickers and goes dark.^";
+            }
+        }
+        ! Air countdown (stops if charcoal filter worn)
+        if (CHARCOAL_IN_FILTER == 1 && Helmet in player) return;
+        AIR_TURNS--;
+        if (AIR_TURNS == 40)
+            print "^The air tastes of smoke. A dull ache is building behind your eyes.^";
+        if (AIR_TURNS == 20)
+            print "^Your chest is tight and your vision is beginning to blur. You need clean air soon.^";
+        if (AIR_TURNS == 10)
+            print "^You are struggling to breathe. Every breath burns.^";
+        if (AIR_TURNS <= 0) {
+            print "^The smoke finally overwhelms you. Your vision narrows and you crumple to the floor.^^";
+            deadflag = 1;
+        }
+    ],
+    has concealed;
+
 [ Initialise;
     location = Airlock;
+    StartDaemon(AirDaemon);
      "^You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead. ^^
 
 You're not sure how many hours It has been since Joe pushed you in the airlock, and you passed out through the effects of the smoke from the fire. He said he was still going to try to put out it, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it. ^^
@@ -578,6 +686,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
     if (noun == stick) {
         if (stick has light) { print_ret "The stick is already lit."; }
         give stick light;
+        STICK_TURNS = 100;
         print_ret "You shake the glow stick vigorously. It flares to life.";
     }
     print_ret "Shaking that does nothing useful.";
@@ -605,7 +714,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
 ];
 
 [ ShootSub;
-    if (noun == PumpWindow) {
+    if (noun == PumpWindow || noun == GenWindow) {
         if (~~(Weapon in player)) "You need a weapon to shoot with.";
         if (WINDOW_BROKEN == 1) "The window is already broken.";
         WINDOW_BROKEN = 1;
@@ -664,6 +773,14 @@ But the air in here won't last forever, the survival suit you threw on had no he
 
 [ AttachSub;
     if (noun == Hose) {
+        ! Reattach hose to oven (from Workshop rig back to Pantry oven)
+        if (location == Pantry) {
+            if (HOSE_STATUS == 0) "The hose is already connected to the oven.";
+            HOSE_STATUS = 0;
+            HOSE_ATTACHED = 0;
+            move Hose to Pantry;
+            print_ret "You reconnect the rubber hose to the oven's gas fitting. The oven is ready to use again.";
+        }
         if (location ~= Workshop) "You need to be in the Workshop to connect the hose to the rig.";
         if (HOSE_STATUS == 0) "The hose is still attached to the oven - detach it first (turn the valve off, then take the hose).";
         if (HOSE_ATTACHED == 1) "The hose is already connected to the rig.";

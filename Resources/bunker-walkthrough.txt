@@ -37,6 +37,7 @@ E, N, E, SW (Lounge)
 N (Library)
 	PULL (out loose) SHELF
 	TAKE SHELF
+
 S, E, SE (Gym - Dead body here, trapped under equipment)
 	EXAMINE BODY
 	SPRAY HELMET
@@ -93,3 +94,29 @@ If mask filter is damaged you can temporarily fill suit with air from gas tank (
 If you don’t carry the emergency bag you are limited to carrying 4 items (hard mode), which takes more steps to complete the game
 
 If you don't use charcoal in the mask just the filter will last for half as long? But you’ll need to replace it?
+
+
+Quick version -
+
+open pack. examine paper. take paperclip. take pack
+open panel. examine panel. insert paperclip into panel
+open internal door. s. take stick. shake stick. e. e
+examine jacket. take book. w. s. take brush
+n. w. w. examine maker. take filter
+s. take knife. s. examine hose. turn valve. take hose
+w. take tree. s. take wd40. n. n. take crowbar
+e. n. e. sw. n. pull shelf. take shelf
+s. e. se. examine body. spray helmet. take helmet
+insert filter into helmet. wear helmet. cut hand
+take hand. s. take pestle. crush wood. take charcoal 
+insert charcoal into helmet. examine window. n. w
+examine bot. s. pry door. s. lean shelf. wait. s
+take weapon. n. e. e. shoot window
+remove helmet. drop helmet. enter window. d
+unblock pipe. u. w. take helmet. wear helmet
+w. w. attach hose. turn dial. e. e
+	0.9.0 onwards -
+scan hand. turn switch. e. take knob. weld knob
+attach crowbar. turn knob. w. w
+turn radio. type door code. type signal code
+n. n. n. open external door. n
