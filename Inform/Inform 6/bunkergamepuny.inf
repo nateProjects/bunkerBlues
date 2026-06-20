@@ -86,6 +86,12 @@ Global STICK_TURNS = 0;         ! turns remaining on glow stick (0 = not active)
 Global RATS_ALIVE = 1;          ! 1 = armoury infested with rats
 Global BOT_WAIT = 0;            ! turns spent in ControlRoom with shelf leaned
 
+! 0.9.0 endgame state
+Global SCANNER_CLEARED = 0;     ! 1 = hand scanned, generator switch usable
+Global RADIO_ON = 0;            ! 1 = radio powered on
+Global SIGNAL_SENT = 0;         ! 1 = signal code transmitted
+Global DOOR_CODE_ENTERED = 0;   ! 1 = door code entered, external door unlocked
+
 Constant INITIAL_LOCATION_VALUE = Airlock;
  
 Include "globals.h";
@@ -159,9 +165,19 @@ Object Paperclip "Paperclip"
 
 Object External_Door "external door"
        with    name "external" "door",
-               description "A heavy blast door leading out to the wasteland. It needs power to open.",
+               description [;
+                   if (ELECTRICITY_STATUS == 0)
+                       "A heavy blast door leading out to the wasteland. The electronic lock needs power to operate.";
+                   if (self hasnt locked)
+                       "The blast door stands unlocked and ready to open.";
+                   "The blast door is powered but locked. It needs the door release code.";
+               ],
                door_dir (n_to) (s_to),
                found_in Airlock Outside,
+               before [;
+                   Open:
+                       if (ELECTRICITY_STATUS == 0) "The blast door needs power to operate.";
+               ],
     has static door openable locked;
 
 Object Panel "panel" Airlock
@@ -640,16 +656,26 @@ Object ->  Weapon "Weapon"
         description "A bolt-action rifle, the finish worn but the mechanism well-maintained. There are a few rounds in the magazine - enough for what you need.";
 
 Object  Outside "Outside"
-  with  description "You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in - someone heard your signal.^^*** You have won! ***",
+  with  description "You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in -- someone heard your signal.",
         s_to External_Door,
   has   light;
 
 Object AirDaemon "air daemon"
     with daemon [;
+        ! Win condition
+        if (location == Outside) { deadflag = 2; return; }
+        ! Bot danger: in any room except Airlock/MainCorridor, without power or lit stick
+        if (location ~= Airlock && location ~= MainCorridor && ELECTRICITY_STATUS == 0) {
+            if (~~(stick has light)) {
+                print "^The cleaning bot's sensor sweeps across you. Without the glow stick to mark you as crew, it reads you as vermin. A sharp electrical discharge drops you where you stand.^^";
+                deadflag = 1;
+                return;
+            }
+        }
         ! Glow stick countdown
         if (STICK_TURNS > 0) {
             STICK_TURNS--;
-            if (STICK_TURNS == 50)
+            if (STICK_TURNS == 20)
                 print "^The glow stick is beginning to fade.^";
             if (STICK_TURNS == 0) {
                 give stick ~light;
@@ -686,7 +712,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
     if (noun == stick) {
         if (stick has light) { print_ret "The stick is already lit."; }
         give stick light;
-        STICK_TURNS = 100;
+        STICK_TURNS = 150;
         print_ret "You shake the glow stick vigorously. It flares to life.";
     }
     print_ret "Shaking that does nothing useful.";
@@ -735,7 +761,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
     print_ret "Leaning that here does nothing useful.";
 ];
 
-! TypeSub: 'type' and 'write' already in PunyInform vocab; wire up in 0.9.0 via Extend
+! TypeCodeSub: wired up in 0.9.0
 
 [ WeldSub;
     if (noun == Knob) {
@@ -744,7 +770,8 @@ But the air in here won't last forever, the survival suit you threw on had no he
         if (DIAL_TURNED == 0) "The welding rig is not ready - attach the hose and set the dial first.";
         if (KNOB_WELDED_ON == 1) "The knob is already welded on.";
         KNOB_WELDED_ON = 1;
-        remove Knob;
+        move Knob to PumpRoom;
+        give Knob static;
         print_ret "You touch the torch to the knob stub and weld the knob firmly onto the pump handle.";
     }
     print_ret "You cannot weld that here.";
@@ -785,7 +812,8 @@ But the air in here won't last forever, the survival suit you threw on had no he
         if (HOSE_STATUS == 0) "The hose is still attached to the oven - detach it first (turn the valve off, then take the hose).";
         if (HOSE_ATTACHED == 1) "The hose is already connected to the rig.";
         HOSE_ATTACHED = 1;
-        print_ret "You connect the hose between the gas tank and the nozzle, forming a portable welding torch.";
+        move Nozzle to player;
+        print_ret "You connect the hose between the gas tank and the nozzle, forming a portable welding torch. You pick up the torch head.";
     }
     if (noun == Crowbar) {
         if (location ~= PumpRoom) "You need to be at the pump to attach the crowbar.";
@@ -793,7 +821,8 @@ But the air in here won't last forever, the survival suit you threw on had no he
         if (CROWBAR_LEVER == 1) "The crowbar is already slotted onto the knob.";
         if (~~(Crowbar in player)) "You need to be holding the crowbar.";
         CROWBAR_LEVER = 1;
-        remove Crowbar;
+        move Crowbar to PumpRoom;
+        give Crowbar static;
         print_ret "You slot the crowbar onto the knob, giving you enough leverage to turn the pump.";
     }
     print_ret "You cannot attach that to anything here.";
@@ -815,8 +844,17 @@ But the air in here won't last forever, the survival suit you threw on had no he
         print_ret "You turn the dial to acetylene. The rig is primed and ready to weld.";
     }
     if (noun == GenSwitch) {
-        ! 0.9.0 - generator logic
-        "The generator switch needs the biometric scanner cleared first.";
+        if (SCANNER_CLEARED == 0) "The biometric scanner must be cleared before the switch can be used.";
+        if (ELECTRICITY_STATUS == 1) "The generator is already running.";
+        ELECTRICITY_STATUS = 1;
+        give Canteen light; give Kitchen light; give Storeroom light;
+        give Hydroponic light; give Pantry light; give Library light;
+        give Lounge light; give WECorridor light; give ControlRoom light;
+        give Workshop light; give ToolRoom light; give Generator light;
+        give PumpRoom light; give Reservoir light; give Armoury light;
+        give BunkRoom light; give Closet light; give Latrine light;
+        give Gym light; give MedBay light;
+        print_ret "You throw the master switch. The generator roars to life. Lights flicker on throughout the bunker.";
     }
     if (noun == Knob) {
         if (KNOB_WELDED_ON == 0) "There is no knob - it needs to be welded back on first.";
@@ -826,18 +864,45 @@ But the air in here won't last forever, the survival suit you threw on had no he
         print_ret "With the crowbar as a lever you heave the knob around. The pump reverses with a grinding shudder - clean air begins to circulate.";
     }
     if (noun == Radio) {
-        ! 0.9.0
-        "The radio needs power before it will work.";
+        if (ELECTRICITY_STATUS == 0) "The radio needs power before it will work.";
+        if (RADIO_ON == 1) "The radio is already on.";
+        RADIO_ON = 1;
+        print_ret "You switch on the radio. It crackles to life, filling the room with static and a carrier wave.";
     }
     print_ret "Turning that does nothing useful here.";
 ];
 
 [ ScanSub;
     if (noun == Scanner) {
-        ! 0.9.0 - generator logic
-        "The scanner awaits a valid hand print.";
+        if (SCANNER_CLEARED == 1) "The scanner has already accepted a valid print.";
+        "The scanner awaits a valid hand print. Try scanning the hand.";
+    }
+    if (noun == Hand) {
+        if (location ~= Generator) "There is no scanner here.";
+        if (Hand has static) "You need to sever the hand from the body first.";
+        if (~~(Hand in player)) "You need to be holding the hand.";
+        if (SCANNER_CLEARED == 1) "The scanner has already accepted the print.";
+        SCANNER_CLEARED = 1;
+        print_ret "You press the severed hand against the scanner. It beeps once and a green light blinks on.";
     }
     print_ret "You cannot scan that.";
+];
+
+[ TypeCodeSub;
+    if (location ~= ControlRoom) "There is nothing here to type a code into.";
+    if (ELECTRICITY_STATUS == 0) "The control room has no power.";
+    if (RADIO_ON == 0) "Turn the radio on first.";
+    if (~~(CodeBook in player)) "You need the code book to know what to type.";
+    if (SIGNAL_SENT == 0) {
+        SIGNAL_SENT = 1;
+        print_ret "You key in the emergency signal code. Static crackles, then a distant acknowledgement tone -- someone is receiving your signal.";
+    }
+    if (DOOR_CODE_ENTERED == 0) {
+        DOOR_CODE_ENTERED = 1;
+        give External_Door ~locked;
+        print_ret "You enter the external door release code. A muffled clunk echoes down the corridor -- the blast door is unlocked.";
+    }
+    "Both codes have already been entered.";
 ];
 
 Verb "shake" "jiggle" "wave"
@@ -887,6 +952,10 @@ Extend "fasten" first
 
 Verb "connect"
 	*   noun    -> Attach;
+
+Verb "type" "write"
+	*           -> TypeCode
+	*   noun    -> TypeCode;
 
 ! TODO: should have help with unique verbs list
 ! TODO: should have routines & verbs in same order & completion order

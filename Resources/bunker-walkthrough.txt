@@ -115,8 +115,7 @@ take weapon. n. e. e. shoot window
 remove helmet. drop helmet. enter window. d
 unblock pipe. u. w. take helmet. wear helmet
 w. w. attach hose. turn dial. e. e
-	0.9.0 onwards -
 scan hand. turn switch. e. take knob. weld knob
 attach crowbar. turn knob. w. w
-turn radio. type door code. type signal code
+turn radio. type signal code. type door code.
 n. n. n. open external door. n
