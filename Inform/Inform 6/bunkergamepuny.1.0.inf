@@ -1,0 +1,1277 @@
+!% -~S
+!% $OMIT_UNUSED_ROUTINES=1
+!% $ZCODE_LESS_DICT_DATA=1
+
+! VERSION 0.9.0
+! 1.0.0 - Tibbles remarks, food/score bonus, light fallback, filter fallback, bag inventory, more synonyms
+
+! The very first lines of the main source code file for a game can
+! contain compiler options, like the lines above. -~S disables
+! strict error checking. This is otherwise used in z5 and z8 games by
+! default. While useful for debugging, it adds ~10 KB to the story file
+! size and it makes the game slower.
+! $OMIT_UNUSED_ROUTINES=1 makes the compiler remove all routines which
+! aren't used. This can save some space.
+! $ZCODE_LESS_DICT_DATA=1 removes an empty data byte for every dictionary word.
+
+Constant Story      "Bunker Blues";
+Constant Headline   "^A game which uses PunyInform.^";
+
+! Uncomment ONE of the two following lines, to show either time or score/turns
+! Leaving both commented out makes the library bigger.
+!Constant STATUSLINE_TIME; Statusline time;
+Constant STATUSLINE_SCORE; Statusline score;
+
+! MAX_SCORE: total points available in the game
+Constant MAX_SCORE = 100;
+
+! Customize the statusline in z5+ (will have no effect in z3)
+!Constant OPTIONAL_SL_NO_SCORE;
+!Constant OPTIONAL_SL_NO_MOVES;
+
+! Uncomment to add optional features to PunyInform
+!Constant DEBUG;
+!Constant CUSTOM_ABBREVIATIONS;
+!Constant CUSTOM_PLAYER_OBJECT = myPlayerObj;
+!Constant OPTIONAL_NO_DARKNESS;
+!Constant OPTIONAL_ALLOW_WRITTEN_NUMBERS;
+!Constant OPTIONAL_EXTENDED_METAVERBS;
+!Constant OPTIONAL_EXTENDED_VERBSET;
+!Constant OPTIONAL_FLEXIBLE_INVENTORY;
+!Constant OPTIONAL_PRINT_SCENERY_CONTENTS;
+Constant OPTIONAL_SCORED;
+!Constant OPTIONAL_FULL_SCORE; ! Comment out NO_SCORE when uncommenting this
+Constant OPTIONAL_FULL_DIRECTIONS;
+Constant OPTIONAL_SIMPLE_DOORS;
+!Constant OPTIONAL_SHIP_DIRECTIONS;
+!Constant OPTIONAL_GUESS_MISSING_NOUN;
+!Constant OPTIONAL_MANUAL_SCOPE;
+!Constant OPTIONAL_MANUAL_REACTIVE;
+!Constant OPTIONAL_ORDERED_TIMERS;
+!Constant OPTIONAL_PROVIDE_UNDO;
+!Constant OPTIONAL_REACTIVE_PARSE_NAME;
+!Constant RUNTIME_ERRORS = 0; ! 0, 1 or 2. 0 = smallest file, 2 = most info
+
+! Define any library constants you need here, like MAX_SCORE, AMUSING_PROVIDED,
+! MAX_CARRIED, SACK_OBJECT,  etc.
+
+Global FILTER_STATUS = 0;       ! 1 = charcoal filter complete (air safe)
+Global ELECTRICITY_STATUS = 0;  ! 1 = generator on
+Global HOSE_STATUS = 0;         ! 0 = attached to oven, 1 = detached
+Global OVEN_STATUS = 0;         ! 0 = off, 1 = on
+
+! 0.7.0 puzzle state
+Global HELMET_FREE = 0;         ! 1 = WD40 applied, helmet takeable
+Global FILTER_IN_HELMET = 0;    ! 1 = coffee filter inserted
+Global CHARCOAL_IN_FILTER = 0;  ! 1 = charcoal packed in (filter complete)
+Global CORRIDOR_DOOR_PRIED = 0; ! 1 = bot can follow through
+Global SHELF_LEANED = 0;        ! 1 = shelf leaned at armoury door
+Global WINDOW_BROKEN = 0;       ! 1 = pump room window shot out
+Global PIPE_CLEAR = 0;          ! 1 = pipe unblocked with brush
+Global HOSE_ATTACHED = 0;       ! 1 = hose connected to rig in Workshop
+Global DIAL_TURNED = 0;         ! 1 = dial set to acetylene, torch ready
+Global KNOB_WELDED_ON = 0;      ! 1 = knob welded onto pump handle
+Global CROWBAR_LEVER = 0;       ! 1 = crowbar attached to knob as lever
+Global PUMP_REVERSED = 0;       ! 1 = pump reversed, air circulating
+
+! 0.8.0 hazard state
+Global AIR_TURNS = 100;         ! turns before smoke kills player
+Global STICK_TURNS = 0;         ! turns remaining on glow stick (0 = not active)
+Global RATS_ALIVE = 1;          ! 1 = armoury infested with rats
+Global BOT_WAIT = 0;            ! turns spent in ControlRoom with shelf leaned
+
+! death cause tracking
+Global DEATH_CAUSE = 0;         ! 0 = smoke, 1 = bot
+
+! 0.9.0 endgame state
+Global SCANNER_CLEARED = 0;     ! 1 = hand scanned, generator switch usable
+Global RADIO_ON = 0;            ! 1 = radio powered on
+Global SIGNAL_SENT = 0;         ! 1 = signal code transmitted
+Global DOOR_CODE_ENTERED = 0;   ! 1 = door code entered, external door unlocked
+
+Constant INITIAL_LOCATION_VALUE = Airlock;
+ 
+Include "globals.h";
+
+
+
+! Define your attributes, common properties and global variables here, if any
+
+! Define the entry point routines you need here, like Amusing, DarkToDark etc.
+
+! Uncomment to add PunyLib extensions
+!Include "ext_menu.h";
+!Include "ext_flags.h";
+!Include "ext_talk_menu.h"; ! Note: Also include ext_flags.h to allow use of flags
+!Include "ext_quote_box.h";
+!Include "ext_cheap_scenery.h";
+
+Replace DeathMessage;
+Include "puny.h";
+
+! Uncomment to add PunyLib extensions
+!Include "ext_waittime.h";
+
+! Unplaced objects - spawned into the world during play
+Object  Charcoal "Charcoal"
+  with  name 'Charcoal',
+        description "Lumps of charcoal crushed from the bonsai wood. Insert into the helmet filter to scrub smoke.";
+
+Object  Suit "Survival Suit" selfobj
+  with  name 'Suit' 'Survival',
+        description "A heavy-duty survival suit, slightly too large and smelling of must. It offers some protection but leaves your head entirely exposed."
+  has   clothing;
+
+Object  Airlock "Airlock"
+  with  description "You are standing in a dimly lit airlock of a fallout shelter. You hear the faint hum of the emergency light, and an acrid smell from the fire you escaped lingers in the air.^^As you look around the otherwise sterile room, you notice a small control panel on the wall to your left, next to the internal door.",
+        s_to Internal_Door,
+        n_to External_Door,
+        has light
+;
+
+Object -> Internal_Door  "internal door"
+       with    name "internal" "door",
+               description
+               "The internal door is made of metal.",
+        door_dir (s_to) (n_to),
+        found_in Airlock MainCorridor,
+    has static door openable locked;
+
+Object -> Pack "Emergency Pack"
+  with  name 'Pack' 'bag' 'backpack' 'sack' 'emergency',
+        description "A battered canvas emergency pack with worn straps. Wearing it across your back gives you considerably more carrying capacity."
+  has   clothing container openable;
+
+Object -> -> Paper "Paper"
+with name 'Papers' 'Paper',
+description [;
+if (self.read_once == false) {
+    self.read_once = true;
+    move paperclip to location;
+    "As you look at the papers the paperclip holding them together falls to the floor.";
+}
+else
+"It is instructions on how to ...";
+],
+read_once false, ! has the player examined the paper?
+;
+
+Object Paperclip "Paperclip"
+  with  name 'Paperclip',
+        description "A small metal paperclip."
+;
+
+Object External_Door "external door"
+       with    name "external" "door",
+               description [;
+                   if (ELECTRICITY_STATUS == 0)
+                       "A heavy blast door leading out to the wasteland. The electronic lock needs power to operate.";
+                   if (self hasnt locked)
+                       "The blast door stands unlocked and ready to open.";
+                   "The blast door is powered but locked. It needs the door release code.";
+               ],
+               door_dir (n_to) (s_to),
+               found_in Airlock Outside,
+               before [;
+                   Open:
+                       if (ELECTRICITY_STATUS == 0) "The blast door needs power to operate.";
+               ],
+    has static door openable locked;
+
+Object Panel "panel" Airlock
+    with  name "panel" "control",
+          description [;
+              if (self has open)
+                  "The panel is open. A wire on the circuit board has burnt out, stopping the door from working.";
+              "A small control panel on the wall next to the internal door. It is closed.";
+          ],
+          before [;
+              Open:
+                  if (self has open) "The panel is already open.";
+                  give self open;
+                  print_ret "You open the door panel, revealing a circuit board.";
+          ],
+          after [;
+              Receive:
+                  if (noun == Paperclip) { remove noun;
+                      give Internal_Door ~locked;
+                      print_ret "The paperclip bridges the burnt-out wire. You hear a click from the internal door.";
+                  }
+          ],
+    has   scenery container openable;
+
+Object -> Circuitboard "circuit board"
+    with  name "circuit" "board" "wire",
+          description "A wire on the board has burnt out, stopping the door from working."
+    has   static;
+
+Object  MainCorridor "Main Corridor"
+  with  description [;
+            if (ELECTRICITY_STATUS == 1)
+                "The main corridor runs the full length of the bunker under steady, bright fluorescent light - a relief after the emergency flicker. Rows of painted-steel doors line each side, their stencilled numbers sharp and clear.^^Exits: N, S, W, E, SE, SW";
+            "Fluorescent strips flicker overhead, casting a sickly pallor over the metal-lined corridor. Rows of identical painted-steel doors line each side, their stencilled numbers faded to near-illegibility.^^Exits: N, S, W, E, SE, SW";
+        ],
+        n_to Internal_Door,
+        s_to WECorridor,
+        e_to BunkRoom,
+        w_to Canteen,
+        se_to Gym,
+        sw_to Lounge,
+        each_turn [;
+            if (ELECTRICITY_STATUS == 1) return;
+            if (random(4) ~= 1) return;
+            switch (random(6)) {
+                1: print "^Tibbles: ~I'm a cleaner, not a magician, but watch this dirt disappear!~^";
+                2: print "^Tibbles: ~Why walk when you can vacuum?~^";
+                3: print "^Tibbles: ~Clean floors, happy life.~^";
+                4: print "^Tibbles: ~I've got the suction, and I'm not afraid to use it.~^";
+                5: print "^Tibbles: ~I'm not just a pretty face, I'm a pretty powerful vacuum too!~^";
+                6: print "^Tibbles: ~Dirt, dust, and debris beware, I'm on the prowl!~^";
+            }
+        ],
+        has light
+;
+
+Object ->  Bot "cleaning bot"
+  with  name 'bot' 'cleaning' 'robot',
+        description "A squat cleaning bot, its sensor array sweeping slowly. It zaps anything it reads as vermin - carrying a lit glow stick marks you as crew, not a target.",
+        before [;
+            Take:
+                "The bot is built to resist exactly that sort of interference. Leave it to its work.";
+            Attack:
+                "Attacking the bot would be extremely unwise. It is armed and considerably more durable than you.";
+        ],
+  has   static;
+
+Object ->  stick "Light Stick"
+  with  name 'Light' 'Stick' 'glow',
+        description "A chemical glow stick. Shake it to activate; reheat it on the oven when it fades."
+;
+
+Object  Canteen "Canteen"
+  with  description
+            "Rows of moulded plastic chairs sit askew around bolted-down tables, their surfaces sticky with the residue of years of institutional meals. A serving hatch at the far end stands open, the kitchen beyond cold and still.^^Exits: E, S",
+        s_to Kitchen,
+        e_to MainCorridor,
+;
+
+Object -> Maker "Coffee Maker"
+  with name 'Coffee' 'Maker',
+    description [;
+    if (self.read_once == false) {
+        self.read_once = true;
+        move Filter to location;
+        "Examining the Coffee Maker reveals a circular paper coffee filter.";
+    }
+    else
+    "It is a Coffee Maker ...";
+    ],
+    read_once false, ! has the player examined the maker?
+;
+
+Object ->  Filter "Coffee Filter"
+  with  name 'Coffee' 'Filter',
+        description "A circular paper coffee filter, slightly damp from the machine. It could be fitted into a helmet's breathing port to filter out particulates.";
+
+Object  BunkRoom "Bunk Room"
+  with  description
+            "Six pairs of metal bunk beds line the walls, their thin mattresses still bearing the impressions of whoever last slept here. A dog-eared paperback and a cracked photograph on one of the bedside shelves are the only signs anyone ever called this home.^^Exits: S, W, E",
+        s_to Latrine,
+        e_to Closet,
+        w_to MainCorridor,
+;
+
+Object  Closet "Closet"
+  with  description
+            "A cramped storage closet barely wider than your shoulders, its shelves mostly stripped of whatever was once kept here. The air is stale with the smell of old wool and something faintly chemical that you can't quite place.^^Exits: W",
+        w_to BunkRoom,
+;
+
+Object -> Jacket "Jacket"
+  with name 'Jacket',
+    description [;
+    if (self.read_once == false) {
+        self.read_once = true;
+        move CodeBook to location;
+        "As you look inside the jacket a small notebook falls from one of the pockets.";
+    }
+    else
+    "It is Bob's jacket ...";
+    ],
+    read_once false, ! has the player examined the jacket?
+;
+
+Object CodeBook "Code Book"
+  with  name 'Code' 'Book' 'notebook' 'codes' 'manual',
+        description "A small, well-thumbed notebook containing radio signal codes and door access codes, written in a cramped but legible hand.";
+
+Object  Latrine "Latrine"
+  with  description
+            "A row of lidded steel lavatories and a pair of cracked porcelain sinks occupy this narrow utility room. A persistent drip somewhere keeps time in the silence, and the overhead strip light hums with the effort of staying on.^^Exits: N",
+        n_to BunkRoom,
+;
+
+Object ->  ToiletBrush "Toilet Brush"
+  with  name 'Toilet' 'Brush',
+        description "A long-handled toilet brush, not particularly pleasant to handle but sturdy enough to clear a blocked pipe.";
+
+Object  Gym "Gym"
+  with  description [;
+            if (HELMET_FREE == 1 && Hand hasnt static)
+                "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman's body remains pinned beneath the weight cage - helmetless, one hand severed at the wrist.^^Exits: S, W";
+            if (HELMET_FREE == 1)
+                "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman lies pinned beneath the weight cage, helmetless now.^^Exits: S, W";
+            "A compact exercise room that took the worst of the earthquake - weight racks overturned, a treadmill on its side, rubber matting buckled and torn. In the far corner a dead crewman lies pinned beneath a toppled cage of weights, still wearing his helmet.^^Exits: S, W";
+        ],
+        s_to MedBay,
+        w_to MainCorridor,
+;
+
+Object ->  Body "body"
+  with  name 'body' 'crewman' 'dead' 'corpse' 'man',
+        description [;
+            if (HELMET_FREE == 1 && Hand hasnt static)
+                "The crewman lies pinned under the weight cage, helmetless and missing a hand. There is nothing more to take from him.";
+            if (HELMET_FREE == 1)
+                "The crewman lies pinned under the weight cage, helmetless now. One hand remains - you could sever it if you need it for the biometric scanner.";
+            "A dead crewman pinned under fallen gym equipment, still wearing his sealed helmet. The joints are seized with rust - something might free them up.";
+        ],
+        before [;
+            Take:
+                "The body is too heavy to move, and there is nothing to be gained by trying.";
+            Attack:
+                "He is already dead. You need to stay focused.";
+        ],
+  has   static;
+
+Object ->  Helmet "Helmet"
+  with  name 'Helmet',
+        description [;
+            if (CHARCOAL_IN_FILTER == 1)
+                "The helmet has a charcoal-packed coffee filter fitted - a crude but effective smoke mask.";
+            if (FILTER_IN_HELMET == 1)
+                "The helmet has a coffee filter fitted into its breathing port. Pack it with charcoal to complete the mask.";
+            if (HELMET_FREE == 1)
+                "A sealed helmet, freed from the body. Fit a filter to make it a smoke mask.";
+            "A sealed helmet, seized up with rust on the dead crewman. It could be freed with WD40.";
+        ],
+        after [;
+            Receive:
+                if (noun == Filter) {
+                    if (FILTER_IN_HELMET == 1) { move noun to player; "There is already a filter in the helmet."; }
+                    FILTER_IN_HELMET = 1;
+                    score = score + 5;
+                    print_ret "You fit the coffee filter into the helmet's breathing port.";
+                }
+                if (noun == Charcoal) {
+                    if (FILTER_IN_HELMET == 0) { move noun to player; "You need to insert a filter into the helmet first."; }
+                    if (CHARCOAL_IN_FILTER == 1) { move noun to player; "The filter is already packed with charcoal."; }
+                    CHARCOAL_IN_FILTER = 1;
+                    FILTER_STATUS = 1;
+                    score = score + 5;
+                    print_ret "You pack the charcoal into the filter. The helmet is now a crude but effective smoke mask.";
+                }
+                move noun to player;
+                print_ret "That does not belong in the helmet.";
+        ],
+  has   static container open clothing;
+
+Object ->  Hand "Hand"
+  with  name 'Hand',
+        description [;
+            if (self has static)
+                "The hand of the dead crewman. You could sever it for use on a biometric scanner.";
+            "A severed hand taken from the dead crewman. It might work on a biometric scanner.";
+        ],
+        before [;
+            Cut:
+                if (self hasnt static) "The hand is already severed.";
+                if (~~(BreadKnife in player)) "You need a blade to do that.";
+                give self ~static;
+                score = score + 5;
+                print_ret "Grimly, you sever the hand at the wrist with the bread knife. It comes free.";
+            Take:
+                if (self has static) "The hand is still attached to the body.";
+        ],
+  has   static;
+
+Object  MedBay "Med Bay"
+  with  description
+            "Banks of white-painted metal cabinets line the walls, most drawers hanging open and rifled through in evident haste. A single examination table sits beneath a surgical light that will never illuminate anything again.^^Exits: N, S",
+        n_to Gym,
+        s_to WECorridor,
+;
+
+Object ->  Pestle "Pestle"
+  with  name 'Pestle',
+        description "A heavy pestle, good for crushing things.";
+
+Object ->  MedWindow "porthole"
+  with  name 'window' 'porthole',
+        description "A small porthole-style window set into the south wall, looking out toward the pump room. You note it as a potential entry point - but not from this side. You'd need to access the pump room from the generator level."
+  has   static;
+
+Object  Kitchen "Kitchen"
+  with  description
+            "Stainless steel work surfaces run the length of this institutional kitchen, a few unwashed pots still sitting in the sink where someone left them in a hurry. The pantry to the south and storeroom to the west are a reminder of how large a crew this bunker was built to feed.^^Exits: N, S, W",
+        n_to Canteen,
+        s_to Pantry,
+        w_to Storeroom,
+;
+
+Object ->  BreadKnife "Bread Knife"
+  with  name 'Bread' 'Knife',
+        description "A long serrated bread knife with a wooden handle, still reasonably sharp despite its age.";
+
+Object  Storeroom "Storeroom"
+  with  description
+            "Metal shelving units stretch floor to ceiling, most of them bare save for a few tins and supply boxes pushed to the back. A heavy crowbar has been left propped against the nearest shelf.^^Exits: S, E",
+        s_to Hydroponic,
+        e_to Kitchen,
+;
+
+Object ->  Crowbar "Crowbar"
+  with  name 'Crowbar' 'jemmy' 'bar' 'jimmy',
+        description "A solid steel crowbar, reassuringly heavy. Useful for prying things open and, in a pinch, as a lever.";
+
+Object  Hydroponic "Hydroponics"
+  with  description
+            "Long hydroponic trays run beneath banks of dead overhead grow-lights, the substrate dry and neglected after what must be weeks without tending. A small bonsai tree in the corner has held on better than the rest, its gnarled trunk evidently tougher than it looks.^^Exits: N, S, E",
+        n_to Storeroom,
+        s_to ToolRoom,
+        e_to Pantry,
+;
+
+Object ->  Tree "Bonsai Tree"
+  with  name 'Bonsai' 'Tree' 'Wood',
+        description "A small but surprisingly dense bonsai tree, its gnarled trunk and compact branches ideal for reducing to charcoal with a good pounding.";
+
+Object  Pantry "Pantry"
+  with  description
+            "Shelving units hold an orderly supply of tinned goods and sealed containers, though several racks have been cleared at some point. A gas hose runs from a shutoff valve on the wall down to the oven, and a faint metallic smell hangs in the air.^^Exits: N, W",
+        n_to Kitchen,
+        w_to Hydroponic,
+;
+
+Object ->  Oven "Oven"
+  with  name 'Oven',
+        description [;
+            if (OVEN_STATUS == 1)
+                "A battered institutional gas oven, its enamel stained and chipped. The burners are lit and the hob is hot.";
+            "A battered institutional gas oven, its enamel stained and chipped. The rubber hose connecting it to the supply pipe snakes out from behind.";
+        ],
+        before [;
+            SwitchOn:
+                if (HOSE_STATUS == 1) {
+                    "The gas hose is not connected - reattach it to the oven before turning it on.";
+                }
+                OVEN_STATUS = 1;
+                print_ret "You light the oven. The burners catch with a soft whump.";
+            SwitchOff:
+                OVEN_STATUS = 0;
+                print_ret "You turn off the oven. The burners die.";
+        ],
+        after [;
+            Receive:
+                if (noun == stick) {
+                    if (OVEN_STATUS == 0) { move noun to player; "The oven is not on - light it first."; }
+                    give stick light;
+                    STICK_TURNS = 100;
+                    move noun to player;
+                    print_ret "You hold the glow stick over the hot hob for a moment. It flares back to full brightness.";
+                }
+                move noun to player;
+                print_ret "That does not belong on the oven.";
+        ],
+  has   switchable supporter;
+
+Object ->  Hose "Hose"
+  with  name 'Hose' 'tube' 'gas' 'rubber',
+        description "A rubber gas hose connecting the oven to the supply pipe. Turn the valve off before detaching it.",
+        before [;
+            Take:
+                if (Valve has on) "The gas is still flowing - turn the valve off first.";
+                HOSE_STATUS = 1;
+        ];
+
+Object ->  Valve "Valve"
+  with  name 'Valve' 'shutoff',
+        description [;
+            if (Valve has on) "A gas shutoff valve on the wall. It is currently open - gas is flowing to the oven.";
+            "A gas shutoff valve on the wall. It is currently closed - gas is off.";
+        ]
+  has   static switchable on;
+
+Object  Library "Library"
+  with  description
+            "Floor-to-ceiling shelves hold a mix of technical manuals and battered paperbacks, a handful of volumes knocked to the floor and left where they fell. One shelf along the far wall has come away from its fittings and hangs at an awkward angle.^^Exits: S",
+        s_to Lounge,
+;
+
+Object ->  Board "Board Shelf"
+  with  name 'Board' 'Shelf',
+        description "A solid wooden shelf that has come away from the wall, roughly a metre long. Sturdy enough to act as a ramp if leaned against something.";
+
+Object  Lounge "Lounge"
+  with  description
+            "Sagging sofas and a pair of armchairs are arranged around a low table strewn with old magazines and the scattered pieces of several abandoned board games. A television set is bolted to the wall at head height, its screen long dark.^^Exits: N, E",
+        n_to Library,
+        e_to MainCorridor,
+;
+
+Object  WECorridor "WE Corridor"
+  with  description [;
+            if (CORRIDOR_DOOR_PRIED == 1) {
+                "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. The heavy fire door to the south hangs open, pried back with the crowbar.^^Exits: N, S, E, SW, SE";
+            }
+            "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. A heavy fire door to the south is wedged shut - the bot will not be able to follow until it is pried open.^^Exits: N, S, E, SW, SE";
+        ],
+        n_to MainCorridor,
+        s_to ControlRoom,
+        e_to MedBay,
+        se_to Generator,
+        sw_to Workshop,
+;
+
+Object ->  CorridorDoor "fire door"
+  with  name 'fire' 'door' 'corridor',
+        description [;
+            if (CORRIDOR_DOOR_PRIED == 1)
+                "The fire door hangs open, pried back with the crowbar.";
+            "A heavy fire door wedged shut. Pry it open with the crowbar so the bot can follow.";
+        ],
+  has   static;
+
+Object  ControlRoom "Control Room"
+  with  description [;
+            if (ELECTRICITY_STATUS == 0)
+                "Banks of monitors and instrument panels cover every surface, most of them dark, a handful still cycling through error messages or static. This room controlled everything - communications, life support, security - and it will again, once the power is back on.^^Exits: N, S, W, E";
+            if (RADIO_ON == 1)
+                "The control room hums with restored power, monitors glowing across every surface. The radio crackles from its corner console.^^Exits: N, S, W, E";
+            "The control room hums with restored power, monitors cycling through system readings. The radio sits silent on its console.^^Exits: N, S, W, E";
+        ],
+        n_to WECorridor,
+        s_to [;
+            if (RATS_ALIVE == 1) {
+                "You push the door open a crack - a seething mass of large, aggressive rodents hurls itself at the gap. You slam it shut.";
+            }
+            return Armoury;
+        ],
+        e_to Generator,
+        w_to Workshop,
+        each_turn [;
+            if (SHELF_LEANED == 0 || RATS_ALIVE == 0 || CORRIDOR_DOOR_PRIED == 0) return;
+            BOT_WAIT++;
+            if (BOT_WAIT == 1)
+                print "^The cleaning bot rolls south through the pried door, its sensors scanning.^";
+            if (BOT_WAIT == 2) {
+                RATS_ALIVE = 0;
+                print "^Sharp electrical zaps drift through from the armoury. Then silence. The bot trundles back.^";
+                print "^Tibbles: ~I'm a cleaning superhero, saving the day one room at a time.~^";
+            }
+        ],
+;
+
+Object ->  Radio "Radio"
+  with  name 'Radio',
+        description [;
+            if (RADIO_ON == 1 && DOOR_CODE_ENTERED == 1)
+                "The radio crackles softly. Both codes have been transmitted - someone out there heard you.";
+            if (RADIO_ON == 1)
+                "The radio crackles with static and a carrier wave. Ready to transmit.";
+            if (ELECTRICITY_STATUS == 1)
+                "A military-grade communications radio. Power is restored - you could switch it on.";
+            "A chunky military-grade communications radio, dusty but intact. It needs power before it can broadcast anything.";
+        ];
+
+Object  Workshop "Workshop"
+  with  description
+            "A long workbench runs down the centre of this well-equipped room, its surface scattered with tools, coils of wire, and half-finished repairs left by whoever was last in here. A portable welding rig stands in one corner - gas tank and nozzle waiting to be connected up.^^Exits: N, W, E",
+        n_to WECorridor,
+        e_to ControlRoom,
+        w_to ToolRoom,
+;
+
+Object ->  Nozzle "Nozzle"
+  with  name 'Nozzle' 'torch' 'welding',
+        description "A welding torch nozzle, the business end of the portable rig. Once the hose is connected and the dial set, this becomes a working flame.";
+
+Object ->  GasTank "Gas Tank"
+  with  name 'Gas' 'Tank',
+        description "A pressurised gas tank. The hose can be attached to connect it to the nozzle.";
+
+Object ->  Dial "Dial"
+  with  name 'Dial',
+        description "A dial controlling the gas mix. It can be set to acetylene for welding, or oxygen for emergency air."
+  has   static switchable;
+
+Object  ToolRoom "Tool Room"
+  with  description
+            "A small utility room lined with pegboard, most of its hooks bare and empty, their tools presumably scattered to various corners of the bunker. A few items remain on the lower shelf, including a can of WD40 that someone never got round to putting away.^^Exits: N, E",
+        n_to Hydroponic,
+        e_to Workshop,
+;
+
+Object ->  WD40 "WD40"
+  with  name 'WD40' 'can' 'oil' 'lubricant' 'aerosol' 'spray',
+        description "A well-used aerosol can of WD40, still with enough left to free up a seized joint or two.";
+
+Object  Generator "Generator"
+  with  description [;
+            if (ELECTRICITY_STATUS == 1)
+                "The generator fills the room with a steady roar, its cables and conduits alive with current. The master switch is thrown; lights burn throughout the bunker.^^Exits: N, W, E";
+            "The bunker's main generator dominates this room, its bulk trailing cables and conduits that run up to the ceiling and along every wall. A master switch and a biometric hand scanner are mounted on a panel nearby, both dormant without power.^^Exits: N, W, E";
+        ],
+        n_to WECorridor,
+        e_to [;
+            if (PIPE_CLEAR == 0) {
+                if (WINDOW_BROKEN == 0)
+                    "The pump room door is sealed - water is pressing hard against it from the other side. You need another way in.";
+                "The pump room door is still sealed by flood pressure. Clear the pipe first.";
+            }
+            return PumpRoom;
+        ],
+        w_to ControlRoom,
+;
+
+Object -> GenWindow "window"
+  with  name 'window',
+        description [;
+            if (WINDOW_BROKEN == 1)
+                "The window has been shot out, leaving a jagged opening into the pump room. You could climb through.";
+            "A small window set into the east wall, looking into the flooded pump room beyond. The door beside it is sealed by water pressure - this window may be the only way in.";
+        ],
+        before [;
+            Enter:
+                if (WINDOW_BROKEN == 0) "The window is intact. You cannot climb through it.";
+                PlayerTo(PumpRoom);
+                print_ret "You squeeze through the broken window frame and drop into the pump room.";
+        ],
+  has   static;
+
+Object ->  Scanner "scanner"
+  with  name 'Scanner' 'biometric',
+        description [;
+            if (SCANNER_CLEARED == 1) "The biometric scanner glows green - cleared and satisfied.";
+            "A biometric hand scanner securing the generator controls. It needs a valid hand print.";
+        ]
+  has   static;
+
+Object ->  GenSwitch "switch"
+  with  name 'Switch',
+        description [;
+            if (ELECTRICITY_STATUS == 1) "The master switch is thrown. The generator is running.";
+            if (SCANNER_CLEARED == 1) "The master switch. The scanner is cleared - you can use it now.";
+            "A master power switch. The biometric scanner must be cleared before it can be used.";
+        ]
+  has   static switchable;
+
+Object  PumpRoom "Pump Room"
+  with  description [;
+            if (PUMP_REVERSED == 1)
+                "The pump room hums with purpose, the reversed pump cycling clean air through the bunker's ventilation. The floor is dry.^^Exits: W, D";
+            if (PIPE_CLEAR == 1)
+                "Pipework and pumping machinery crowd this damp room. The floor has drained since the pipe was cleared. The air pump stands at the centre - knob reattached, crowbar slotted on as a lever - waiting to be turned.^^Exits: W, D";
+            "Pipework and pumping machinery crowd this damp utility room. The floor is under several inches of murky water from the burst pipe. The main air pump stands at the centre, its control knob snapped clean off.^^Exits: W, D";
+        ],
+        w_to Generator,
+        d_to Reservoir,
+        each_turn [;
+            if (PIPE_CLEAR == 1) return;
+            if (Helmet in player && CHARCOAL_IN_FILTER == 1) {
+                CHARCOAL_IN_FILTER = 0;
+                FILTER_STATUS = 0;
+                remove Charcoal;
+                print "^The floodwater soaks into the helmet's filter, turning the charcoal to mush. Your smoke filter is ruined.^";
+            }
+        ],
+;
+
+Object ->  PumpWindow "window"
+  with  name 'window',
+        description [;
+            if (WINDOW_BROKEN == 1)
+                "The window has been shot out - a ragged opening back into the generator room. You could climb through to get out.";
+            "A small window set into the west wall, looking back into the generator room. It looks like it could be shot out from the other side.";
+        ],
+        before [;
+            Enter:
+                if (WINDOW_BROKEN == 0) "The window is intact.";
+                PlayerTo(Generator);
+                print_ret "You haul yourself back through the window into the generator room.";
+        ],
+  has   static;
+
+Object ->  Knob "Knob"
+  with  name 'Knob',
+        description [;
+            if (CROWBAR_LEVER == 1) "The knob is welded back onto the pump handle, with the crowbar slotted on as a lever. Ready to turn.";
+            if (KNOB_WELDED_ON == 1) "The knob has been welded back onto the pump handle. You need a lever to turn it - attach the crowbar.";
+            "A broken air-pump handle stub - the knob has snapped off. It could be welded back on.";
+        ];
+
+Object  Reservoir "Reservoir"
+  with  description [;
+            if (PIPE_CLEAR == 1)
+                "A low-ceilinged chamber beneath the pump room, mostly occupied by the concrete cistern. The supply pipe runs clear now, water flowing properly.^^Exits: U";
+            "A low-ceilinged chamber directly beneath the pump room, almost entirely occupied by a large concrete cistern fed by pipes from above. The main supply pipe runs along the base of the wall, its outlet visibly choked with accumulated sediment and debris.^^Exits: U";
+        ],
+        u_to PumpRoom,
+;
+
+Object ->  Pipe "Pipe"
+  with  name 'Pipe',
+        description [;
+            if (PIPE_CLEAR == 1) "The supply pipe runs clear now, water flowing properly through.";
+            "The main water supply pipe, its outlet packed solid with sediment and debris. It needs clearing before water can flow again.";
+        ];
+
+Object  Armoury "Armoury"
+  with  description [;
+            if (RATS_ALIVE == 0)
+                "The armoury is quiet now, the infestation cleared. Heavy-gauge mesh covers stripped weapons racks - someone left in a hurry. Gnaw marks and droppings remain on every surface, but the rats are gone.^^Exits: N";
+            "A small secure room with heavy-gauge mesh panels over the shelving, most of the weapons racks stripped bare in what must have been a considerable hurry. Whatever infestation drove everyone out has left its mark - droppings and gnaw marks cover every surface.^^Exits: N";
+        ],
+        n_to ControlRoom,
+;
+
+Object ->  Weapon "Weapon"
+  with  name 'Weapon' 'rifle' 'gun',
+        description "A bolt-action rifle, the finish worn but the mechanism well-maintained. There are a few rounds in the magazine - enough for what you need.";
+
+Object  Outside "Outside"
+  with  description "You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in - someone heard your signal.",
+        s_to External_Door,
+  has   light;
+
+Object AirDaemon "air daemon"
+    with daemon [;
+        ! Win condition
+        if (location == Outside) { deadflag = 2; return; }
+        ! Bot danger: in any room except Airlock/MainCorridor, without power or lit stick
+        if (location ~= Airlock && location ~= MainCorridor && ELECTRICITY_STATUS == 0) {
+            if (~~(stick has light)) {
+                DEATH_CAUSE = 1;
+                deadflag = 1;
+                return;
+            }
+        }
+        ! Glow stick countdown
+        if (STICK_TURNS > 0) {
+            STICK_TURNS--;
+            if (STICK_TURNS == 20)
+                print "^The glow stick is beginning to fade.^";
+            if (STICK_TURNS == 0) {
+                give stick ~light;
+                print "^The glow stick flickers and goes dark.^";
+            }
+        }
+        ! Air countdown (stops if charcoal filter worn)
+        if (CHARCOAL_IN_FILTER == 1 && Helmet in player) return;
+        AIR_TURNS--;
+        if (AIR_TURNS == 40)
+            print "^The air tastes of smoke. A dull ache is building behind your eyes.^";
+        if (AIR_TURNS == 20)
+            print "^Your chest is tight and your vision is beginning to blur. You need clean air soon.^";
+        if (AIR_TURNS == 10)
+            print "^You are struggling to breathe. Every breath burns.^";
+        if (AIR_TURNS <= 0) {
+            DEATH_CAUSE = 0;
+            deadflag = 1;
+        }
+    ],
+    has concealed;
+
+[ DeathMessage;
+    if (DEATH_CAUSE == 1) {
+        if (random(2) == 1)
+            print "Tibbles: ~I'm a master of messes. Don't mess with me.~^^";
+        else
+            print "Tibbles: ~I'm the captain of clean. Messes like you should not be seen.~^^";
+        print "The cleaning bot didn't know you from the rats. A lit glow stick marks you as crew - without it, you are just another target.";
+        return;
+    }
+    ! default: smoke
+    print "The smoke finally wins. The air in the bunker runs out before you find a way to fix it. Next time, work faster - or build the filter sooner.";
+];
+
+[ Initialise;
+    location = Airlock;
+    StartDaemon(AirDaemon);
+     "^You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead. ^^
+
+You're not sure how many hours It has been since Joe pushed you in the airlock, and you passed out through the effects of the smoke from the fire. He said he was still going to try to put out it, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it. ^^
+
+But the air in here won't last forever, the survival suit you threw on had no helmet, and there is no way to open to the external door without electricity, even if you dared to enter the wasteland without more protection..^";
+];
+
+[ ShakeSub;
+    if (noun == stick) {
+        if (stick has light) { print_ret "The stick is already lit."; }
+        give stick light;
+        STICK_TURNS = 150;
+        print_ret "You shake the glow stick vigorously. It flares to life.";
+    }
+    print_ret "Shaking that does nothing useful.";
+];
+
+[ SpraySub;
+    if (noun == Helmet) {
+        if (~~(WD40 in player)) "You need something to spray with.";
+        if (HELMET_FREE == 1) "The helmet joints are already freed up.";
+        HELMET_FREE = 1;
+        score = score + 5;
+        give Helmet ~static;
+        print_ret "You spray WD40 onto the rusted joints. With a series of creaks the helmet comes free from the body.";
+    }
+    print_ret "Spraying that achieves nothing useful.";
+];
+
+[ LeverSub;
+    if (noun == CorridorDoor) {
+        if (~~(Crowbar in player)) "You need the crowbar to pry that open.";
+        if (CORRIDOR_DOOR_PRIED == 1) "The door is already pried open.";
+        CORRIDOR_DOOR_PRIED = 1;
+        score = score + 5;
+        print_ret "You jam the crowbar into the door frame and heave. The fire door grinds open and stays put.";
+    }
+    print_ret "You cannot pry that open.";
+];
+
+[ ShootSub;
+    if (noun == GenWindow) {
+        if (~~(Weapon in player)) "You need a weapon to shoot with.";
+        if (WINDOW_BROKEN == 1) "The window is already broken.";
+        WINDOW_BROKEN = 1;
+        score = score + 5;
+        print_ret "You fire at the window. The glass shatters inward, leaving a jagged opening into the pump room.";
+    }
+    if (noun == PumpWindow) {
+        if (WINDOW_BROKEN == 1) "The window is already broken.";
+        "The window looks back into the generator room - shooting it from this side would do nothing useful. It needs to be shot from the other side.";
+    }
+    if (noun == MedWindow) {
+        "The porthole is on the wrong side of the wall. To get into the pump room you need to find a window accessible from the generator level.";
+    }
+    print_ret "Shooting that would be unwise.";
+];
+
+[ LeanSub;
+    if (noun == Board) {
+        if (~~(Board in player)) "You need to be carrying the shelf.";
+        if (location ~= ControlRoom) "This is not the right place to lean the shelf.";
+        if (SHELF_LEANED == 1) "The shelf is already leaned against the armoury door.";
+        SHELF_LEANED = 1;
+        remove Board;
+        print_ret "You lean the shelf against the lip of the armoury door, creating a ramp. The bot should be able to cross now.";
+    }
+    print_ret "Leaning that here does nothing useful.";
+];
+
+! TypeCodeSub: wired up in 0.9.0
+
+[ WeldSub;
+    if (noun == Knob) {
+        if (location ~= PumpRoom) "You need to be at the pump to weld the knob on.";
+        if (~~(Nozzle in player)) "You need the welding torch (the nozzle) to do this.";
+        if (DIAL_TURNED == 0) "The welding rig is not ready - attach the hose and set the dial first.";
+        if (KNOB_WELDED_ON == 1) "The knob is already welded on.";
+        KNOB_WELDED_ON = 1;
+        score = score + 5;
+        move Knob to PumpRoom;
+        give Knob static;
+        print_ret "You touch the torch to the knob stub and weld the knob firmly onto the pump handle.";
+    }
+    print_ret "You cannot weld that here.";
+];
+
+[ UnblockSub;
+    if (noun == Pipe) {
+        if (~~(ToiletBrush in player)) "You need something to clear the blockage with.";
+        if (PIPE_CLEAR == 1) "The pipe is already clear.";
+        PIPE_CLEAR = 1;
+        score = score + 5;
+        print_ret "You ram the toilet brush into the pipe and work it back and forth. A foul slurry of debris clears through. Water begins to flow again.";
+    }
+    print_ret "You cannot unblock that.";
+];
+
+[ CrushSub;
+    if (noun == Tree) {
+        if (~~(Tree in player)) "You need to be carrying the bonsai tree.";
+        if (~~(Pestle in player)) "You need something to crush it with.";
+        remove Tree;
+        move Charcoal to player;
+        score = score + 5;
+        print_ret "You pound the bonsai wood with the pestle, reducing it to usable chunks of charcoal.";
+    }
+    print_ret "You cannot crush that.";
+];
+
+[ AttachSub;
+    if (noun == Hose) {
+        ! Reattach hose to oven (from Workshop rig back to Pantry oven)
+        if (location == Pantry) {
+            if (HOSE_STATUS == 0) "The hose is already connected to the oven.";
+            HOSE_STATUS = 0;
+            HOSE_ATTACHED = 0;
+            move Hose to Pantry;
+            print_ret "You reconnect the rubber hose to the oven's gas fitting. The oven is ready to use again.";
+        }
+        if (location ~= Workshop) "You need to be in the Workshop to connect the hose to the rig.";
+        if (HOSE_STATUS == 0) "The hose is still attached to the oven - detach it first (turn the valve off, then take the hose).";
+        if (HOSE_ATTACHED == 1) "The hose is already connected to the rig.";
+        HOSE_ATTACHED = 1;
+        score = score + 5;
+        move Nozzle to player;
+        print_ret "You connect the hose between the gas tank and the nozzle, forming a portable welding torch. You pick up the torch head.";
+    }
+    if (noun == Crowbar) {
+        if (location ~= PumpRoom) "You need to be at the pump to attach the crowbar.";
+        if (KNOB_WELDED_ON == 0) "You need to weld the knob back onto the pump handle first.";
+        if (CROWBAR_LEVER == 1) "The crowbar is already slotted onto the knob.";
+        if (~~(Crowbar in player)) "You need to be holding the crowbar.";
+        CROWBAR_LEVER = 1;
+        score = score + 5;
+        move Crowbar to PumpRoom;
+        give Crowbar static;
+        print_ret "You slot the crowbar onto the knob, giving you enough leverage to turn the pump.";
+    }
+    print_ret "You cannot attach that to anything here.";
+];
+
+[ RotateSub;
+    if (noun == Valve) {
+        if (Valve has on) {
+            give Valve ~on;
+            print_ret "You turn the valve off. The hiss of gas through the pipe stops.";
+        }
+        give Valve on;
+        print_ret "You turn the valve on. Gas begins flowing again.";
+    }
+    if (noun == Dial) {
+        if (HOSE_ATTACHED == 0) "Attach the hose to the tank and nozzle first.";
+        if (DIAL_TURNED == 1) "The dial is already set to acetylene.";
+        DIAL_TURNED = 1;
+        print_ret "You turn the dial to acetylene. The rig is primed and ready to weld.";
+    }
+    if (noun == GenSwitch) {
+        if (SCANNER_CLEARED == 0) "The biometric scanner must be cleared before the switch can be used.";
+        if (ELECTRICITY_STATUS == 1) "The generator is already running.";
+        ELECTRICITY_STATUS = 1;
+        score = score + 10;
+        give Canteen light; give Kitchen light; give Storeroom light;
+        give Hydroponic light; give Pantry light; give Library light;
+        give Lounge light; give WECorridor light; give ControlRoom light;
+        give Workshop light; give ToolRoom light; give Generator light;
+        give PumpRoom light; give Reservoir light; give Armoury light;
+        give BunkRoom light; give Closet light; give Latrine light;
+        give Gym light; give MedBay light;
+        print_ret "You throw the master switch. The generator roars to life. Lights flicker on throughout the bunker.";
+    }
+    if (noun == Knob) {
+        if (KNOB_WELDED_ON == 0) "There is no knob - it needs to be welded back on first.";
+        if (CROWBAR_LEVER == 0) "You need a lever attached to the knob to turn it - attach the crowbar.";
+        if (PUMP_REVERSED == 1) "The pump is already reversed.";
+        PUMP_REVERSED = 1;
+        score = score + 15;
+        print_ret "With the crowbar as a lever you heave the knob around. The pump reverses with a grinding shudder - clean air begins to circulate.";
+    }
+    if (noun == Radio) {
+        if (ELECTRICITY_STATUS == 0) "The radio needs power before it will work.";
+        if (RADIO_ON == 1) "The radio is already on.";
+        RADIO_ON = 1;
+        print_ret "You switch on the radio. It crackles to life, filling the room with static and a carrier wave.";
+    }
+    print_ret "Turning that does nothing useful here.";
+];
+
+[ ScanSub;
+    if (noun == Scanner) {
+        if (SCANNER_CLEARED == 1) "The scanner has already accepted a valid print.";
+        "The scanner awaits a valid hand print. Try scanning the hand.";
+    }
+    if (noun == Hand) {
+        if (location ~= Generator) "There is no scanner here.";
+        if (Hand has static) "You need to sever the hand from the body first.";
+        if (~~(Hand in player)) "You need to be holding the hand.";
+        if (SCANNER_CLEARED == 1) "The scanner has already accepted the print.";
+        SCANNER_CLEARED = 1;
+        score = score + 5;
+        print_ret "You press the severed hand against the scanner. It beeps once and a green light blinks on.";
+    }
+    print_ret "You cannot scan that.";
+];
+
+[ SearchObjSub;
+    if (noun == Body) {
+        if (HELMET_FREE == 0)
+            "You search the dead crewman carefully. He's wearing a sealed helmet, though the joints are seized solid with rust. There might be something in the bunker to free it up.";
+        if (Hand has static)
+            "You've got the helmet. The hand is still attached - sever it if you need it for the scanner.";
+        "You've taken everything useful from the body.";
+    }
+    if (noun == Jacket) { <<Examine Jacket>>; }
+    if (noun == Pack) {
+        "The emergency pack is designed to carry things, not conceal them. Whatever is in it is already in your inventory.";
+    }
+    ! No noun - search the room
+    if (noun == 0) { "A careful search of the area turns up nothing you hadn't already noticed."; }
+    "You find nothing you hadn't already noticed.";
+];
+
+[ PushObjSub;
+    if (noun == Bot) {
+        "The bot rolls a little, then rights itself and resumes its patrol. Best to let it do its job.";
+    }
+    if (noun == Body) { "The body is too heavy to move."; }
+    if (noun == Oven || noun == Valve || noun == Scanner) { "It's fixed to the wall."; }
+    "Pushing that does nothing useful.";
+];
+
+[ PullObjSub;
+    if (noun == Board) {
+        if (Board in player) "You're already carrying it.";
+        move Board to player;
+        "You pull the loose shelf away from the wall. It comes free with a shower of plaster dust.";
+    }
+    if (noun == Body) { "The body is too heavy to move."; }
+    if (noun == Valve) { <<Rotate Valve>>; }
+    if (noun == Hose) { <<Take Hose>>; }
+    "Pulling that does nothing useful.";
+];
+
+[ BreakObjSub;
+    if (noun == PumpWindow || noun == GenWindow) {
+        if (WINDOW_BROKEN == 1) "The window is already broken.";
+        if (~~(Weapon in player)) "The window is thick safety glass. You'd need something more forceful - a weapon, perhaps.";
+        <<Shoot noun>>;
+    }
+    if (noun == MedWindow) { "That window looks out over the pump room but is not in a useful position to break from here."; }
+    if (noun == CorridorDoor) {
+        "The door is solid steel. Prying it open with the crowbar would be more effective.";
+    }
+    if (noun == Panel) { "You'd rather not destroy the circuitry inside."; }
+    "Breaking that would serve no useful purpose.";
+];
+
+[ ReadTextSub;
+    if (noun == Paper) {
+        "The papers set out emergency procedures for shelter personnel:^^
+In the event of fire, seal the airlock and await rescue. The external door release code is held by the senior officer. To request evacuation, transmit on the emergency frequency using the signal codes from the senior officer's notebook.";
+    }
+    if (noun == CodeBook) {
+        "The notebook is dense with codes and frequencies in cramped but legible handwriting - signal codes, door release codes, radio frequencies. Everything you need is here. You will need to type them into the control room console.";
+    }
+    "There is nothing here worth reading.";
+];
+
+[ SmellRoomSub;
+    ! Object-level smell
+    if (noun ~= 0) {
+        if (noun == Body) "Death, sweat, and the particular sourness of the gym. You do not linger on it.";
+        if (noun == Tree) "A dry, woody, earthy scent - unremarkable but alive.";
+        if (noun == Charcoal) "Smoky and ashen, with a faint chemical edge.";
+        if (noun == Oven) {
+            if (OVEN_STATUS == 1) "Hot metal and the faint blue smell of burning gas.";
+            "Cold metal and the faint ghost of past meals.";
+        }
+        if (noun == Hose) "Rubber and the faint ghost of gas. Turn the valve off before you handle it.";
+        "Nothing remarkable.";
+    }
+    ! Room-level smell
+    if (location == Reservoir) { "A cold, mineral smell rises from the cistern - damp concrete and standing water."; }
+    if (location == Gym) { "The room smells of stale sweat, rubber matting and something worse from the direction of the body."; }
+    if (location == Pantry && HOSE_STATUS == 1) { "A faint smell of gas hangs in the air where the hose was disconnected."; }
+    if (location == Hydroponic) { "Dry compost and the faint green smell of the surviving bonsai."; }
+    if (PUMP_REVERSED == 1) { "Clean, filtered air. The pump is doing its job."; }
+    if (AIR_TURNS > 70) { "A faint acrid edge - smoke from the fire, still present but distant."; }
+    if (AIR_TURNS > 40) { "The smell of smoke is noticeable now. It catches at the back of your throat."; }
+    if (AIR_TURNS > 15) { "Thick smoke. Your eyes sting and every breath tastes of ash."; }
+    "The air is almost unbreathable. The smoke is overwhelming.";
+];
+
+[ ListenRoomSub;
+    ! Object-level listen
+    if (noun ~= 0) {
+        if (noun == Bot) "The bot's motors hum softly, its sensors sweeping in a slow arc.";
+        if (noun == Radio) {
+            if (RADIO_ON == 1) "Static and a carrier wave. Somewhere out there, someone is listening.";
+            "Nothing. The radio is off.";
+        }
+        if (noun == GenSwitch || noun == Generator) {
+            if (ELECTRICITY_STATUS == 1) "A deep mechanical roar from the generator. The floor vibrates faintly underfoot.";
+            "Silence. The generator is not running.";
+        }
+        if (noun == Pipe) {
+            if (PIPE_CLEAR == 0) "Water gurgles and hisses through the blocked pipe.";
+            "Water flowing cleanly. The pipe is clear.";
+        }
+        "Nothing remarkable.";
+    }
+    ! Room-level listen
+    if (location == Generator && ELECTRICITY_STATUS == 1) { "The generator fills the room with a steady roar. A deep vibration runs through everything."; }
+    if (location == PumpRoom) {
+        if (PIPE_CLEAR == 0) { "Water rushing and gurgling through the burst pipe. The flood has its own sound."; }
+        if (PUMP_REVERSED == 1) { "The steady rhythm of the reversed pump, working hard."; }
+        "The pump ticks and sighs.";
+    }
+    if (location == ControlRoom && RADIO_ON == 1) { "The radio crackles from the console - static, a carrier wave, the edge of something more."; }
+    if (location == MainCorridor) { "The fluorescent strips hum overhead. Somewhere, the quiet whirr of the cleaning bot's wheels."; }
+    if (location == Reservoir) { "Dripping water. Somewhere above you, a pipe."; }
+    "Silence, broken only by the hum of the emergency lighting.";
+];
+
+[ TypeCodeSub;
+    if (location ~= ControlRoom) "There is nothing here to type a code into.";
+    if (ELECTRICITY_STATUS == 0) "The control room has no power.";
+    if (RADIO_ON == 0) "Turn the radio on first.";
+    if (~~(CodeBook in player)) "You need the code book to know what to type.";
+    if (SIGNAL_SENT == 0) {
+        SIGNAL_SENT = 1;
+        score = score + 5;
+        print_ret "You key in the emergency signal code. Static crackles, then a distant acknowledgement tone - someone is receiving your signal.";
+    }
+    if (DOOR_CODE_ENTERED == 0) {
+        DOOR_CODE_ENTERED = 1;
+        score = score + 10;
+        give External_Door ~locked;
+        print_ret "You enter the external door release code. A muffled clunk echoes down the corridor - the blast door is unlocked.";
+    }
+    "Both codes have already been entered.";
+];
+
+Verb "shake" "jiggle" "wave" "rattle" "activate"
+	*   noun    -> Shake;
+
+Verb "sever" "saw" "hack"
+	*   noun    -> Cut;
+
+Extend "slice" first
+	*   noun    -> Cut;
+
+Extend "chop" first
+	*   noun    -> Cut;
+
+! attach already in vocab?
+
+Verb "spray" "apply" "squirt" "oil" "lubricate"
+	*   noun    -> Spray;
+
+Verb "lever" "wedge" "pry" "prise" "force" "jimmy"
+	*   noun    -> Lever;
+
+Verb "shoot" "fire" "blast" "discharge"
+	*   noun    -> Shoot;
+
+Verb "lean" "lay" "prop" "rest"
+	*   noun    -> Lean;
+
+Extend "stand" first
+	*   noun    -> Lean;
+
+! Verb "type" "write" ! enter? copy?
+!	*   noun    -> Type;
+! already both in vocab
+
+Verb "crush" "pound" "mix" "grind" "pulverise" "pulverize" "mash" "bash"
+	*   noun    -> Crush;
+
+Extend "smash" first
+	*   noun    -> Crush;
+
+Verb "weld" "fuse" "bond" "meld" "melt" "solder" "join" "braze"
+	*   noun    -> Weld;
+
+Verb "unblock" "empty" "unclog"
+	*   noun    -> Unblock;
+
+Extend "clear" first
+	*   noun    -> Unblock;
+
+Extend "scrub" first
+	*   noun    -> Unblock;
+
+Extend "sweep" first
+	*   noun    -> Unblock;
+
+Verb "scan"
+	*   noun    -> Scan;
+
+Extend "turn" first
+	*   noun    -> Rotate;
+
+Extend "attach" first
+	*   noun    -> Attach;
+
+Extend "fasten" first
+	*   noun    -> Attach;
+
+Verb "connect"
+	*   noun    -> Attach;
+
+Verb "type" "write"
+	*           -> TypeCode
+	*   noun    -> TypeCode;
+
+Extend "search" first
+	*           -> SearchObj
+	*   noun    -> SearchObj;
+
+Extend "push" first
+	*   noun    -> PushObj;
+
+Extend "pull" first
+	*   noun    -> PullObj;
+
+Extend "break" first
+	*   noun    -> BreakObj;
+
+Extend "read" first
+	*   noun    -> ReadText;
+
+Extend "smell" first
+	*           -> SmellRoom
+	*   noun    -> SmellRoom;
+
+Extend "listen" first
+	*           -> ListenRoom
+	*   noun    -> ListenRoom;
+
+[ AboutSub;
+    print "^^BUNKER BLUES^^
+You woke up alone in the airlock of a fallout shelter. A fire - and the earthquake that started it - have left the bunker's air supply compromised. The air is running out. Find a way to fix it, signal for rescue, and get out.^^
+The clock is ticking from the moment you start. Every command uses a turn, and the smoke will kill you if you take too long. The game is winnable - pay attention to everything you examine.^^
+BASIC COMMANDS^^
+LOOK (L) - describe current room^^
+EXAMINE (X) object - look at something^^
+INVENTORY (I) - list what you are carrying^^
+GO direction, or just N / S / E / W / U / D^^
+TAKE, DROP, PUT object IN/ON object^^
+WEAR, REMOVE - for clothing^^
+OPEN, CLOSE, SWITCH ON, SWITCH OFF^^
+READ, SMELL, LISTEN^^
+SEARCH object - search something carefully^^
+UNDO - take back your last move^^
+AGAIN (G) - repeat last command^^
+SAVE, RESTORE, RESTART, QUIT^^
+UNUSUAL VERBS^^
+These are the non-standard actions you will need at some point:^^
+  SHAKE object - activate something by shaking^^
+  SPRAY object - use an aerosol on something^^
+  LEVER/PRY object - force something open^^
+  SHOOT/FIRE object - use a weapon on something^^
+  LEAN/PROP object - lean something against something^^
+  CRUSH/POUND object - reduce something to pieces^^
+  WELD/SOLDER object - fuse metal parts together^^
+  CLEAR/UNBLOCK object - remove a blockage^^
+  SCAN object - use the biometric scanner^^
+  TURN object - turn a valve, dial, knob or switch^^
+  ATTACH/CONNECT object - connect one thing to another^^
+  SEVER/SAW object - cut something free^^
+  TYPE / WRITE - enter a code into a console^^";
+    rtrue;
+];
+
+Verb "about" "help" "hints" "info"
+    * -> About;
