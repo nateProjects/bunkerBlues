@@ -2,6 +2,14 @@
 !% $OMIT_UNUSED_ROUTINES=1
 !% $ZCODE_LESS_DICT_DATA=1
 
+! VERSION HISTORY
+! 0.5.0 — skeleton: all rooms, basic objects, stub verbs, stub action subs
+! 0.6.0 — missing objects & rooms (body, bot, charcoal, external door, window, valve, dial, scanner, Outside); fix door_dir bug; enable SCAN verb
+! 0.7.0 — core puzzle logic (crush→charcoal, spray WD40, filter assembly, hose/weld rig, unblock pipe, pry door, lean shelf)
+! 0.8.0 — hazards & timers (air clock, glow stick fade + reheat, pump room flood + charcoal dissolve, rats blocking armoury)
+! 0.9.0 — bot behaviour, generator biometric lock, pump reversal, control room radio/code sequence, Outside win condition
+! 1.0.0 — polish: Tibbles AI, food/score bonus, light fallback, room light attributes audit, full test pass
+
 ! The very first lines of the main source code file for a game can
 ! contain compiler options, like the lines above. -~S disables
 ! strict error checking. This is otherwise used in z5 and z8 games by
