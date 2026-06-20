@@ -3,12 +3,12 @@
 !% $ZCODE_LESS_DICT_DATA=1
 
 ! VERSION HISTORY
-! 0.5.0 -- skeleton: all rooms, basic objects, stub verbs, stub action subs
-! 0.6.0 -- missing objects & rooms (body, bot, charcoal, external door, window, valve, dial, scanner, Outside); fix door_dir bug; enable SCAN verb
-! 0.7.0 -- core puzzle logic (crush→charcoal, spray WD40, filter assembly, hose/weld rig, unblock pipe, pry door, lean shelf)
-! 0.8.0 -- hazards & timers (air clock, glow stick fade + reheat, pump room flood + charcoal dissolve, rats blocking armoury)
-! 0.9.0 -- bot behaviour, generator biometric lock, pump reversal, control room radio/code sequence, Outside win condition
-! 1.0.0 -- polish: Tibbles AI, food/score bonus, light fallback, room light attributes audit, full test pass
+! 0.5.0 - skeleton: all rooms, basic objects, stub verbs, stub action subs
+! 0.6.0 - missing objects & rooms (body, bot, charcoal, external door, window, valve, dial, scanner, Outside); fix door_dir bug; enable SCAN verb
+! 0.7.0 - core puzzle logic (crush→charcoal, spray WD40, filter assembly, hose/weld rig, unblock pipe, pry door, lean shelf)
+! 0.8.0 - hazards & timers (air clock, glow stick fade + reheat, pump room flood + charcoal dissolve, rats blocking armoury)
+! 0.9.0 - bot behaviour, generator biometric lock, pump reversal, control room radio/code sequence, Outside win condition
+! 1.0.0 - polish: Tibbles AI, food/score bonus, light fallback, room light attributes audit, full test pass
 
 ! The very first lines of the main source code file for a game can
 ! contain compiler options, like the lines above. -~S disables
@@ -102,14 +102,14 @@ Include "puny.h";
 ! Uncomment to add PunyLib extensions
 !Include "ext_waittime.h";
 
-! Unplaced objects -- spawned into the world during play
+! Unplaced objects - spawned into the world during play
 Object  Charcoal "Charcoal"
   with  name 'Charcoal',
         description "Lumps of charcoal crushed from the bonsai wood. Insert into the helmet filter to scrub smoke.";
 
 Object  Suit "Survival Suit" selfobj
   with  name 'Suit' 'Survival',
-        description "Survival Suit"
+        description "A heavy-duty survival suit, slightly too large and smelling of must. It offers some protection but leaves your head entirely exposed."
   has   clothing;
 
 Object  Airlock "Airlock"
@@ -129,7 +129,7 @@ Object -> Internal_Door  "internal door"
 
 Object -> Pack "Emergency Pack"
   with  name 'Pack',
-        description "Emergency Pack"
+        description "A battered canvas emergency pack with worn straps. Wearing it across your back gives you considerably more carrying capacity."
   has   clothing container openable;
 
 Object -> -> Paper "Paper"
@@ -187,7 +187,7 @@ Object -> Circuitboard "circuit board"
 
 Object  MainCorridor "Main Corridor"
   with  description
-            "You find yourself in a long hallway, with rows of doors on either side.^^Exits: N,S,W,E,SE,SW",
+            "Fluorescent strips flicker overhead, casting a sickly pallor over the metal-lined corridor running the full length of the bunker. Rows of identical painted-steel doors line each side, their stencilled numbers faded to near-illegibility.^^Exits: N, S, W, E, SE, SW",
         n_to Internal_Door,
         s_to WECorridor,
         e_to BunkRoom,
@@ -199,7 +199,7 @@ Object  MainCorridor "Main Corridor"
 
 Object ->  Bot "cleaning bot"
   with  name 'bot' 'cleaning' 'robot',
-        description "A squat cleaning bot. It zaps anything it reads as vermin -- carrying a lit glow stick marks you as crew, not a target."
+        description "A squat cleaning bot. It zaps anything it reads as vermin - carrying a lit glow stick marks you as crew, not a target."
   has   static;
 
 Object ->  stick "Light Stick"
@@ -209,7 +209,7 @@ Object ->  stick "Light Stick"
 
 Object  Canteen "Canteen"
   with  description
-            "Exits: E,S",
+            "Rows of moulded plastic chairs sit askew around bolted-down tables, their surfaces sticky with the residue of years of institutional meals. A serving hatch at the far end stands open, the kitchen beyond cold and still.^^Exits: E, S",
         s_to Kitchen,
         e_to MainCorridor,
 ;
@@ -230,11 +230,11 @@ Object -> Maker "Coffee Maker"
 
 Object ->  Filter "Coffee Filter"
   with  name 'Coffee' 'Filter',
-        description "Coffee Filter";
+        description "A circular paper coffee filter, slightly damp from the machine. It could be fitted into a helmet's breathing port to filter out particulates.";
 
 Object  BunkRoom "Bunk Room"
   with  description
-            "Exits: S,W,E",
+            "Six pairs of metal bunk beds line the walls, their thin mattresses still bearing the impressions of whoever last slept here. A dog-eared paperback and a cracked photograph on one of the bedside shelves are the only signs anyone ever called this home.^^Exits: S, W, E",
         s_to Latrine,
         e_to Closet,
         w_to MainCorridor,
@@ -242,7 +242,7 @@ Object  BunkRoom "Bunk Room"
 
 Object  Closet "Closet"
   with  description
-            "Exits: W",
+            "A cramped storage closet barely wider than your shoulders, its shelves mostly stripped of whatever was once kept here. The air is stale with the smell of old wool and something faintly chemical that you can't quite place.^^Exits: W",
         w_to BunkRoom,
 ;
 
@@ -262,21 +262,21 @@ Object -> Jacket "Jacket"
 
 Object CodeBook "Code Book"
   with  name 'Code' 'Book',
-        description "Code Book";
+        description "A small, well-thumbed notebook containing radio signal codes and door access codes, written in a cramped but legible hand.";
 
 Object  Latrine "Latrine"
   with  description
-            "Exits: N",
+            "A row of lidded steel lavatories and a pair of cracked porcelain sinks occupy this narrow utility room. A persistent drip somewhere keeps time in the silence, and the overhead strip light hums with the effort of staying on.^^Exits: N",
         n_to BunkRoom,
 ;
 
 Object ->  ToiletBrush "Toilet Brush"
   with  name 'Toilet' 'Brush',
-        description "Toilet Brush";
+        description "A long-handled toilet brush, not particularly pleasant to handle but sturdy enough to clear a blocked pipe.";
 
 Object  Gym "Gym"
   with  description
-            "Exits: S,W",
+            "A compact exercise room that took the worst of the earthquake - weight racks overturned, a treadmill on its side, rubber matting buckled and torn. In the far corner a dead crewman lies pinned beneath a toppled cage of weights, still wearing his helmet.^^Exits: S, W",
         s_to MedBay,
         w_to MainCorridor,
 ;
@@ -290,7 +290,7 @@ Object ->  Helmet "Helmet"
   with  name 'Helmet',
         description [;
             if (CHARCOAL_IN_FILTER == 1)
-                "The helmet has a charcoal-packed coffee filter fitted -- a crude but effective smoke mask.";
+                "The helmet has a charcoal-packed coffee filter fitted - a crude but effective smoke mask.";
             if (FILTER_IN_HELMET == 1)
                 "The helmet has a coffee filter fitted into its breathing port. Pack it with charcoal to complete the mask.";
             if (HELMET_FREE == 1)
@@ -336,7 +336,7 @@ Object ->  Hand "Hand"
 
 Object  MedBay "Med Bay"
   with  description
-            "Exits: N,S",
+            "Banks of white-painted metal cabinets line the walls, most drawers hanging open and rifled through in evident haste. A single examination table sits beneath a surgical light that will never illuminate anything again.^^Exits: N, S",
         n_to Gym,
         s_to WECorridor,
 ;
@@ -347,12 +347,12 @@ Object ->  Pestle "Pestle"
 
 Object ->  MedWindow "window"
   with  name 'window',
-        description "A small porthole-style window. It looks out toward the pump room -- you file that away."
+        description "A small porthole-style window. It looks out toward the pump room - you file that away."
   has   static;
 
 Object  Kitchen "Kitchen"
   with  description
-            "Exits: N,S,W",
+            "Stainless steel work surfaces run the length of this institutional kitchen, a few unwashed pots still sitting in the sink where someone left them in a hurry. The pantry to the south and storeroom to the west are a reminder of how large a crew this bunker was built to feed.^^Exits: N, S, W",
         n_to Canteen,
         s_to Pantry,
         w_to Storeroom,
@@ -360,22 +360,22 @@ Object  Kitchen "Kitchen"
 
 Object ->  BreadKnife "Bread Knife"
   with  name 'Bread' 'Knife',
-        description "Bread Knife";
+        description "A long serrated bread knife with a wooden handle, still reasonably sharp despite its age.";
 
 Object  Storeroom "Storeroom"
   with  description
-            "Exits: S,E",
+            "Metal shelving units stretch floor to ceiling, most of them bare save for a few tins and supply boxes pushed to the back. A heavy crowbar has been left propped against the nearest shelf.^^Exits: S, E",
         s_to Hydroponic,
         e_to Kitchen,
 ;
 
 Object ->  Crowbar "Crowbar"
   with  name 'Crowbar',
-        description "Crowbar";
+        description "A solid steel crowbar, reassuringly heavy. Useful for prying things open and, in a pinch, as a lever.";
 
 Object  Hydroponic "Hydroponics"
   with  description
-            "Exits: N,S,E",
+            "Long hydroponic trays run beneath banks of dead overhead grow-lights, the substrate dry and neglected after what must be weeks without tending. A small bonsai tree in the corner has held on better than the rest, its gnarled trunk evidently tougher than it looks.^^Exits: N, S, E",
         n_to Storeroom,
         s_to ToolRoom,
         e_to Pantry,
@@ -383,18 +383,18 @@ Object  Hydroponic "Hydroponics"
 
 Object ->  Tree "Bonsai Tree"
   with  name 'Bonsai' 'Tree' 'Wood',
-        description "Bonsai Tree";
+        description "A small but surprisingly dense bonsai tree, its gnarled trunk and compact branches ideal for reducing to charcoal with a good pounding.";
 
 Object  Pantry "Pantry"
   with  description
-            "Exits: N,W",
+            "Shelving units hold an orderly supply of tinned goods and sealed containers, though several racks have been cleared at some point. A gas hose runs from a shutoff valve on the wall down to the oven, and a faint metallic smell hangs in the air.^^Exits: N, W",
         n_to Kitchen,
         w_to Hydroponic,
 ;
 
 Object ->  Oven "Oven"
   with  name 'Oven',
-        description "Oven",
+        description "A battered institutional gas oven, its enamel stained and chipped. The rubber hose connecting it to the supply pipe snakes out from behind.",
     after [;
     SwitchOn: 
       if (HOSE_STATUS==1) { ! hose is detached
@@ -412,7 +412,7 @@ Object ->  Hose "Hose"
         description "A rubber gas hose connecting the oven to the supply pipe. Turn the valve off before detaching it.",
         before [;
             Take:
-                if (Valve has on) "The gas is still flowing -- turn the valve off first.";
+                if (Valve has on) "The gas is still flowing - turn the valve off first.";
                 HOSE_STATUS = 1;
         ];
 
@@ -423,26 +423,27 @@ Object ->  Valve "Valve"
 
 Object  Library "Library"
   with  description
-            "Exits: S",
+            "Floor-to-ceiling shelves hold a mix of technical manuals and battered paperbacks, a handful of volumes knocked to the floor and left where they fell. One shelf along the far wall has come away from its fittings and hangs at an awkward angle.^^Exits: S",
         s_to Lounge,
 ;
 
 Object ->  Board "Board Shelf"
   with  name 'Board' 'Shelf',
-        description "Board (Shelf)";
+        description "A solid wooden shelf that has come away from the wall, roughly a metre long. Sturdy enough to act as a ramp if leaned against something.";
 
 Object  Lounge "Lounge"
   with  description
-            "Exits: N,E",
+            "Sagging sofas and a pair of armchairs are arranged around a low table strewn with old magazines and the scattered pieces of several abandoned board games. A television set is bolted to the wall at head height, its screen long dark.^^Exits: N, E",
         n_to Library,
         e_to MainCorridor,
 ;
 
 Object  WECorridor "WE Corridor"
   with  description [;
-            if (CORRIDOR_DOOR_PRIED == 1)
-                "Exits: N,S,E,SW,SE^^A heavy fire door to the south hangs open, pried back with the crowbar.";
-            "Exits: N,S,E,SW,SE^^A heavy fire door to the south is wedged shut. The bot will not be able to follow until it is pried open.";
+            if (CORRIDOR_DOOR_PRIED == 1) {
+                "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. The heavy fire door to the south hangs open, pried back with the crowbar.^^Exits: N, S, E, SW, SE";
+            }
+            "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. A heavy fire door to the south is wedged shut - the bot will not be able to follow until it is pried open.^^Exits: N, S, E, SW, SE";
         ],
         n_to MainCorridor,
         s_to ControlRoom,
@@ -462,7 +463,7 @@ Object ->  CorridorDoor "fire door"
 
 Object  ControlRoom "Control Room"
   with  description
-            "Exits: N,S,W,E",
+            "Banks of monitors and instrument panels cover every surface, most of them dark, a handful still cycling through error messages or static. This room controlled everything - communications, life support, security - and it will again, once the power is back on.^^Exits: N, S, W, E",
         n_to WECorridor,
         s_to Armoury,
         e_to Generator,
@@ -471,11 +472,11 @@ Object  ControlRoom "Control Room"
 
 Object ->  Radio "Radio"
   with  name 'Radio',
-        description "Radio";
+        description "A chunky military-grade communications radio, dusty but intact. It will need power before it can broadcast anything.";
 
 Object  Workshop "Workshop"
   with  description
-            "Exits: N,W,E",
+            "A long workbench runs down the centre of this well-equipped room, its surface scattered with tools, coils of wire, and half-finished repairs left by whoever was last in here. A portable welding rig stands in one corner - gas tank and nozzle waiting to be connected up.^^Exits: N, W, E",
         n_to WECorridor,
         e_to ControlRoom,
         w_to ToolRoom,
@@ -483,7 +484,7 @@ Object  Workshop "Workshop"
 
 Object ->  Nozzle "Nozzle"
   with  name 'Nozzle',
-        description "Nozzle";
+        description "A welding torch nozzle, the business end of the portable rig. Once the hose is connected and the dial set, this becomes a working flame.";
 
 Object ->  GasTank "Gas Tank"
   with  name 'Gas' 'Tank',
@@ -496,18 +497,18 @@ Object ->  Dial "Dial"
 
 Object  ToolRoom "Tool Room"
   with  description
-            "Exits: N, E",
+            "A small utility room lined with pegboard, most of its hooks bare and empty, their tools presumably scattered to various corners of the bunker. A few items remain on the lower shelf, including a can of WD40 that someone never got round to putting away.^^Exits: N, E",
         n_to Hydroponic,
         e_to Workshop,
 ;
 
 Object ->  WD40 "WD40"
   with  name 'WD40',
-        description "WD40";
+        description "A well-used aerosol can of WD40, still with enough left to free up a seized joint or two.";
 
 Object  Generator "Generator"
   with  description
-            "Exits: N,W,E",
+            "The bunker's main generator dominates this room, its bulk trailing cables and conduits that run up to the ceiling and along every wall. A master switch and a biometric hand scanner are mounted on a panel nearby, both dormant without power.^^Exits: N, W, E",
         n_to WECorridor,
         e_to PumpRoom,
         w_to ControlRoom,
@@ -525,7 +526,7 @@ Object ->  GenSwitch "switch"
 
 Object  PumpRoom "Pump Room"
   with  description
-            "Exits: W,D",
+            "Pipework and pumping machinery crowd this damp utility room, the metalwork orange with corrosion in places and the floor slick with condensation. The main air pump stands at the centre of it all, its control knob snapped clean off at the stem.^^Exits: W, D",
         w_to Generator,
         d_to Reservoir,
 ;
@@ -537,30 +538,30 @@ Object ->  PumpWindow "window"
 
 Object ->  Knob "Knob"
   with  name 'Knob',
-        description "A broken air-pump handle stub -- the knob has snapped off. It could be welded back on.";
+        description "A broken air-pump handle stub - the knob has snapped off. It could be welded back on.";
 
 Object  Reservoir "Reservoir"
   with  description
-            "Exits: U",
+            "A low-ceilinged chamber directly beneath the pump room, almost entirely occupied by a large concrete cistern fed by pipes from above. The main supply pipe runs along the base of the wall, its outlet visibly choked with accumulated sediment and debris.^^Exits: U",
         u_to PumpRoom,
 ;
 
 Object ->  Pipe "Pipe"
   with  name 'Pipe',
-        description "Pipe";
+        description "The main water supply pipe, its outlet packed solid with sediment and debris. It needs clearing before water can flow again.";
 
 Object  Armoury "Armoury"
   with  description
-            "Exits: N",
+            "A small secure room with heavy-gauge mesh panels over the shelving, most of the weapons racks stripped bare in what must have been a considerable hurry. Whatever infestation drove everyone out has left its mark - droppings and gnaw marks cover every surface.^^Exits: N",
         n_to ControlRoom,
 ;
 
 Object ->  Weapon "Weapon"
   with  name 'Weapon' 'rifle' 'gun',
-        description "A rifle.";
+        description "A bolt-action rifle, the finish worn but the mechanism well-maintained. There are a few rounds in the magazine - enough for what you need.";
 
 Object  Outside "Outside"
-  with  description "You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in -- someone heard your signal.^^*** You have won! ***",
+  with  description "You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in - someone heard your signal.^^*** You have won! ***",
         s_to External_Door,
   has   light;
 
@@ -631,7 +632,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
     if (noun == Knob) {
         if (location ~= PumpRoom) "You need to be at the pump to weld the knob on.";
         if (~~(Nozzle in player)) "You need the welding torch (the nozzle) to do this.";
-        if (DIAL_TURNED == 0) "The welding rig is not ready -- attach the hose and set the dial first.";
+        if (DIAL_TURNED == 0) "The welding rig is not ready - attach the hose and set the dial first.";
         if (KNOB_WELDED_ON == 1) "The knob is already welded on.";
         KNOB_WELDED_ON = 1;
         remove Knob;
@@ -664,7 +665,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
 [ AttachSub;
     if (noun == Hose) {
         if (location ~= Workshop) "You need to be in the Workshop to connect the hose to the rig.";
-        if (HOSE_STATUS == 0) "The hose is still attached to the oven -- detach it first (turn the valve off, then take the hose).";
+        if (HOSE_STATUS == 0) "The hose is still attached to the oven - detach it first (turn the valve off, then take the hose).";
         if (HOSE_ATTACHED == 1) "The hose is already connected to the rig.";
         HOSE_ATTACHED = 1;
         print_ret "You connect the hose between the gas tank and the nozzle, forming a portable welding torch.";
@@ -697,15 +698,15 @@ But the air in here won't last forever, the survival suit you threw on had no he
         print_ret "You turn the dial to acetylene. The rig is primed and ready to weld.";
     }
     if (noun == GenSwitch) {
-        ! 0.9.0 -- generator logic
+        ! 0.9.0 - generator logic
         "The generator switch needs the biometric scanner cleared first.";
     }
     if (noun == Knob) {
-        if (KNOB_WELDED_ON == 0) "There is no knob -- it needs to be welded back on first.";
-        if (CROWBAR_LEVER == 0) "You need a lever attached to the knob to turn it -- attach the crowbar.";
+        if (KNOB_WELDED_ON == 0) "There is no knob - it needs to be welded back on first.";
+        if (CROWBAR_LEVER == 0) "You need a lever attached to the knob to turn it - attach the crowbar.";
         if (PUMP_REVERSED == 1) "The pump is already reversed.";
         PUMP_REVERSED = 1;
-        print_ret "With the crowbar as a lever you heave the knob around. The pump reverses with a grinding shudder -- clean air begins to circulate.";
+        print_ret "With the crowbar as a lever you heave the knob around. The pump reverses with a grinding shudder - clean air begins to circulate.";
     }
     if (noun == Radio) {
         ! 0.9.0
@@ -716,7 +717,7 @@ But the air in here won't last forever, the survival suit you threw on had no he
 
 [ ScanSub;
     if (noun == Scanner) {
-        ! 0.9.0 -- generator logic
+        ! 0.9.0 - generator logic
         "The scanner awaits a valid hand print.";
     }
     print_ret "You cannot scan that.";
