@@ -11,7 +11,7 @@ You are a junior crew member, who has grown up in a nuclear fallout shelter afte
 Even if it were safe to go outside, you didn’t have time to get your survival helmet, and the outer doors wouldn’t open anyway without being disengaged, which requires electricity. So to escape you will need to find a way to see, to breath, and to restart the generators.
 Your only companion will be the sometimes humorous, sometimes annoying cleanbot.
 
-[PunyInform Source](Inform/Inform 6/bunkergamepuny.1.0.inf)
+[PunyInform Source](Inform/Inform%206/bunkergamepuny.1.0.inf)
 
 [TinyZ Version](https://github.com/etherton/tinyz/blob/main/bunkerblues.tz) - in progress
 
