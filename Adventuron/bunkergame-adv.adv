@@ -1,5 +1,31 @@
+##########################################################################
+# Bunker Blues
+# Design and code by Nate Taylor
+# Adventuron conversion, ported from the PunyInform source
+# (Inform/Inform 6/bunkergamepuny.1.0.inf) and cross-checked against
+# Resources/bunker-walkthrough.txt and Resources/bunkernotes.txt.
+##########################################################################
+
+game_information {
+   game_name           = Bunker Blues
+   game_version         = 0.1.0
+   game_shortname       = BunkerBlues
+   written_by           = Nate Taylor
+   uuid                 = 2191f624-e980-46f6-b6f1-85792f494e81
+   year_of_release      = 2026
+   copyright_message    = Creative Commons Sharealike
+   short_synopsis       = Escape a fallout shelter after fire and earthquake knock out the power and air.
+}
 
 start_at = airlock
+
+game_settings {
+   inventory_items_limit_var = carry_limit
+}
+
+##########################################################################
+# LOCATIONS
+##########################################################################
 
 locations {
    airlock       : location "" header = "Airlock";
@@ -24,8 +50,14 @@ locations {
    pump_room     : location "" header = "Pump Room";
    reservoir     : location "" header = "Reservoir";
    armoury       : location "" header = "Armoury";
+   outside       : location "" header = "Outside";
 }
 
+##########################################################################
+# CONNECTIONS
+# NOTE: pump_room <-> reservoir direction was wrong in the original
+# skeleton (up/down swapped) - reservoir is BELOW pump_room, fixed here.
+##########################################################################
 
 connections {
    from, direction, to = [
@@ -77,36 +109,1236 @@ connections {
       generator, east_oneway, pump_room,
       generator, west_oneway, control_room,
       pump_room, west_oneway, generator,
-      pump_room, up_oneway, reservoir,
-      reservoir, down_oneway, pump_room,
+      pump_room, down_oneway, reservoir,
+      reservoir, up_oneway, pump_room,
       armoury, north_oneway, control_room,
+      airlock, north_oneway, outside,
+      outside, south_oneway, airlock,
    ]
 }
 
+##########################################################################
+# OBJECTS
+##########################################################################
 
- objects {
-    paper    : object "a paper"    at="airlock";
-    paperclip     : object "a paperclip"       at="airlock";
-    suit     : object "a survival suit"    at="airlock";
-    pack     : object "a pack"    at="airlock";
+objects {
 
-    stick    : object "a glow stick"    at="main_corridor";
-    filter   : object "a coffee filter"    at="canteen"; # need to take from coffee machine
-    book     : object "a code book"    at="closet";
-    knife    : object "a bread knife"    at="kitchen";
-    crowbar  : object "a crowbar"    at="storeroom";
-    brush    : object "a toilet brush"    at="latrine";
-    helmet   : object "a survival helmet"    at="gym";
-    hand     : object "a severed hand"    at="gym";
-    pestle   : object "a pestle"    at="med_bay";
-    tree     : object "a bonsai tree"    at="hydroponic";
-    hose     : object "a hose"    at="pantry";
-    shelf    : object "a shelf"    at="library";
-    torch    : object "a welding torch"    at="workshop"; #nozel - hose melted
-    tank     : object "a tank of oxyfuel"    at="workshop";
-    WD40     : object "a can of WD40"    at="tool_room"; # generic name?
-    weapon   : object "a weapon"    at="armoury";
- # stationary
-    radio    : object "a radio"    at="control_room";
-    crewmate : object "a crew member"    at="gym";
- }
+   # --- Airlock ---
+   emergency_pack : object "a battered canvas emergency pack"
+      at             = "airlock"
+      wearable       = "true"
+      msg            = "A battered canvas emergency pack with worn straps. Wearing it across your back gives you considerably more carrying capacity."
+   ;
+   papers         : object "some papers"        at="airlock" msg="Emergency procedures for shelter personnel. In the event of fire, seal the airlock and await rescue. The external door release code is held by the senior officer. To request evacuation, transmit on the emergency frequency using the signal codes from the senior officer's notebook.";
+   paperclip      : object "a paperclip"                    msg="A small metal paperclip.";
+   survival_suit  : object "a survival suit"   at="inventory" wearable="true" initially_worn="true" msg="A heavy-duty survival suit, slightly too large and smelling of must. It offers some protection but leaves your head entirely exposed.";
+   panel          : scenery "a control panel"   at="airlock" conspicuous="false";
+   internal_door  : scenery "the internal door" at="airlock" conspicuous="false";
+   external_door  : scenery "the external door" at="airlock" conspicuous="false";
+
+   # --- Main Corridor ---
+   glow_stick     : object "a glow stick" at="main_corridor" msg="A chemical glow stick. Shake it to activate; reheat it on the oven when it fades.";
+   cleaning_bot   : scenery "a cleaning bot" at="main_corridor" msg="A squat cleaning bot, its sensor array sweeping slowly. It zaps anything it reads as vermin - carrying a lit glow stick marks you as crew, not a target.";
+
+   # --- Canteen ---
+   coffee_maker   : scenery "a coffee maker" at="canteen" msg="It's just an ordinary coffee maker.";
+   coffee_filter  : object "a coffee filter" msg="A circular paper coffee filter, slightly damp from the machine. It could be fitted into a helmet's breathing port to filter out particulates.";
+
+   # --- Kitchen ---
+   bread_knife    : object "a bread knife" at="kitchen" msg="A long serrated bread knife with a wooden handle, still reasonably sharp despite its age.";
+
+   # --- Storeroom ---
+   crowbar        : object "a crowbar" at="storeroom" msg="A solid steel crowbar, reassuringly heavy. Useful for prying things open and, in a pinch, as a lever.";
+
+   # --- Latrine ---
+   toilet_brush   : object "a toilet brush" at="latrine" msg="A long-handled toilet brush, not particularly pleasant to handle but sturdy enough to clear a blocked pipe.";
+
+   # --- Bunk Room / Closet ---
+   jacket         : scenery "Bob's jacket" at="closet" msg="It is Bob's jacket. You miss Bob.";
+   code_book      : object "a small notebook" noun="book" adjective="code" msg="A small, well-thumbed notebook containing radio signal codes and door access codes, written in a cramped but legible hand.";
+
+   # --- Gym / Med Bay ---
+   crewmate       : scenery "a dead crewman" at="gym" msg="A dead crewman pinned under fallen gym equipment.";
+   hand_attached  : scenery "a hand" at="gym" conspicuous="false" msg="The hand of the dead crewman. You could sever it for use on a biometric scanner.";
+   hand           : object "a severed hand" msg="A severed hand. It might work on a biometric scanner.";
+   survival_helmet : object "a survival helmet" at="gym" wearable="true" msg="A sealed helmet, seized up with rust on the dead crewman. It could be freed with WD40.";
+   pestle         : object "a pestle" at="med_bay" msg="A heavy pestle, good for crushing things.";
+   med_window     : scenery "a small porthole" at="med_bay" conspicuous="false" msg="A small porthole-style window set into the south wall, looking out toward the pump room. You note it as a potential entry point - but not from this side. You'd need to access the pump room from the generator level.";
+
+   # --- Hydroponics / Tool Room ---
+   bonsai_tree    : object "a bonsai tree" at="hydroponic" msg="A small but surprisingly dense bonsai tree, its gnarled trunk and compact branches ideal for reducing to charcoal with a good pounding.";
+   charcoal       : object "some charcoal" msg="Lumps of charcoal crushed from the bonsai wood. Insert into the helmet filter to scrub smoke.";
+   wd40           : object "a can of WD40" at="tool_room" noun="wd40" adjective="can" msg="A well-used aerosol can of WD40, still with enough left to free up a seized joint or two.";
+
+   # --- Pantry ---
+   hose           : object "a hose" at="pantry" msg="A rubber gas hose connecting the oven to the supply pipe.";
+   valve          : scenery "a shutoff valve" at="pantry" conspicuous="false";
+   oven           : scenery "an oven" at="pantry" conspicuous="false";
+
+   # --- Library ---
+   wooden_shelf   : object "a wooden shelf" at="library" noun="shelf" adjective="wooden" msg="A solid wooden shelf, roughly a metre long. Sturdy enough to act as a ramp if leaned against something.";
+
+   # --- Workshop / Tool Room rig ---
+   gas_tank       : scenery "a gas tank" at="workshop" conspicuous="false";
+   dial           : scenery "a dial" at="workshop" conspicuous="false";
+   torch          : object "a welding torch" noun="torch" adjective="welding" msg="A welding torch nozzle, the business end of the portable rig.";
+
+   # --- WE Corridor ---
+   fire_door      : scenery "a fire door" at="we_corridor" conspicuous="false";
+
+   # --- Control Room ---
+   radio          : scenery "a radio" at="control_room" conspicuous="false";
+
+   # --- Generator ---
+   scanner        : scenery "a biometric scanner" at="generator" conspicuous="false";
+   gen_switch     : scenery "a master switch" at="generator" noun="switch" adjective="master" conspicuous="false";
+   gen_window     : scenery "a window" at="generator" noun="window" adjective="generator" conspicuous="false";
+
+   # --- Pump Room ---
+   knob           : scenery "a broken pump handle" at="pump_room" noun="knob" conspicuous="false";
+   pump_window    : scenery "a window" at="pump_room" noun="window" adjective="pump" conspicuous="false";
+
+   # --- Reservoir ---
+   pipe           : scenery "a supply pipe" at="reservoir" conspicuous="false";
+
+   # --- Armoury ---
+   weapon         : object "a bolt-action rifle" at="armoury" noun="rifle" msg="A bolt-action rifle, the finish worn but the mechanism well-maintained. There are a few rounds in the magazine - enough for what you need.";
+
+}
+
+##########################################################################
+# PUZZLE STATE
+##########################################################################
+
+booleans {
+   internal_door_open     : boolean "false";
+   external_door_unlocked : boolean "false"; // both codes typed in on the radio
+   helmet_free             : boolean "false"; // WD40 applied, helmet takeable
+   filter_in_helmet        : boolean "false";
+   charcoal_in_filter      : boolean "false";
+   valve_open               : boolean "true";  // gas flowing to the oven
+   oven_on                  : boolean "false";
+   hose_attached            : boolean "false"; // hose connected to the workshop rig
+   dial_turned              : boolean "false";
+   knob_welded              : boolean "false";
+   crowbar_lever            : boolean "false";
+   pump_reversed            : boolean "false";
+   radio_on                 : boolean "false";
+   signal_sent              : boolean "false";
+   pipe_clear               : boolean "false";
+   corridor_door_pried      : boolean "false"; // fire door pried, bot can follow
+   scanner_cleared          : boolean "false";
+   electricity_on           : boolean "false";
+   shelf_pulled             : boolean "false"; // shelf worked loose from the wall
+   shelf_leaned             : boolean "false"; // shelf leaned against armoury door
+   rats_cleared               : boolean "false";
+   window_broken             : boolean "false"; // generator/pump-room window
+   external_door_open        : boolean "false";
+}
+
+integers {
+   air_turns    : integer "100" min="-10" max="100";
+   score        : integer "0"   max="100";
+   carry_limit  : integer "4"   max="20";
+   stick_turns  : integer "0"   max="150"; // 0 = glow stick not lit
+   bot_wait     : integer "0"   max="5";
+}
+
+##########################################################################
+# VOCABULARY - custom verb synonym groups
+##########################################################################
+
+vocabulary {
+   : verb / aliases = [shake, jiggle, wave, rattle]
+   : verb / aliases = [sever, cut, saw, hack, slice, chop]
+   : verb / aliases = [spray, squirt, apply, oil, lubricate]
+   : verb / aliases = [pry, lever, wedge, force, jimmy, prise]
+   : verb / aliases = [shoot, fire, blast]
+   : verb / aliases = [lean, prop, rest, stand]
+   : verb / aliases = [pull, tug, yank]
+   : verb / aliases = [crush, pound, mix, grind, mash, smash, bash]
+   : verb / aliases = [weld, fuse, bond, solder, melt, braze]
+   : verb / aliases = [unblock, clear, unclog, scrub, sweep, empty]
+   : verb / aliases = [scan]
+   : verb / aliases = [turn, rotate, twist, throw, flip, flick, switch, press, light, ignite]
+   : verb / aliases = [attach, connect, fasten]
+   : verb / aliases = [type, write]
+   : noun  / aliases = [tree, wood]
+   : noun  / aliases = [book, codebook, notebook]
+}
+
+##########################################################################
+# BARRIERS
+##########################################################################
+
+barriers {
+   internal_door_block : block_path {
+      from            = airlock
+      to              = main_corridor
+      block_when_not  = internal_door_open
+      message         = You'll need to find some other way to open the internal door - try examining the panel.
+   }
+   external_door_block : block_path {
+      from            = airlock
+      to              = outside
+      block_when_not  = external_door_open
+      message         = The blast door is closed.
+   }
+   flood_block : block_path {
+      from            = generator
+      to              = pump_room
+      block_when_not  = pipe_clear
+      message         = The pump room door is sealed - water is pressing hard against it from the other side. You need another way in.
+   }
+   armoury_block : block_path {
+      from            = control_room
+      to              = armoury
+      block_when_not  = rats_cleared
+      message         = You push the door open a crack - a seething mass of large, aggressive rodents hurls itself at the gap. You slam it shut.
+   }
+}
+
+##########################################################################
+# STARTUP
+##########################################################################
+
+on_startup {
+   : print "BUNKER BLUES\nby Nate Taylor, with thanks to David Etherton";
+   : press_any_key;
+   : print "You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead.\nYou're not sure how many hours it has been since Joe pushed you in the airlock, and you passed out from the smoke of the fire. He said he was still going to try to put it out, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it.\nBut the air in here won't last forever, the survival suit you threw on had no helmet, and there is no way to open the external door without electricity, even if you dared to enter the wasteland without more protection.";
+}
+
+##########################################################################
+# LOCATION DESCRIPTIONS
+##########################################################################
+
+on_describe {
+
+   : if (is_at "airlock") {
+      : print "You are standing in a dimly lit airlock of a fallout shelter. You hear the faint hum of the emergency light, and an acrid smell from the fire you escaped lingers in the air.\nAs you look around the otherwise sterile room, you notice a small control panel on the wall to your left, next to the internal door.";
+   }
+
+   : if (is_at "main_corridor") {
+      : if (electricity_on) {
+         : print "The main corridor runs the full length of the bunker under steady, bright fluorescent light - a relief after the emergency flicker. Rows of painted-steel doors line each side, their stencilled numbers sharp and clear.";
+      }
+      : else {
+         : print "Fluorescent strips flicker overhead, casting a sickly pallor over the metal-lined corridor. Rows of identical painted-steel doors line each side, their stencilled numbers faded to near-illegibility.";
+      }
+   }
+
+   : if (is_at "canteen") {
+      : print "Rows of moulded plastic chairs sit askew around bolted-down tables, their surfaces sticky with the residue of years of institutional meals. A serving hatch at the far end stands open, the kitchen beyond cold and still.";
+   }
+
+   : if (is_at "bunk_room") {
+      : print "Six pairs of metal bunk beds line the walls, their thin mattresses still bearing the impressions of whoever last slept here. A dog-eared paperback and a cracked photograph on one of the bedside shelves are the only signs anyone ever called this home.";
+   }
+
+   : if (is_at "closet") {
+      : print "A cramped storage closet barely wider than your shoulders, its shelves mostly stripped of whatever was once kept here. The air is stale with the smell of old wool and something faintly chemical that you can't quite place.";
+   }
+
+   : if (is_at "latrine") {
+      : print "A row of lidded steel lavatories and a pair of cracked porcelain sinks occupy this narrow utility room. A persistent drip somewhere keeps time in the silence, and the overhead strip light hums with the effort of staying on.";
+   }
+
+   : if (is_at "gym") {
+      : if (helmet_free && is_exists "hand") {
+         : print "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman's body remains pinned beneath the weight cage - helmetless, one hand severed at the wrist.";
+      }
+      : else_if (helmet_free) {
+         : print "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman lies pinned beneath the weight cage, helmetless now.";
+      }
+      : else {
+         : print "A compact exercise room that took the worst of the earthquake - weight racks overturned, a treadmill on its side, rubber matting buckled and torn. In the far corner a dead crewman lies pinned beneath a toppled cage of weights, still wearing his helmet.";
+      }
+   }
+
+   : if (is_at "med_bay") {
+      : print "Banks of white-painted metal cabinets line the walls, most drawers hanging open and rifled through in evident haste. A single examination table sits beneath a surgical light that will never illuminate anything again.";
+   }
+
+   : if (is_at "kitchen") {
+      : print "Stainless steel work surfaces run the length of this institutional kitchen, a few unwashed pots still sitting in the sink where someone left them in a hurry. The pantry to the south and storeroom to the west are a reminder of how large a crew this bunker was built to feed.";
+   }
+
+   : if (is_at "storeroom") {
+      : print "Metal shelving units stretch floor to ceiling, most of them bare save for a few tins and supply boxes pushed to the back.";
+   }
+
+   : if (is_at "hydroponic") {
+      : print "Long hydroponic trays run beneath banks of dead overhead grow-lights, the substrate dry and neglected after what must be weeks without tending. A small bonsai tree in the corner has held on better than the rest, its gnarled trunk evidently tougher than it looks.";
+   }
+
+   : if (is_at "pantry") {
+      : print "Shelving units hold an orderly supply of tinned goods and sealed containers, though several racks have been cleared at some point. A gas hose runs from a shutoff valve on the wall down to the oven, and a faint metallic smell hangs in the air.";
+   }
+
+   : if (is_at "library") {
+      : print "Floor-to-ceiling shelves hold a mix of technical manuals and battered paperbacks, a handful of volumes knocked to the floor and left where they fell. One shelf along the far wall has come away from its fittings and hangs at an awkward angle.";
+   }
+
+   : if (is_at "lounge") {
+      : print "Sagging sofas and a pair of armchairs are arranged around a low table strewn with old magazines and the scattered pieces of several abandoned board games. A television set is bolted to the wall at head height, its screen long dark.";
+   }
+
+   : if (is_at "we_corridor") {
+      : if (corridor_door_pried) {
+         : print "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. The heavy fire door to the south hangs open, pried back with the crowbar.";
+      }
+      : else {
+         : print "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. A heavy fire door to the south is wedged shut - the bot will not be able to follow until it is pried open.";
+      }
+   }
+
+   : if (is_at "control_room") {
+      : if (electricity_on == false) {
+         : print "Banks of monitors and instrument panels cover every surface, most of them dark, a handful still cycling through error messages or static. This room controlled everything - communications, life support, security - and it will again, once the power is back on.";
+      }
+      : else_if (radio_on) {
+         : print "The control room hums with restored power, monitors glowing across every surface. The radio crackles from its corner console.";
+      }
+      : else {
+         : print "The control room hums with restored power, monitors cycling through system readings. The radio sits silent on its console.";
+      }
+   }
+
+   : if (is_at "workshop") {
+      : print "A long workbench runs down the centre of this well-equipped room, its surface scattered with tools, coils of wire, and half-finished repairs left by whoever was last in here. A portable welding rig stands in one corner - gas tank and nozzle waiting to be connected up.";
+   }
+
+   : if (is_at "tool_room") {
+      : print "A small utility room lined with pegboard, most of its hooks bare and empty, their tools presumably scattered to various corners of the bunker. A few items remain on the lower shelf, including a can of WD40 that someone never got round to putting away.";
+   }
+
+   : if (is_at "generator") {
+      : if (electricity_on) {
+         : print "The generator fills the room with a steady roar, its cables and conduits alive with current. The master switch is thrown; lights burn throughout the bunker.";
+      }
+      : else {
+         : print "The bunker's main generator dominates this room, its bulk trailing cables and conduits that run up to the ceiling and along every wall. A master switch and a biometric hand scanner are mounted on a panel nearby, both dormant without power.";
+      }
+      : if (window_broken) {
+         : print "The window in the east wall has been shot out, leaving a jagged opening into the pump room.";
+      }
+   }
+
+   : if (is_at "pump_room") {
+      : if (pump_reversed) {
+         : print "The pump room hums with purpose, the reversed pump cycling clean air through the bunker's ventilation. The floor is dry.";
+      }
+      : else_if (pipe_clear) {
+         : print "Pipework and pumping machinery crowd this damp room. The floor has drained since the pipe was cleared. The air pump stands at the centre, waiting to be turned.";
+      }
+      : else {
+         : print "Pipework and pumping machinery crowd this damp utility room. The floor is under several inches of murky water from the burst pipe. The main air pump stands at the centre, its control knob snapped clean off.";
+      }
+   }
+
+   : if (is_at "reservoir") {
+      : if (pipe_clear) {
+         : print "A low-ceilinged chamber beneath the pump room, mostly occupied by the concrete cistern. The supply pipe runs clear now, water flowing properly.";
+      }
+      : else {
+         : print "A low-ceilinged chamber directly beneath the pump room, almost entirely occupied by a large concrete cistern fed by pipes from above. The main supply pipe runs along the base of the wall, its outlet visibly choked with accumulated sediment and debris.";
+      }
+   }
+
+   : if (is_at "armoury") {
+      : if (rats_cleared) {
+         : print "The armoury is quiet now, the infestation cleared. Heavy-gauge mesh covers stripped weapons racks - someone left in a hurry. Gnaw marks and droppings remain on every surface, but the rats are gone.";
+      }
+      : else {
+         : print "A small secure room with heavy-gauge mesh panels over the shelving, most of the weapons racks stripped bare in what must have been a considerable hurry. Whatever infestation drove everyone out has left its mark - droppings and gnaw marks cover every surface.";
+      }
+   }
+
+   : if (is_at "outside") {
+      : print "You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in - someone heard your signal.";
+   }
+
+}
+
+##########################################################################
+# ON_COMMAND - Part 1: Airlock, pack, glow stick, one-time reveals
+##########################################################################
+
+on_command {
+
+   #### Airlock: panel / paperclip / doors ####
+
+   : if_examine "panel" {
+      : if (internal_door_open) {
+         : print "The panel hangs open. A paperclip is fused to the circuit board, providing power to the inner door.";
+      }
+      : else {
+         : print "A small control panel on the wall next to the internal door. It is closed.";
+      }
+   }
+
+   : match "open panel" {
+      : if (internal_door_open) {
+         : print "The panel is already open.";
+      }
+      : else {
+         : print "You open the door panel, revealing a circuit board. A wire has burnt out, stopping the door from working.";
+      }
+   }
+
+   : match "insert paperclip;put paperclip;attach paperclip;fit paperclip" {
+      : if (internal_door_open) {
+         : print "The paperclip already bridges the burnt-out wire.";
+      }
+      : else_if (is_carried "paperclip" == false) {
+         : print "You don't have a paperclip.";
+      }
+      : else {
+         : set_true "internal_door_open";
+         : print "The paperclip shorts out the broken wire and the door slides slowly open on the dwindling emergency power.";
+         : add var="score" value="3";
+      }
+   }
+
+   : if_examine "internal_door" {
+      : print "The internal door is made out of metal.";
+   }
+
+   : if_examine "external_door" {
+      : if (external_door_open) {
+         : print "The blast door stands open, the wasteland visible beyond.";
+      }
+      : else_if (external_door_unlocked) {
+         : print "A heavy blast door leading out to the wasteland. It is powered and unlocked - you could open it.";
+      }
+      : else_if (electricity_on) {
+         : print "A heavy blast door leading out to the wasteland. The electronic lock is powered but locked. It needs the door release code.";
+      }
+      : else {
+         : print "A heavy blast door leading out to the wasteland. The electronic lock needs power to operate.";
+      }
+   }
+
+   : match "open door" {
+      : if (is_at "airlock" && internal_door_open == false) {
+         : print "You'll need to find some other way to do that - try examining the panel.";
+      }
+      : else_if (is_at "airlock" && electricity_on == false) {
+         : print "The blast door needs power to operate.";
+      }
+      : else_if (is_at "airlock" && external_door_unlocked == false) {
+         : print "The blast door is locked. It needs the door release code.";
+      }
+      : else_if (is_at "airlock" && external_door_open) {
+         : print "It's already open.";
+      }
+      : else_if (is_at "airlock") {
+         : set_true "external_door_open";
+         : print "You throw the heavy bolts and the blast door swings open, the wasteland visible beyond.";
+      }
+      : else_if (is_at "we_corridor") {
+         : print "The fire door doesn't have a handle on this side - it needs prying open with something.";
+      }
+      : else {
+         : print "There is nothing here to open.";
+      }
+   }
+
+   #### emergency pack carrying capacity ####
+
+   : match "wear pack" {
+      : wear "emergency_pack";
+      : set_integer var="carry_limit" value="12";
+   }
+
+   : match "remove pack;unwear pack" {
+      : unwear "emergency_pack";
+      : set_integer var="carry_limit" value="4";
+   }
+
+   #### one-time reveals ####
+
+   : if_examine "papers" {
+      : examine "papers";
+      : if (has_not_created "paperclip") {
+         : create "paperclip" target="airlock";
+         : print "As you look at the papers, the paperclip holding them together falls to the floor.";
+      }
+   }
+
+   : if_examine "jacket" {
+      : examine "jacket";
+      : if (has_not_created "code_book") {
+         : create "code_book" target="closet";
+         : print "As you look inside the jacket a small notebook falls from one of the pockets.";
+      }
+   }
+
+   : if_examine "coffee_maker" {
+      : examine "coffee_maker";
+      : if (has_not_created "coffee_filter") {
+         : create "coffee_filter" target="canteen";
+         : print "Examining the coffee maker reveals a circular paper coffee filter.";
+      }
+   }
+
+   #### glow stick ####
+
+   : match "shake stick" {
+      : if (is_carried "glow_stick" == false) {
+         : print "You need to pick it up first.";
+      }
+      : else_if (stick_turns > 0) {
+         : print "The stick is already lit.";
+      }
+      : else {
+         : set_integer var="stick_turns" value="150";
+         : print "You shake the glow stick vigorously. It flares to life.";
+      }
+   }
+
+   : if_examine "glow_stick" {
+      : if (stick_turns > 0) {
+         : print "A chemical glow stick, giving off a faint light.";
+      }
+      : else {
+         : print "A chemical glow stick. Shake it to activate; reheat it on the oven when it fades.";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 2: Helmet mask chain, hand, scanner, switch, charcoal
+##########################################################################
+
+
+   #### helmet ####
+
+   : if_examine "survival_helmet" {
+      : if (charcoal_in_filter) {
+         : print "The helmet has a charcoal-packed coffee filter fitted - a crude but effective smoke mask.";
+      }
+      : else_if (filter_in_helmet) {
+         : print "The helmet has a coffee filter fitted into its breathing port. Pack it with charcoal to complete the mask.";
+      }
+      : else_if (helmet_free) {
+         : print "A sealed helmet, freed from the body. Fit a filter to make it a smoke mask.";
+      }
+      : else {
+         : print "A sealed helmet, seized up with rust on the dead crewman. It could be freed with WD40.";
+      }
+   }
+
+   : match "get helmet" {
+      : if (helmet_free == false) {
+         : print "The helmet is seized up with rust on the dead crewman. You'll need to free it up first.";
+      }
+      : else {
+         : get "survival_helmet";
+      }
+   }
+
+   : match "wear helmet" {
+      : if (helmet_free == false) {
+         : print "The helmet is seized up with rust on the dead crewman. You'll need to free it up first.";
+      }
+      : else {
+         : wear "survival_helmet";
+      }
+   }
+
+   : match "remove helmet;unwear helmet" {
+      : unwear "survival_helmet";
+      : if (charcoal_in_filter) {
+         : print "The smoke immediately starts catching at your throat again.";
+      }
+   }
+
+   : match "spray helmet" {
+      : if (is_carried "wd40" == false) {
+         : print "You need something to spray with.";
+      }
+      : else_if (helmet_free) {
+         : print "The helmet joints are already freed up.";
+      }
+      : else {
+         : set_true "helmet_free";
+         : print "You spray WD40 onto the rusted joints. With a series of creaks the helmet comes free from the body.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "insert filter;put filter;fit filter" {
+      : if (helmet_free == false) {
+         : print "You need to free the helmet from the body first.";
+      }
+      : else_if (is_carried "coffee_filter" == false) {
+         : print "You don't have a coffee filter.";
+      }
+      : else_if (filter_in_helmet) {
+         : print "There is already a filter fitted into the helmet.";
+      }
+      : else {
+         : set_true "filter_in_helmet";
+         : print "You fit the coffee filter into the helmet's breathing port.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "insert charcoal;put charcoal;fit charcoal;pack charcoal" {
+      : if (filter_in_helmet == false) {
+         : print "You need to fit a filter into the helmet before adding charcoal.";
+      }
+      : else_if (is_carried "charcoal" == false) {
+         : print "You don't have any charcoal.";
+      }
+      : else_if (charcoal_in_filter) {
+         : print "The filter is already packed with charcoal.";
+      }
+      : else {
+         : set_true "charcoal_in_filter";
+         : destroy "charcoal";
+         : print "You pack the charcoal into the filter. The helmet is now a crude but effective smoke mask.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### hand ####
+
+   : if_examine "hand_attached" {
+      : print "The hand of the dead crewman. You could sever it for use on a biometric scanner.";
+   }
+
+   : if_examine "hand" {
+      : print "A severed hand. It might work on a biometric scanner.";
+   }
+
+   : match "cut hand" {
+      : if (is_carried "bread_knife" == false) {
+         : print "You'll need something sharper than that!";
+      }
+      : else_if (is_exists "hand") {
+         : print "You've already got it.";
+      }
+      : else {
+         : destroy "hand_attached";
+         : create "hand" target="gym";
+         : print "It's grisly work but you managed to separate the hand from the body.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### scanner / switch ####
+
+   : match "scan hand" {
+      : if (is_at "generator" == false) {
+         : print "There is no scanner here.";
+      }
+      : else_if (is_exists "hand" == false) {
+         : print "You need to sever the hand from the body first.";
+      }
+      : else_if (is_carried "hand" == false) {
+         : print "You need to be holding the hand.";
+      }
+      : else_if (scanner_cleared) {
+         : print "The scanner has already accepted the print.";
+      }
+      : else {
+         : set_true "scanner_cleared";
+         : print "You press the severed hand against the scanner. It beeps once and a green light blinks on.";
+         : add var="score" value="5";
+      }
+   }
+
+   : if_examine "scanner" {
+      : if (scanner_cleared) {
+         : print "The biometric scanner glows green - cleared and satisfied.";
+      }
+      : else {
+         : print "A biometric hand scanner securing the generator controls. It needs a valid hand print.";
+      }
+   }
+
+   : if_examine "gen_switch" {
+      : if (electricity_on) {
+         : print "The master switch is thrown. The generator is running.";
+      }
+      : else_if (scanner_cleared) {
+         : print "The master switch. The scanner is cleared - you can use it now.";
+      }
+      : else {
+         : print "A master power switch. The biometric scanner must be cleared before it can be used.";
+      }
+   }
+
+   : match "turn switch" {
+      : if (scanner_cleared == false) {
+         : print "The biometric scanner must be cleared before the switch can be used.";
+      }
+      : else_if (electricity_on) {
+         : print "The generator is already running.";
+      }
+      : else {
+         : set_true "electricity_on";
+         : print "You throw the master switch. The generator roars to life. Lights flicker on throughout the bunker.";
+         : add var="score" value="10";
+      }
+   }
+
+   #### charcoal source ####
+
+   : match "crush tree" {
+      : if (is_carried "pestle" == false) {
+         : print "You need something to crush it with.";
+      }
+      : else_if (is_carried "bonsai_tree" == false) {
+         : print "You need to be carrying the bonsai tree.";
+      }
+      : else_if (is_exists "charcoal") {
+         : print "You already have enough charcoal.";
+      }
+      : else {
+         : destroy "bonsai_tree";
+         : create "charcoal";
+         : print "You pound the bonsai wood with the pestle, reducing it to usable chunks of charcoal.";
+         : add var="score" value="3";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 3: Valve, oven, hose, welding rig, knob
+##########################################################################
+
+
+   #### valve ####
+
+   : if_examine "valve" {
+      : if (valve_open) {
+         : print "A gas shutoff valve on the wall. It is currently open - gas is flowing to the oven.";
+      }
+      : else {
+         : print "A gas shutoff valve on the wall. It is currently closed - gas is off.";
+      }
+   }
+
+   : match "turn valve" {
+      : if (valve_open) {
+         : set_false "valve_open";
+         : print "You turn the valve off. The hiss of gas through the pipe stops.";
+      }
+      : else {
+         : set_true "valve_open";
+         : print "You turn the valve on. Gas begins flowing again.";
+      }
+   }
+
+   #### hose / oven ####
+
+   : if_examine "hose" {
+      : if (valve_open) {
+         : print "A rubber gas hose connecting the oven to the supply pipe. Turn the valve off before detaching it.";
+      }
+      : else {
+         : print "A rubber gas hose, disconnected from the oven's gas fitting.";
+      }
+   }
+
+   : match "get hose" {
+      : if (valve_open) {
+         : print "The gas is still flowing - turn the valve off first.";
+      }
+      : else {
+         : get "hose";
+      }
+   }
+
+   : if_examine "oven" {
+      : if (oven_on) {
+         : print "A battered institutional gas oven, its enamel stained and chipped. The burners are lit and the hob is hot.";
+      }
+      : else {
+         : print "A battered institutional gas oven, its enamel stained and chipped. The rubber hose connecting it to the supply pipe snakes out from behind.";
+      }
+   }
+
+   : match "turn oven" {
+      : if (oven_on) {
+         : set_false "oven_on";
+         : print "You turn off the oven. The burners die.";
+      }
+      : else_if (!is_within { outer="pantry" inner="hose" }) {
+         : print "The gas hose is not connected - reattach it to the oven before turning it on.";
+      }
+      : else {
+         : set_true "oven_on";
+         : print "You light the oven. The burners catch with a soft whump.";
+      }
+   }
+
+   : match "put stick;insert stick" {
+      : if (is_at "pantry" == false) {
+         : print "There's nowhere here to do that.";
+      }
+      : else_if (oven_on == false) {
+         : print "The oven is not on - light it first.";
+      }
+      : else_if (is_carried "glow_stick" == false) {
+         : print "You need to be holding the glow stick.";
+      }
+      : else {
+         : set_integer var="stick_turns" value="150";
+         : print "You hold the glow stick over the hot hob for a moment. It flares back to full brightness.";
+      }
+   }
+
+   : match "attach hose" {
+      : if (is_at "pantry") {
+         : if (is_within { outer="pantry" inner="hose" }) {
+            : print "The hose is already connected to the oven.";
+         }
+         : else_if (is_carried "hose" == false) {
+            : print "You need to be holding the hose.";
+         }
+         : else {
+            : create "hose" target="pantry";
+            : print "You reconnect the rubber hose to the oven's gas fitting. The oven is ready to use again.";
+         }
+      }
+      : else_if (is_at "workshop") {
+         : if (is_carried "hose" == false) {
+            : print "You need to be holding the hose.";
+         }
+         : else_if (hose_attached) {
+            : print "The hose is already connected to the rig.";
+         }
+         : else {
+            : set_true "hose_attached";
+            : destroy "hose";
+            : create "torch" target="inventory";
+            : print "You connect the hose between the gas tank and the nozzle, forming a portable welding torch. You pick up the torch head.";
+            : add var="score" value="5";
+         }
+      }
+      : else {
+         : print "There's nothing here to attach the hose to.";
+      }
+   }
+
+   : if_examine "gas_tank" {
+      : if (hose_attached) {
+         : print "A pressurised gas tank, the hose now connected between it and the nozzle.";
+      }
+      : else {
+         : print "A pressurised gas tank. The hose can be attached to connect it to the nozzle.";
+      }
+   }
+
+   #### dial ####
+
+   : if_examine "dial" {
+      : if (dial_turned) {
+         : print "A dial controlling the gas mix, set to acetylene. The rig is primed and ready to weld.";
+      }
+      : else {
+         : print "A dial controlling the gas mix. Set it to acetylene to prime the rig for welding.";
+      }
+   }
+
+   : match "turn dial" {
+      : if (hose_attached == false) {
+         : print "Attach the hose to the rig first.";
+      }
+      : else_if (dial_turned) {
+         : print "The dial is already set to acetylene.";
+      }
+      : else {
+         : set_true "dial_turned";
+         : print "You turn the dial to acetylene. The rig is primed and ready to weld.";
+      }
+   }
+
+   #### knob ####
+
+   : if_examine "knob" {
+      : if (crowbar_lever) {
+         : print "The knob is welded back onto the pump handle, with the crowbar slotted on as a lever. Ready to turn.";
+      }
+      : else_if (knob_welded) {
+         : print "The knob has been welded back onto the pump handle. You need a lever to turn it - attach the crowbar.";
+      }
+      : else {
+         : print "A broken air-pump handle stub - the knob has snapped off. It could be welded back on.";
+      }
+   }
+
+   : match "weld knob" {
+      : if (is_at "pump_room" == false) {
+         : print "You need to be at the pump to weld the knob on.";
+      }
+      : else_if (is_carried "torch" == false) {
+         : print "You need the welding torch to do this.";
+      }
+      : else_if (dial_turned == false) {
+         : print "The welding rig is not ready - attach the hose and set the dial first.";
+      }
+      : else_if (knob_welded) {
+         : print "The knob is already welded on.";
+      }
+      : else {
+         : set_true "knob_welded";
+         : print "You touch the torch to the knob stub and weld the knob firmly onto the pump handle.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "attach crowbar" {
+      : if (is_at "pump_room" == false) {
+         : print "There's nothing to attach the crowbar to here.";
+      }
+      : else_if (knob_welded == false) {
+         : print "You need to weld the knob back on first.";
+      }
+      : else_if (is_carried "crowbar" == false) {
+         : print "You need to be holding the crowbar.";
+      }
+      : else_if (crowbar_lever) {
+         : print "The crowbar is already slotted onto the knob.";
+      }
+      : else {
+         : set_true "crowbar_lever";
+         : destroy "crowbar";
+         : print "You slot the crowbar onto the knob, giving you enough leverage to turn the pump.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "turn knob" {
+      : if (knob_welded == false) {
+         : print "There is no knob - it needs to be welded back on first.";
+      }
+      : else_if (crowbar_lever == false) {
+         : print "You need a lever attached to the knob to turn it - attach the crowbar.";
+      }
+      : else_if (pump_reversed) {
+         : print "The pump is already reversed.";
+      }
+      : else {
+         : set_true "pump_reversed";
+         : print "With the crowbar as a lever you heave the knob around. The pump reverses with a grinding shudder - clean air begins to circulate.";
+         : add var="score" value="15";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 4: Fire door, pipe, radio, codes
+##########################################################################
+
+
+   #### fire door ####
+
+   : if_examine "fire_door" {
+      : if (corridor_door_pried) {
+         : print "The fire door hangs open, pried back with the crowbar.";
+      }
+      : else {
+         : print "A heavy fire door wedged shut. Pry it open with the crowbar so the bot can follow.";
+      }
+   }
+
+   : match "pry door" {
+      : if (is_at "we_corridor" == false) {
+         : print "There's nothing here to pry open.";
+      }
+      : else_if (is_carried "crowbar" == false) {
+         : print "You need the crowbar to pry that open.";
+      }
+      : else_if (corridor_door_pried) {
+         : print "The door is already pried open.";
+      }
+      : else {
+         : set_true "corridor_door_pried";
+         : print "You jam the crowbar into the door frame and heave. The fire door grinds open and stays put.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### pipe ####
+
+   : if_examine "pipe" {
+      : if (pipe_clear) {
+         : print "The supply pipe runs clear now, water flowing properly through.";
+      }
+      : else {
+         : print "The main water supply pipe, its outlet packed solid with sediment and debris. It needs clearing before water can flow again.";
+      }
+   }
+
+   : match "unblock pipe" {
+      : if (is_carried "toilet_brush" == false) {
+         : print "You need something to clear the blockage with.";
+      }
+      : else_if (pipe_clear) {
+         : print "The pipe is already clear.";
+      }
+      : else {
+         : set_true "pipe_clear";
+         : print "You ram the toilet brush into the pipe and work it back and forth. A foul slurry of debris clears through. Water begins to flow again.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### radio / codes ####
+
+   : if_examine "radio" {
+      : if (external_door_unlocked) {
+         : print "The radio crackles softly. Both codes have been transmitted - someone out there heard you.";
+      }
+      : else_if (radio_on) {
+         : print "The radio crackles with static and a carrier wave. Ready to transmit.";
+      }
+      : else_if (electricity_on) {
+         : print "A military-grade communications radio. Power is restored - you could switch it on.";
+      }
+      : else {
+         : print "A chunky military-grade communications radio, dusty but intact. It needs power before it can broadcast anything.";
+      }
+   }
+
+   : match "turn radio" {
+      : if (electricity_on == false) {
+         : print "The radio needs power before it will work.";
+      }
+      : else_if (radio_on) {
+         : print "The radio is already on.";
+      }
+      : else {
+         : set_true "radio_on";
+         : print "You switch on the radio. It crackles to life, filling the room with static and a carrier wave.";
+      }
+   }
+
+   : match "type code;type -" {
+      : if (is_at "control_room" == false) {
+         : print "There is nothing here to type a code into.";
+      }
+      : else_if (electricity_on == false) {
+         : print "The control room has no power.";
+      }
+      : else_if (radio_on == false) {
+         : print "Turn the radio on first.";
+      }
+      : else_if (is_carried "code_book" == false) {
+         : print "You need the code book to know what to type.";
+      }
+      : else_if (signal_sent == false) {
+         : set_true "signal_sent";
+         : print "You key in the emergency signal code. Static crackles, then a distant acknowledgement tone - someone is receiving your signal.";
+         : add var="score" value="5";
+      }
+      : else_if (external_door_unlocked == false) {
+         : set_true "external_door_unlocked";
+         : print "You enter the external door release code. A muffled clunk echoes down the corridor - the blast door is unlocked.";
+         : add var="score" value="10";
+      }
+      : else {
+         : print "Both codes have already been entered.";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 5: Shelf, rats/armoury, weapon, windows
+##########################################################################
+
+
+   #### shelf ####
+
+   : match "pull shelf" {
+      : if (is_at "library" == false) {
+         : print "There's nothing here to pull.";
+      }
+      : else_if (shelf_pulled) {
+         : print "You've already pulled the shelf loose.";
+      }
+      : else {
+         : set_true "shelf_pulled";
+         : print "You pull the loose shelf away from the wall. It comes free with a shower of plaster dust.";
+      }
+   }
+
+   : match "get shelf" {
+      : if (shelf_pulled == false) {
+         : print "The shelf is fixed to the wall - try pulling it loose first.";
+      }
+      : else {
+         : get "wooden_shelf";
+      }
+   }
+
+   : match "lean shelf" {
+      : if (is_carried "wooden_shelf" == false) {
+         : print "You need to be carrying the shelf.";
+      }
+      : else_if (is_at "control_room" == false) {
+         : print "This is not the right place to lean the shelf.";
+      }
+      : else_if (shelf_leaned) {
+         : print "The shelf is already leaned against the armoury door.";
+      }
+      : else {
+         : set_true "shelf_leaned";
+         : destroy "wooden_shelf";
+         : print "You lean the shelf against the lip of the armoury door, creating a ramp. The bot should be able to cross now.";
+      }
+   }
+
+   #### windows ####
+
+   : if_examine "gen_window" {
+      : if (window_broken) {
+         : print "The window has been shot out, leaving a jagged opening into the pump room. You could climb through.";
+      }
+      : else {
+         : print "A small window set into the east wall, looking into the flooded pump room beyond. The door beside it is sealed by water pressure - this window may be the only way in.";
+      }
+   }
+
+   : if_examine "pump_window" {
+      : if (window_broken) {
+         : print "The window has been shot out - a ragged opening back into the generator room. You could climb through to get out.";
+      }
+      : else {
+         : print "A small window set into the west wall, looking back into the generator room. It looks like it could be shot out from the other side.";
+      }
+   }
+
+   : match "shoot window" {
+      : if (window_broken) {
+         : print "The window is already broken.";
+      }
+      : else_if (is_at "pump_room") {
+         : print "The window looks back into the generator room - shooting it from this side would do nothing useful. It needs to be shot from the other side.";
+      }
+      : else_if (is_at "med_bay") {
+         : print "That porthole looks out over the pump room but is not in a useful position to break from here.";
+      }
+      : else_if (is_at "generator" == false) {
+         : print "There's no window here to shoot.";
+      }
+      : else_if (is_carried "weapon" == false) {
+         : print "You need a weapon to shoot with.";
+      }
+      : else {
+         : set_true "window_broken";
+         : print "You fire at the window. The glass shatters inward, leaving a jagged opening into the pump room.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "enter window" {
+      : if (window_broken == false) {
+         : print "The window is intact. You cannot climb through it.";
+      }
+      : else_if (is_at "generator") {
+         : goto "pump_room";
+         : print "You squeeze through the broken window frame and drop into the pump room.";
+         : redescribe;
+      }
+      : else_if (is_at "pump_room") {
+         : goto "generator";
+         : print "You haul yourself back through the window into the generator room.";
+         : redescribe;
+      }
+      : else {
+         : print "There's no window here to climb through.";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 6: Score
+##########################################################################
+
+   : match "score _" {
+      : print {( "Your score is " + score + " out of 100." )}
+   }
+}
+
+##########################################################################
+# ON_TICK - air countdown, glow stick, Tibbles, bot-crossing, hazards
+##########################################################################
+
+on_tick {
+
+   #### win condition ####
+   : if (is_at "outside") {
+      : win_game;
+   }
+
+   #### glow stick fade ####
+   : if (stick_turns > 0) {
+      : decrement "stick_turns";
+      : if (stick_turns == 20) {
+         : print "The glow stick is beginning to fade.";
+      }
+      : if (stick_turns == 0) {
+         : print "The glow stick flickers and goes dark.";
+      }
+   }
+
+   #### Tibbles banter - main corridor, only while power is off ####
+   : if (is_at "main_corridor" && electricity_on == false && chance(25)) {
+      : if (chance(50)) {
+         : print "Tibbles: \"I'm a cleaner, not a magician, but watch this dirt disappear!\"";
+      }
+      : else {
+         : print "Tibbles: \"Why walk when you can vacuum?\"";
+      }
+   }
+
+   #### bot crossing into the armoury, clearing the rats ####
+   : if (rats_cleared == false && shelf_leaned && corridor_door_pried) {
+      : increment "bot_wait";
+      : if (bot_wait == 1) {
+         : print "The cleaning bot rolls south through the pried door, its sensors scanning.";
+      }
+      : if (bot_wait == 2) {
+         : set_true "rats_cleared";
+         : print "Sharp electrical zaps drift through from the armoury. Then silence. The bot trundles back.\nTibbles: \"I'm a cleaning superhero, saving the day one room at a time.\"";
+      }
+   }
+
+   #### floodwater ruins an unworn or worn filter left in the flood ####
+   : if (is_at "pump_room" && pipe_clear == false && charcoal_in_filter && is_carried "survival_helmet") {
+      : set_false "charcoal_in_filter";
+      : set_false "filter_in_helmet";
+      : print "The floodwater soaks into the helmet's filter, turning the charcoal to mush. Your smoke filter is ruined.";
+   }
+
+   #### the bot mistakes you for vermin if you wander in the dark without a lit stick ####
+   : if (electricity_on == false && stick_turns == 0 && is_at "airlock" == false && is_at "main_corridor" == false && is_at "outside" == false) {
+      : print "The cleaning bot's sensors sweep across you in the gloom - no lit stick, no way for it to know you're crew. Sharp arcs of electricity lance out.\nTibbles: \"I'm the captain of clean. Messes like you should not be seen.\"";
+      : lose_game;
+   }
+
+   #### air countdown - stops while the finished mask is worn ####
+   : if (!(charcoal_in_filter && is_worn "survival_helmet")) {
+      : decrement "air_turns";
+      : if (air_turns == 40) {
+         : print "The air tastes of smoke. A dull ache is building behind your eyes.";
+      }
+      : if (air_turns == 20) {
+         : print "Your chest is tight and your vision is beginning to blur. You need clean air soon.";
+      }
+      : if (air_turns == 10) {
+         : print "You are struggling to breathe. Every breath burns.";
+      }
+      : if (air_turns <= 0) {
+         : print "The smoke finally wins. The air in the bunker runs out before you find a way to fix it. Next time, work faster - or build the filter sooner.";
+         : lose_game;
+      }
+   }
+
+}
