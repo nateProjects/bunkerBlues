@@ -292,6 +292,7 @@ vocabulary {
    : noun  / aliases = [tree, wood]
    : noun  / aliases = [book, codebook, notebook]
    : noun  / aliases = [crewmate, body, crewman, corpse]
+   : noun  / aliases = [documents, notice]
 }
 
 ##########################################################################
@@ -1437,10 +1438,13 @@ on_tick {
          : create "cleaning_bot" target="control_room";
          : print "The cleaning bot rolls south through the pried door, its sensors scanning.";
       }
-      : if (bot_wait == 4) {
+      : if (bot_wait == 2) {
          : set_true "rats_cleared";
+         : print "Sharp electrical zaps drift through from the armoury. Then silence.\nTibbles: \"I'm a cleaning superhero, saving the day one room at a time.\"";
+      }
+      : if (bot_wait == 4) {
          : create "cleaning_bot" target="main_corridor";
-         : print "Sharp electrical zaps drift through from the armoury. Then silence. The bot trundles back.\nTibbles: \"I'm a cleaning superhero, saving the day one room at a time.\"";
+         : print "The cleaning bot trundles back through the pried door.";
       }
    }
 
