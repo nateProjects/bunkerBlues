@@ -8,7 +8,7 @@
 
 game_information {
    game_name           = Bunker Blues
-   game_version         = 0.1.0
+   game_version         = 1.0.0
    game_shortname       = BunkerBlues
    written_by           = Nate Taylor
    uuid                 = 2191f624-e980-46f6-b6f1-85792f494e81
