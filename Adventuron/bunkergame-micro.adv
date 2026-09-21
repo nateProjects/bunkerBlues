@@ -1,0 +1,1547 @@
+##########################################################################
+# Bunker Blues - 8-BIT COMPATIBLE VARIANT (targets DAAD / PAW export)
+# Design and code by Nate Taylor
+# Adventuron conversion, ported from the PunyInform source
+# (Inform/Inform 6/bunkergamepuny.1.0.inf) and cross-checked against
+# Resources/bunker-walkthrough.txt and Resources/bunkernotes.txt.
+#
+# This file is derived from bunkergame-adv.adv, reworked to avoid
+# features the 8-bit exporter doesn't support (see the "Targetting
+# 8-Bit Micros" doc): no string variables, no non-conspicuous objects,
+# no linger()/is_just_entered(), and no embedded graphics. Remember to
+# switch on "8-Bit Compatible" mode in the Adventuron editor's MENU
+# before compiling/exporting this file - that toggle lives in the
+# editor UI, not in the source text.
+##########################################################################
+
+game_information {
+   game_name           = Bunker Blues
+   game_version         = 0.1.0
+   game_shortname       = BunkerBlues
+   written_by           = Nate Taylor
+   uuid                 = 2191f624-e980-46f6-b6f1-85792f494e81
+   year_of_release      = 2026
+   copyright_message    = Creative Commons Sharealike
+   short_synopsis       = Escape a fallout shelter after fire and earthquake knock out the power and air.
+}
+
+start_at = airlock
+
+# loading_screen = bunker_title
+
+game_settings {
+   inventory_items_limit_var = carry_limit
+}
+
+##########################################################################
+# LOCATIONS
+##########################################################################
+
+locations {
+   airlock       : location "You are standing in a dimly lit airlock of a fallout shelter. You hear the faint hum of the emergency light, and an acrid smell from the fire you escaped lingers in the air.\nAs you look around the otherwise sterile room, you notice a small control panel on the wall to your left, next to the internal door." header = "Airlock";
+   main_corridor : location "" header = "Main Corridor";
+   canteen       : location "Rows of moulded plastic chairs sit askew around bolted-down tables, their surfaces sticky with the residue of years of institutional meals. A serving hatch at the far end stands open, the kitchen beyond cold and still." header = "Canteen";
+   bunk_room     : location "Six pairs of metal bunk beds line the walls, their thin mattresses still bearing the impressions of whoever last slept here. A dog-eared paperback and a cracked photograph on one of the bedside shelves are the only signs anyone ever called this home." header = "Bunk Room";
+   closet        : location "A cramped storage closet barely wider than your shoulders, its shelves mostly stripped of whatever was once kept here. The air is stale with the smell of old wool and something faintly chemical that you can't quite place." header = "Closet";
+   latrine       : location "A row of lidded steel lavatories and a pair of cracked porcelain sinks occupy this narrow utility room. A persistent drip somewhere keeps time in the silence, and the overhead strip light hums with the effort of staying on." header = "Latrine";
+   gym           : location "" header = "Gym";
+   med_bay       : location "Banks of white-painted metal cabinets line the walls, most drawers hanging open and rifled through in evident haste. A single examination table sits beneath a surgical light that will never illuminate anything again." header = "Med Bay";
+   kitchen       : location "Stainless steel work surfaces run the length of this institutional kitchen, a few unwashed pots still sitting in the sink where someone left them in a hurry. The pantry to the south and storeroom to the west are a reminder of how large a crew this bunker was built to feed." header = "Kitchen";
+   storeroom     : location "Metal shelving units stretch floor to ceiling, most of them bare save for a few tins and supply boxes pushed to the back." header = "Storeroom";
+   hydroponic    : location "Long hydroponic trays run beneath banks of dead overhead grow-lights, the substrate dry and neglected after what must be weeks without tending. A small bonsai tree in the corner has held on better than the rest, its gnarled trunk evidently tougher than it looks." header = "Hydroponics";
+   pantry        : location "Shelving units hold an orderly supply of tinned goods and sealed containers, though several racks have been cleared at some point. A gas hose runs from a shutoff valve on the wall down to the oven, and a faint metallic smell hangs in the air." header = "Pantry";
+   library       : location "Floor-to-ceiling shelves hold a mix of technical manuals and battered paperbacks, a handful of volumes knocked to the floor and left where they fell. One shelf along the far wall has come away from its fittings and hangs at an awkward angle." header = "Library";
+   lounge        : location "Sagging sofas and a pair of armchairs are arranged around a low table strewn with old magazines and the scattered pieces of several abandoned board games. A television set is bolted to the wall at head height, its screen long dark." header = "Lounge";
+   we_corridor   : location "" header = "WE Corridor";
+   control_room  : location "" header = "Control Room";
+   workshop      : location "A long workbench runs down the centre of this well-equipped room, its surface scattered with tools, coils of wire, and half-finished repairs left by whoever was last in here. A portable welding rig stands in one corner - gas tank and nozzle waiting to be connected up." header = "Workshop";
+   tool_room     : location "A small utility room lined with pegboard, most of its hooks bare and empty, their tools presumably scattered to various corners of the bunker. A few items remain on the lower shelf, including a few cans of solvent that someone never got round to putting away." header = "Tool Room";
+   generator     : location "" header = "Generator";
+   pump_room     : location "" header = "Pump Room";
+   reservoir     : location "" header = "Reservoir";
+   armoury       : location "" header = "Armoury";
+   outside       : location "You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in - someone heard your signal. You've won!" header = "Outside";
+}
+
+
+##########################################################################
+# CONNECTIONS
+# NOTE: pump_room <-> reservoir direction was wrong in the original
+# skeleton (up/down swapped) - reservoir is BELOW pump_room, fixed here.
+##########################################################################
+
+connections {
+   from, direction, to = [
+      airlock, south_oneway, main_corridor,
+      main_corridor, north_oneway, airlock,
+      main_corridor, south_oneway, we_corridor,
+      main_corridor, east_oneway, bunk_room,
+      main_corridor, west_oneway, canteen,
+      main_corridor, southeast_oneway, gym,
+      main_corridor, southwest_oneway, lounge,
+      canteen, south_oneway, kitchen,
+      canteen, east_oneway, main_corridor,
+      bunk_room, south_oneway, latrine,
+      bunk_room, east_oneway, closet,
+      bunk_room, west_oneway, main_corridor,
+      closet, west_oneway, bunk_room,
+      latrine, north_oneway, bunk_room,
+      gym, south_oneway, med_bay,
+      gym, west_oneway, main_corridor,
+      med_bay, north_oneway, gym,
+      med_bay, south_oneway, we_corridor,
+      kitchen, north_oneway, canteen,
+      kitchen, south_oneway, pantry,
+      kitchen, west_oneway, storeroom,
+      storeroom, south_oneway, hydroponic,
+      storeroom, east_oneway, kitchen,
+      hydroponic, north_oneway, storeroom,
+      hydroponic, south_oneway, tool_room,
+      hydroponic, east_oneway, pantry,
+      pantry, north_oneway, kitchen,
+      pantry, west_oneway, hydroponic,
+      library, south_oneway, lounge,
+      lounge, north_oneway, library,
+      lounge, east_oneway, main_corridor,
+      we_corridor, north_oneway, main_corridor,
+      we_corridor, south_oneway, control_room,
+      we_corridor, east_oneway, med_bay,
+      we_corridor, southeast_oneway, generator,
+      we_corridor, southwest_oneway, workshop,
+      control_room, north_oneway, we_corridor,
+      control_room, south_oneway, armoury,
+      control_room, east_oneway, generator,
+      control_room, west_oneway, workshop,
+      workshop, north_oneway, we_corridor,
+      workshop, east_oneway, control_room,
+      workshop, west_oneway, tool_room,
+      tool_room, north_oneway, hydroponic,
+      tool_room, east_oneway, workshop,
+      generator, north_oneway, we_corridor,
+      generator, east_oneway, pump_room,
+      generator, west_oneway, control_room,
+      pump_room, west_oneway, generator,
+      pump_room, down_oneway, reservoir,
+      reservoir, up_oneway, pump_room,
+      armoury, north_oneway, control_room,
+      airlock, north_oneway, outside,
+      outside, south_oneway, airlock,
+   ]
+}
+
+##########################################################################
+# OBJECTS
+##########################################################################
+
+objects {
+
+   # --- Airlock ---
+   emergency_pack : object "a battered canvas emergency pack"
+      at             = "airlock"
+      msg            = "A battered canvas emergency pack with worn straps. Carrying it gives you considerably more carrying capacity."
+   ;
+   documents      : object "some documents"     at="airlock" msg="Emergency procedures for shelter personnel. In the event of fire, seal the airlock and await rescue. The external door release code is held by the senior officer. To request evacuation, transmit on the emergency frequency using the signal codes from the senior officer's notebook.";
+   paperclip      : object "a paperclip"                    msg="A small metal paperclip.";
+   panel          : scenery "a control panel"   at="airlock";
+   internal_door  : scenery "the internal door" at="airlock" noun="hatch" adjective="internal";
+   external_door  : scenery "the external door" at="airlock";
+
+   # --- Main Corridor ---
+   glow_stick     : object "a glow stick" at="main_corridor" msg="A chemical glow stick. Shake it to activate; reheat it on the oven when it fades.";
+   cleaning_bot   : scenery "a cleaning bot" at="main_corridor" msg="A squat cleaning bot, its sensor array sweeping slowly. It zaps anything it reads as vermin - carrying a lit glow stick marks you as crew, not a target.";
+
+   # --- Canteen ---
+   coffee_maker   : scenery "a coffee maker" at="canteen" msg="It's just an ordinary coffee maker.";
+   coffee_filter  : object "a coffee filter" msg="A circular paper coffee filter, slightly damp from the machine. It could be fitted into a helmet's breathing port to filter out particulates.";
+
+   # --- Kitchen ---
+   bread_knife    : object "a bread knife" at="kitchen" msg="A long serrated bread knife with a wooden handle, still reasonably sharp despite its age.";
+
+   # --- Storeroom ---
+   crowbar        : object "a crowbar" at="storeroom" msg="A solid steel crowbar, reassuringly heavy. Useful for prying things open and, in a pinch, as a lever.";
+
+   # --- Latrine ---
+   toilet_brush   : object "a toilet brush" at="latrine" msg="A long-handled toilet brush, not particularly pleasant to handle but sturdy enough to clear a blocked pipe.";
+
+   # --- Bunk Room / Closet ---
+   jacket         : scenery "Bob's jacket" at="closet" msg="It is Bob's jacket. You miss Bob.";
+   code_book      : object "a small notebook" noun="book" adjective="code" msg="A small, well-thumbed notebook containing radio signal codes and door access codes, written in a cramped but legible hand.";
+
+   # --- Gym / Med Bay ---
+   crewmate       : scenery "a dead crewman" at="gym" noun="crewmate" msg="A dead crewman pinned under fallen gym equipment.";
+   hand_attached  : scenery "a hand" at="gym" msg="The hand of the dead crewman. You could sever it for use on a biometric scanner.";
+   hand           : object "a severed hand" msg="A severed hand. It might work on a biometric scanner.";
+   survival_helmet : object "a survival helmet" at="gym" msg="A sealed helmet, seized up with rust on the dead crewman. It could be freed with WD40.";
+   pestle         : object "a pestle" at="med_bay" msg="A heavy pestle, good for crushing things.";
+   med_window     : scenery "a small porthole" at="med_bay" noun="porthole" msg="A small porthole-style window set into the south wall, looking out toward the pump room. You note it as a potential entry point - but not from this side. You'd need to access the pump room from the generator level.";
+
+   # --- Hydroponics / Tool Room ---
+   bonsai_tree    : object "a bonsai tree" at="hydroponic" msg="A small but surprisingly dense bonsai tree, its gnarled trunk and compact branches ideal for reducing to charcoal with a good pounding.";
+   charcoal       : object "some charcoal" msg="Lumps of charcoal crushed from the bonsai wood. Insert into the helmet filter to scrub smoke.";
+   wd40           : object "a can of WD40" at="tool_room" noun="wd40" adjective="can" msg="A well-used aerosol can of WD40, still with enough left to free up a seized joint or two.";
+
+   # --- Pantry ---
+   hose           : object "a hose" at="pantry" msg="A rubber gas hose connecting the oven to the supply pipe.";
+   valve          : scenery "a shutoff valve" at="pantry";
+   oven           : scenery "an oven" at="pantry";
+
+   # --- Library ---
+   wooden_shelf   : object "a wooden shelf" at="library" noun="shelf" adjective="wooden" msg="A solid wooden shelf, roughly a metre long. Sturdy enough to act as a ramp if leaned against something.";
+
+   # --- Workshop / Tool Room rig ---
+   gas_tank       : scenery "a gas tank" at="workshop";
+   dial           : scenery "a dial" at="workshop";
+   torch          : object "a welding torch" noun="torch" adjective="welding" msg="A welding torch nozzle, the business end of the portable rig.";
+
+   # --- WE Corridor ---
+   fire_door      : scenery "a fire door" at="we_corridor";
+
+   # --- Control Room ---
+   radio          : scenery "a radio" at="control_room";
+   armoury_door   : scenery "the armoury door" at="control_room" noun="door" adjective="armoury";
+
+   # --- Generator ---
+   scanner        : scenery "a biometric scanner" at="generator";
+   gen_switch     : scenery "a master switch" at="generator" noun="switch" adjective="master";
+   gen_window     : scenery "a window" at="generator" noun="window" adjective="generator";
+
+   # --- Pump Room ---
+   knob           : scenery "a broken pump handle" at="pump_room" noun="knob";
+   pump_window    : scenery "a window" at="pump_room" noun="window" adjective="pump";
+
+   # --- Reservoir ---
+   pipe           : scenery "a supply pipe" at="reservoir";
+
+   # --- Armoury ---
+   weapon         : object "a bolt-action rifle" at="armoury" noun="rifle" msg="A bolt-action rifle, the finish worn but the mechanism well-maintained. There are a few rounds in the magazine - enough for what you need.";
+
+}
+
+##########################################################################
+# PUZZLE STATE
+##########################################################################
+
+booleans {
+   internal_door_open     : boolean "false";
+   external_door_unlocked : boolean "false"; // both codes typed in on the radio
+   helmet_free             : boolean "false"; // WD40 applied, helmet takeable
+   filter_in_helmet        : boolean "false";
+   charcoal_in_filter      : boolean "false";
+   valve_open               : boolean "true";  // gas flowing to the oven
+   oven_on                  : boolean "false";
+   hose_attached            : boolean "false"; // hose connected to the workshop rig
+   dial_turned              : boolean "false";
+   knob_welded              : boolean "false";
+   crowbar_lever            : boolean "false";
+   pump_reversed            : boolean "false";
+   radio_on                 : boolean "false";
+   signal_sent              : boolean "false";
+   pipe_clear               : boolean "false";
+   corridor_door_pried      : boolean "false"; // fire door pried, bot can follow
+   scanner_cleared          : boolean "false";
+   electricity_on           : boolean "false";
+   shelf_pulled             : boolean "false"; // shelf worked loose from the wall
+   shelf_leaned             : boolean "false"; // shelf leaned against armoury door
+   rats_cleared               : boolean "false";
+   window_broken             : boolean "false"; // generator/pump-room window
+   external_door_open        : boolean "false";
+   gas_leaking                : boolean "false"; // hose detached while valve is still open
+   hose_on_oven                : boolean "true";  // hose physically reattached to the oven's gas fitting
+   bot_bump_shown              : boolean "false"; // one-shot bump message per control room visit
+   helmet_worn                 : boolean "false"; // manual "worn" tracking - wear/unwear commands are not 8-bit compatible
+   leak_active                  : boolean "false"; // derived: hose detached AND valve open (keeps conditions to 2 terms max)
+   bot_armed                    : boolean "false"; // derived: control room + door pried + shelf not leaned + rats not cleared
+   tibbles_can_speak            : boolean "false"; // derived: main corridor + power off + chance roll
+   bot_can_cross                : boolean "false"; // derived: rats not cleared + shelf leaned + door pried
+   filter_at_risk               : boolean "false"; // derived: pump room + pipe not clear + charcoal fitted + helmet held
+   mask_active                  : boolean "false"; // derived: charcoal fitted AND helmet worn
+   chance_hit                    : boolean "false"; // holds the result of a chance() roll before comparing it
+   bot_can_zap                  : boolean "false"; // derived: dark + no lit stick + away from the lit rooms
+}
+
+integers {
+   air_turns    : integer "100" min="-10" max="100";
+   score        : integer "0"   max="100";
+   carry_limit  : integer "6"   max="20";
+   stick_turns  : integer "0"   max="150"; // 0 = glow stick not lit
+   bot_wait     : integer "0"   max="5";
+   gas_leak_turns : integer "0" max="10"; // turns since the gas leak started
+   tibbles_line   : integer "0" max="5";  // cycles through Tibbles' lines without repeating
+   reservoir_turns : integer "0" max="10"; // turns spent in the flooded reservoir
+}
+
+##########################################################################
+# VOCABULARY - custom verb synonym groups
+##########################################################################
+
+vocabulary {
+   : verb / aliases = [shake, jiggle, wave, rattle]
+   : verb / aliases = [sever, cut, saw, hack, slice, chop]
+   : verb / aliases = [spray, squirt, apply, oil, lubricate]
+   : verb / aliases = [pry, lever, wedge, force, jimmy, prise]
+   : verb / aliases = [shoot, fire, blast]
+   : verb / aliases = [lean, prop, rest, stand]
+   : verb / aliases = [pull, tug, yank]
+   : verb / aliases = [crush, pound, mix, grind, mash, smash, bash]
+   : verb / aliases = [weld, fuse, bond, solder, melt, braze]
+   : verb / aliases = [unblock, clear, unclog, scrub, sweep, empty]
+   : verb / aliases = [scan]
+   : verb / aliases = [turn, rotate, twist, throw, flip, flick, switch, press, light, ignite]
+   : verb / aliases = [attach, connect, fasten]
+   : verb / aliases = [type, write]
+   : noun  / aliases = [tree, wood]
+   : noun  / aliases = [book, codebook, notebook]
+   : noun  / aliases = [crewmate, body, crewman, corpse]
+}
+
+##########################################################################
+# BARRIERS
+##########################################################################
+
+barriers {
+   internal_door_block : block_path {
+      from            = airlock
+      to              = main_corridor
+      block_when_not  = internal_door_open
+      message         = You'll need to find some other way to open the internal door - try examining the panel.
+   }
+   external_door_block : block_path {
+      from            = airlock
+      to              = outside
+      block_when_not  = external_door_open
+      message         = The blast door is closed.
+   }
+   flood_block : block_path {
+      from            = generator
+      to              = pump_room
+      block_when_not  = pipe_clear
+      message         = The pump room door is sealed - water is pressing hard against it from the other side. You need another way in.
+   }
+   armoury_block : block_path {
+      from            = control_room
+      to              = armoury
+      block_when_not  = corridor_door_pried
+      message         = You push the door open a crack - a seething mass of large, aggressive rodents hurls itself at the gap. You slam it shut.
+   }
+}
+
+##########################################################################
+# STARTUP
+##########################################################################
+
+on_startup {
+   : print "BUNKER BLUES\nby Nate Taylor, with thanks to David Etherton";
+   : press_any_key;
+   : print "You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead.\nYou're not sure how many hours it has been since Joe pushed you in the airlock, and you passed out from the smoke of the fire. He said he was still going to try to put it out, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it.\nBut the air in here won't last forever, the survival suit you threw on had no helmet, and there is no way to open the external door without electricity, even if you dared to enter the wasteland without more protection.";
+}
+
+##########################################################################
+# LOCATION DESCRIPTIONS
+##########################################################################
+
+on_describe {
+
+   : if (is_at "main_corridor") {
+      : if (electricity_on) {
+         : print "The main corridor runs the full length of the bunker under steady, bright fluorescent light - a relief after the emergency flicker. Rows of painted-steel doors line each side, their stencilled numbers sharp and clear.";
+      }
+      : else {
+         : print "Fluorescent strips flicker overhead, casting a sickly pallor over the metal-lined corridor. Rows of identical painted-steel doors line each side, their stencilled numbers faded to near-illegibility.";
+      }
+   }
+
+   : if (is_at "gym") {
+      : if (helmet_free && is_exists "hand") {
+         : print "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman's body remains pinned beneath the weight cage - helmetless, one hand severed at the wrist.";
+      }
+      : else_if (helmet_free) {
+         : print "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman lies pinned beneath the weight cage, helmetless now.";
+      }
+      : else {
+         : print "A compact exercise room that took the worst of the earthquake - weight racks overturned, a treadmill on its side, rubber matting buckled and torn. In the far corner a dead crewman lies pinned beneath a toppled cage of weights, still wearing his helmet.";
+      }
+   }
+
+   : if (is_at "we_corridor") {
+      : if (corridor_door_pried) {
+         : print "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. The heavy fire door to the south hangs open, pried back with the crowbar.";
+      }
+      : else {
+         : print "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. A heavy fire door to the south is wedged shut - the bot will not be able to follow until it is pried open.";
+      }
+   }
+
+   : if (is_at "control_room") {
+      : if (electricity_on == false) {
+         : print "Banks of monitors and instrument panels cover every surface, most of them dark, a handful still cycling through error messages or static. This room controlled everything - communications, life support, security - and it will again, once the power is back on.";
+      }
+      : else_if (radio_on) {
+         : print "The control room hums with restored power, monitors glowing across every surface. The radio crackles from its corner console.";
+      }
+      : else {
+         : print "The control room hums with restored power, monitors cycling through system readings. The radio sits silent on its console.";
+      }
+      : if (rats_cleared == false && shelf_leaned) {
+         : print "A door to the south leads toward the armoury - the bot is still working the gap you ramped for it, scratching and skittering sounds coming from beyond.";
+      }
+      : else_if (rats_cleared == false) {
+         : print "A door to the south leads toward the armoury, but a scrabbling, chittering noise from the gap beneath it warns you not to just open it - something would need to be dealt with first, and the low gap under the door looks like it would take a ramp of some kind for anything to cross it.";
+      }
+   }
+
+   : if (is_at "generator") {
+      : if (electricity_on) {
+         : print "The generator fills the room with a steady roar, its cables and conduits alive with current. The master switch is thrown; lights burn throughout the bunker.";
+      }
+      : else {
+         : print "The bunker's main generator dominates this room, its bulk trailing cables and conduits that run up to the ceiling and along every wall. A master switch and a biometric hand scanner are mounted on a panel nearby, both dormant without power.";
+      }
+      : if (window_broken) {
+         : print "The window in the east wall has been shot out, leaving a jagged opening into the pump room.";
+      }
+      : else {
+         : print "A small window is set into the east wall, looking into the flooded pump room beyond.";
+      }
+   }
+
+   : if (is_at "pump_room") {
+      : if (pump_reversed) {
+         : print "The pump room hums with purpose, the reversed pump cycling clean air through the bunker's ventilation. The floor is dry.";
+      }
+      : else_if (pipe_clear) {
+         : print "Pipework and pumping machinery crowd this damp room. The floor has drained since the pipe was cleared. The air pump stands at the centre, waiting to be turned.";
+      }
+      : else {
+         : print "Pipework and pumping machinery crowd this damp utility room. The floor is under several inches of murky water from the burst pipe. The main air pump stands at the centre, its control knob snapped clean off.";
+      }
+   }
+
+   : if (is_at "reservoir") {
+      : if (pipe_clear) {
+         : print "A low-ceilinged chamber beneath the pump room, mostly occupied by the concrete cistern. The supply pipe runs clear now, water flowing properly.";
+      }
+      : else {
+         : print "A low-ceilinged chamber directly beneath the pump room, almost entirely occupied by a large concrete cistern fed by pipes from above. The main supply pipe runs along the base of the wall, its outlet visibly choked with accumulated sediment and debris.";
+      }
+   }
+
+   : if (is_at "armoury") {
+      : if (rats_cleared) {
+         : print "The armoury is quiet now, the infestation cleared. Heavy-gauge mesh covers stripped weapons racks - someone left in a hurry. Gnaw marks and droppings remain on every surface, but the rats are gone.";
+      }
+      : else {
+         : print "A small secure room with heavy-gauge mesh panels over the shelving, most of the weapons racks stripped bare in what must have been a considerable hurry. Whatever infestation drove everyone out has left its mark - droppings and gnaw marks cover every surface.";
+      }
+   }
+
+}
+
+##########################################################################
+# ON_COMMAND - Part 1: Airlock, pack, glow stick, one-time reveals
+##########################################################################
+
+on_command {
+
+   #### Airlock: panel / paperclip / doors ####
+
+   : if_examine "panel" {
+      : if (internal_door_open) {
+         : print "The panel hangs open. A paperclip is fused to the circuit board, providing power to the inner door.";
+      }
+      : else {
+         : print "A small control panel on the wall next to the internal door. It is closed.";
+      }
+   }
+
+   : match "open panel" {
+      : if (internal_door_open) {
+         : print "The panel is already open.";
+      }
+      : else {
+         : print "You open the door panel, revealing a circuit board. A wire has burnt out, stopping the door from working.";
+      }
+   }
+
+   : match "insert paperclip;put paperclip;attach paperclip;fit paperclip" {
+      : if (internal_door_open) {
+         : print "The paperclip already bridges the burnt-out wire.";
+      }
+      : else_if (is_carried "paperclip" == false) {
+         : print "You don't have a paperclip.";
+      }
+      : else {
+         : set_true "internal_door_open";
+         : destroy "paperclip";
+         : print "The paperclip shorts out the broken wire and the door slides slowly open on the dwindling emergency power.";
+         : add var="score" value="3";
+      }
+   }
+
+   : if_examine "internal_door" {
+      : print "The internal door is made out of metal.";
+   }
+
+   : if_examine "external_door" {
+      : if (external_door_open) {
+         : print "The blast door stands open, the wasteland visible beyond.";
+      }
+      : else_if (external_door_unlocked) {
+         : print "A heavy blast door leading out to the wasteland. It is powered and unlocked - you could open it.";
+      }
+      : else_if (electricity_on) {
+         : print "A heavy blast door leading out to the wasteland. The electronic lock is powered but locked. It needs the door release code.";
+      }
+      : else {
+         : print "A heavy blast door leading out to the wasteland. The electronic lock needs power to operate.";
+      }
+   }
+
+   : match "open door" {
+      : if (is_at "airlock" && electricity_on == false) {
+         : print "The blast door needs power to operate.";
+      }
+      : else_if (is_at "airlock" && external_door_unlocked == false) {
+         : print "The blast door is locked. It needs the door release code.";
+      }
+      : else_if (is_at "airlock" && external_door_open) {
+         : print "It's already open.";
+      }
+      : else_if (is_at "airlock") {
+         : set_true "external_door_open";
+         : print "You throw the heavy bolts and the blast door swings open, the wasteland visible beyond.";
+      }
+      : else_if (is_at "we_corridor") {
+         : print "The fire door doesn't have a handle on this side - it needs prying open with something.";
+      }
+      : else {
+         : print "There is nothing here to open.";
+      }
+   }
+
+   #### player self-description ####
+
+   : match "examine me;examine myself;examine self" {
+      : print "You're wearing a heavy-duty survival suit, slightly too large and smelling of must. It offers some protection but leaves your head entirely exposed.";
+   }
+
+   #### emergency pack carrying capacity ####
+   #### having the pack (not just wearing it) is what unlocks the extra capacity ####
+
+   : match "get pack" {
+      : get "emergency_pack";
+      : set_integer var="carry_limit" value="12";
+   }
+
+   : match "drop pack" {
+      : drop "emergency_pack";
+      : set_integer var="carry_limit" value="6";
+   }
+
+   : match "wear pack;remove pack;unwear pack" {
+      : print "There's no need - just carrying it in your hands gives you the extra capacity.";
+   }
+
+   #### one-time reveals ####
+
+   : if_examine "documents" {
+      : print "Emergency procedures for shelter personnel. In the event of fire, seal the airlock and await rescue. The external door release code is held by the senior officer. To request evacuation, transmit on the emergency frequency using the signal codes from the senior officer's notebook.";
+      : if (has_not_created "paperclip") {
+         : create "paperclip" target="airlock";
+         : print "As you look through the documents, the paperclip holding them together falls to the floor.";
+      }
+   }
+
+   : if_examine "jacket" {
+      : print "It is Bob's jacket. You miss Bob.";
+      : if (has_not_created "code_book") {
+         : create "code_book" target="closet";
+         : print "As you look inside the jacket a small notebook falls from one of the pockets.";
+      }
+   }
+
+   : if_examine "coffee_maker" {
+      : print "It's just an ordinary coffee maker.";
+      : if (has_not_created "coffee_filter") {
+         : create "coffee_filter" target="canteen";
+         : print "Examining the coffee maker reveals a circular paper coffee filter.";
+      }
+   }
+
+   #### glow stick ####
+
+   : match "shake stick" {
+      : if (is_carried "glow_stick" == false) {
+         : print "You need to pick it up first.";
+      }
+      : else_if (stick_turns > 0) {
+         : print "The stick is already lit.";
+      }
+      : else {
+         : set_integer var="stick_turns" value="150";
+         : print "You shake the glow stick vigorously. It flares to life.";
+      }
+   }
+
+   : if_examine "glow_stick" {
+      : if (stick_turns > 0) {
+         : print "A chemical glow stick, giving off a faint light.";
+      }
+      : else {
+         : print "A chemical glow stick. Shake it to activate; reheat it on the oven when it fades.";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 2: Helmet mask chain, hand, scanner, switch, charcoal
+##########################################################################
+
+
+   #### crewmate ####
+
+   : if_examine "crewmate" {
+      : if (helmet_free && is_exists "hand") {
+         : print "The crewman lies pinned under the weight cage, helmetless and missing a hand. There is nothing more to take from him.";
+      }
+      : else_if (helmet_free) {
+         : print "The crewman lies pinned under the weight cage, helmetless now. One hand remains - you could sever it if you need it for the biometric scanner.";
+      }
+      : else {
+         : print "A dead crewman pinned under fallen gym equipment, still wearing his sealed helmet. The joints are seized with rust - something might free them up.";
+      }
+   }
+
+   : match "take crewmate" {
+      : print "The body is too heavy to move, and there is nothing to be gained by trying.";
+   }
+
+   : match "attack crewmate" {
+      : print "He is already dead. You need to stay focused.";
+   }
+
+   #### helmet ####
+
+   : if_examine "survival_helmet" {
+      : if (charcoal_in_filter) {
+         : print "The helmet has a charcoal-packed coffee filter fitted - a crude but effective smoke mask.";
+      }
+      : else_if (filter_in_helmet) {
+         : print "The helmet has a coffee filter fitted into its breathing port. Pack it with charcoal to complete the mask.";
+      }
+      : else_if (helmet_free) {
+         : print "A sealed helmet, freed from the body. Fit a filter to make it a smoke mask.";
+      }
+      : else {
+         : print "A sealed helmet, seized up with rust on the dead crewman. It could be freed with WD40.";
+      }
+   }
+
+   : match "get helmet" {
+      : if (helmet_free == false) {
+         : print "The helmet is seized up with rust on the dead crewman. You'll need to free it up first.";
+      }
+      : else {
+         : get "survival_helmet";
+      }
+   }
+
+   : match "wear helmet" {
+      : if (helmet_free == false) {
+         : print "The helmet is seized up with rust on the dead crewman. You'll need to free it up first.";
+      }
+      : else_if (is_carried "survival_helmet" == false) {
+         : print "You need to be holding the helmet first.";
+      }
+      : else_if (helmet_worn) {
+         : print "You're already wearing it.";
+      }
+      : else {
+         : set_true "helmet_worn";
+         : print "You put on the helmet.";
+      }
+   }
+
+   : match "remove helmet;unwear helmet" {
+      : if (helmet_worn == false) {
+         : print "You're not wearing it.";
+      }
+      : else {
+         : set_false "helmet_worn";
+         : print "You take off the helmet.";
+         : if (charcoal_in_filter) {
+            : print "The smoke immediately starts catching at your throat again.";
+         }
+      }
+   }
+
+   : match "drop helmet" {
+      : set_false "helmet_worn";
+      : drop "survival_helmet";
+   }
+
+   : match "spray helmet" {
+      : if (is_carried "wd40" == false) {
+         : print "You need something to spray with.";
+      }
+      : else_if (helmet_free) {
+         : print "The helmet joints are already freed up.";
+      }
+      : else {
+         : set_true "helmet_free";
+         : print "You spray WD40 onto the rusted joints. With a series of creaks the helmet comes free from the body.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "insert filter;put filter;fit filter" {
+      : if (helmet_free == false) {
+         : print "You need to free the helmet from the body first.";
+      }
+      : else_if (is_carried "coffee_filter" == false) {
+         : print "You don't have a coffee filter.";
+      }
+      : else_if (filter_in_helmet) {
+         : print "There is already a filter fitted into the helmet.";
+      }
+      : else {
+         : set_true "filter_in_helmet";
+         : print "You fit the coffee filter into the helmet's breathing port.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "insert charcoal;put charcoal;fit charcoal;pack charcoal" {
+      : if (filter_in_helmet == false) {
+         : print "You need to fit a filter into the helmet before adding charcoal.";
+      }
+      : else_if (is_carried "charcoal" == false) {
+         : print "You don't have any charcoal.";
+      }
+      : else_if (charcoal_in_filter) {
+         : print "The filter is already packed with charcoal.";
+      }
+      : else {
+         : set_true "charcoal_in_filter";
+         : destroy "charcoal";
+         : print "You pack the charcoal into the filter. The helmet is now a crude but effective smoke mask.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### hand ####
+
+   : if_examine "hand_attached" {
+      : print "The hand of the dead crewman. You could sever it for use on a biometric scanner.";
+   }
+
+   : if_examine "hand" {
+      : print "A severed hand. It might work on a biometric scanner.";
+   }
+
+   : match "cut hand" {
+      : if (is_carried "bread_knife" == false) {
+         : print "You'll need something sharper than that!";
+      }
+      : else_if (is_exists "hand") {
+         : print "You've already got it.";
+      }
+      : else {
+         : destroy "hand_attached";
+         : create "hand" target="gym";
+         : print "It's grisly work but you managed to separate the hand from the body.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### scanner / switch ####
+
+   : match "scan hand" {
+      : if (is_at "generator" == false) {
+         : print "There is no scanner here.";
+      }
+      : else_if (is_exists "hand" == false) {
+         : print "You need to sever the hand from the body first.";
+      }
+      : else_if (is_carried "hand" == false) {
+         : print "You need to be holding the hand.";
+      }
+      : else_if (scanner_cleared) {
+         : print "The scanner has already accepted the print.";
+      }
+      : else {
+         : set_true "scanner_cleared";
+         : print "You press the severed hand against the scanner. It beeps once and a green light blinks on.";
+         : add var="score" value="5";
+      }
+   }
+
+   : if_examine "scanner" {
+      : if (scanner_cleared) {
+         : print "The biometric scanner glows green - cleared and satisfied.";
+      }
+      : else {
+         : print "A biometric hand scanner securing the generator controls. It needs a valid hand print.";
+      }
+   }
+
+   : if_examine "gen_switch" {
+      : if (electricity_on) {
+         : print "The master switch is thrown. The generator is running.";
+      }
+      : else_if (scanner_cleared) {
+         : print "The master switch. The scanner is cleared - you can use it now.";
+      }
+      : else {
+         : print "A master power switch. The biometric scanner must be cleared before it can be used.";
+      }
+   }
+
+   : match "turn switch" {
+      : if (scanner_cleared == false) {
+         : print "The biometric scanner must be cleared before the switch can be used.";
+      }
+      : else_if (electricity_on) {
+         : print "The generator is already running.";
+      }
+      : else {
+         : set_true "electricity_on";
+         : print "You throw the master switch. The generator roars to life. Lights flicker on throughout the bunker.";
+         : add var="score" value="10";
+      }
+   }
+
+   #### charcoal source ####
+
+   : match "crush tree" {
+      : if (is_carried "pestle" == false) {
+         : print "You need something to crush it with.";
+      }
+      : else_if (is_carried "bonsai_tree" == false) {
+         : print "You need to be carrying the bonsai tree.";
+      }
+      : else_if (is_exists "charcoal") {
+         : print "You already have enough charcoal.";
+      }
+      : else {
+         : destroy "bonsai_tree";
+         : create "charcoal";
+         : print "You pound the bonsai wood with the pestle, reducing it to usable chunks of charcoal.";
+         : add var="score" value="3";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 3: Valve, oven, hose, welding rig, knob
+##########################################################################
+
+
+   #### valve ####
+
+   : if_examine "valve" {
+      : if (valve_open) {
+         : print "A gas shutoff valve on the wall. It is currently open - gas is flowing to the oven.";
+      }
+      : else {
+         : print "A gas shutoff valve on the wall. It is currently closed - gas is off.";
+      }
+   }
+
+   : match "turn valve" {
+      : if (valve_open) {
+         : set_false "valve_open";
+         : print "You turn the valve off. The hiss of gas through the pipe stops.";
+      }
+      : else {
+         : set_true "valve_open";
+         : print "You turn the valve on. Gas begins flowing again.";
+      }
+   }
+
+   #### hose / oven ####
+
+   : if_examine "hose" {
+      : if (valve_open) {
+         : print "A rubber gas hose connecting the oven to the supply pipe. Turn the valve off before detaching it.";
+      }
+      : else {
+         : print "A rubber gas hose, disconnected from the oven's gas fitting.";
+      }
+   }
+
+   : match "get hose" {
+      : get "hose";
+      : set_false "hose_on_oven";
+   }
+
+   : if_examine "oven" {
+      : if (oven_on) {
+         : print "A battered institutional gas oven, its enamel stained and chipped. The burners are lit and the hob is hot.";
+      }
+      : else {
+         : print "A battered institutional gas oven, its enamel stained and chipped. The rubber hose connecting it to the supply pipe snakes out from behind.";
+      }
+   }
+
+   : match "turn oven" {
+      : if (oven_on) {
+         : set_false "oven_on";
+         : print "You turn off the oven. The burners die.";
+      }
+      : else_if (hose_on_oven == false && valve_open) {
+         : print "The igniter sparks - and the gas leaking into the room from the disconnected hose catches instantly. The pantry erupts in a roaring explosion.";
+         : lose_game;
+      }
+      : else_if (hose_on_oven == false) {
+         : print "The gas hose is not connected - reattach it to the oven before turning it on.";
+      }
+      : else {
+         : set_true "oven_on";
+         : print "You light the oven. The burners catch with a soft whump.";
+      }
+   }
+
+   : match "put stick;insert stick" {
+      : if (is_at "pantry" == false) {
+         : print "There's nowhere here to do that.";
+      }
+      : else_if (oven_on == false) {
+         : print "The oven is not on - light it first.";
+      }
+      : else_if (is_carried "glow_stick" == false) {
+         : print "You need to be holding the glow stick.";
+      }
+      : else {
+         : set_integer var="stick_turns" value="150";
+         : print "You hold the glow stick over the hot hob for a moment. It flares back to full brightness.";
+      }
+   }
+
+   : match "attach hose" {
+      : if (is_at "pantry") {
+         : if (hose_on_oven) {
+            : print "The hose is already connected to the oven.";
+         }
+         : else_if (is_carried "hose" == false) {
+            : print "You need to be holding the hose.";
+         }
+         : else {
+            : create "hose" target="pantry";
+            : set_true "hose_on_oven";
+            : print "You reconnect the rubber hose to the oven's gas fitting. The oven is ready to use again.";
+         }
+      }
+      : else_if (is_at "workshop") {
+         : if (is_carried "hose" == false) {
+            : print "You need to be holding the hose.";
+         }
+         : else_if (hose_attached) {
+            : print "The hose is already connected to the rig.";
+         }
+         : else {
+            : set_true "hose_attached";
+            : destroy "hose";
+            : create "torch" target="inventory";
+            : print "You connect the hose between the gas tank and the nozzle, forming a portable welding torch. You pick up the torch head.";
+            : add var="score" value="5";
+         }
+      }
+      : else {
+         : print "There's nothing here to attach the hose to.";
+      }
+   }
+
+   : if_examine "gas_tank" {
+      : if (hose_attached) {
+         : print "A pressurised gas tank, the hose now connected between it and the nozzle.";
+      }
+      : else {
+         : print "A pressurised gas tank. The hose can be attached to connect it to the nozzle.";
+      }
+   }
+
+   #### dial ####
+
+   : if_examine "dial" {
+      : if (dial_turned) {
+         : print "A dial controlling the gas mix, set to acetylene. The rig is primed and ready to weld.";
+      }
+      : else {
+         : print "A dial controlling the gas mix. Set it to acetylene to prime the rig for welding.";
+      }
+   }
+
+   : match "turn dial" {
+      : if (hose_attached == false) {
+         : print "Attach the hose to the rig first.";
+      }
+      : else_if (dial_turned) {
+         : print "The dial is already set to acetylene.";
+      }
+      : else {
+         : set_true "dial_turned";
+         : print "You turn the dial to acetylene. The rig is primed and ready to weld.";
+      }
+   }
+
+   #### knob ####
+
+   : if_examine "knob" {
+      : if (crowbar_lever) {
+         : print "The knob is welded back onto the pump handle, with the crowbar slotted on as a lever. Ready to turn.";
+      }
+      : else_if (knob_welded) {
+         : print "The knob has been welded back onto the pump handle. You need a lever to turn it - attach the crowbar.";
+      }
+      : else {
+         : print "A broken air-pump handle stub - the knob has snapped off. It could be welded back on.";
+      }
+   }
+
+   : match "weld knob" {
+      : if (is_at "pump_room" == false) {
+         : print "You need to be at the pump to weld the knob on.";
+      }
+      : else_if (is_carried "torch" == false) {
+         : print "You need the welding torch to do this.";
+      }
+      : else_if (dial_turned == false) {
+         : print "The welding rig is not ready - attach the hose and set the dial first.";
+      }
+      : else_if (knob_welded) {
+         : print "The knob is already welded on.";
+      }
+      : else {
+         : set_true "knob_welded";
+         : print "You touch the torch to the knob stub and weld the knob firmly onto the pump handle.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "attach crowbar" {
+      : if (is_at "pump_room" == false) {
+         : print "There's nothing to attach the crowbar to here.";
+      }
+      : else_if (knob_welded == false) {
+         : print "You need to weld the knob back on first.";
+      }
+      : else_if (is_carried "crowbar" == false) {
+         : print "You need to be holding the crowbar.";
+      }
+      : else_if (crowbar_lever) {
+         : print "The crowbar is already slotted onto the knob.";
+      }
+      : else {
+         : set_true "crowbar_lever";
+         : destroy "crowbar";
+         : print "You slot the crowbar onto the knob, giving you enough leverage to turn the pump.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "turn knob" {
+      : if (knob_welded == false) {
+         : print "There is no knob - it needs to be welded back on first.";
+      }
+      : else_if (crowbar_lever == false) {
+         : print "You need a lever attached to the knob to turn it - attach the crowbar.";
+      }
+      : else_if (pump_reversed) {
+         : print "The pump is already reversed.";
+      }
+      : else {
+         : set_true "pump_reversed";
+         : print "With the crowbar as a lever you heave the knob around. The pump reverses with a grinding shudder - clean air begins to circulate.";
+         : add var="score" value="15";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 4: Fire door, pipe, radio, codes
+##########################################################################
+
+
+   #### fire door ####
+
+   : if_examine "fire_door" {
+      : if (corridor_door_pried) {
+         : print "The fire door hangs open, pried back with the crowbar.";
+      }
+      : else {
+         : print "A heavy fire door wedged shut. Pry it open with the crowbar so the bot can follow.";
+      }
+   }
+
+   : match "pry door" {
+      : if (is_at "we_corridor" == false && is_at "control_room" == false) {
+         : print "There's nothing here to pry open.";
+      }
+      : else_if (is_carried "crowbar" == false) {
+         : print "You need the crowbar to pry that open.";
+      }
+      : else_if (corridor_door_pried) {
+         : print "The door is already pried open.";
+      }
+      : else {
+         : set_true "corridor_door_pried";
+         : print "You jam the crowbar into the door frame and heave. The fire door grinds open and stays put.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### pipe ####
+
+   : if_examine "pipe" {
+      : if (pipe_clear) {
+         : print "The supply pipe runs clear now, water flowing properly through.";
+      }
+      : else {
+         : print "The main water supply pipe, its outlet packed solid with sediment and debris. It needs clearing before water can flow again.";
+      }
+   }
+
+   : match "unblock pipe" {
+      : if (is_carried "toilet_brush" == false) {
+         : print "You need something to clear the blockage with.";
+      }
+      : else_if (pipe_clear) {
+         : print "The pipe is already clear.";
+      }
+      : else {
+         : set_true "pipe_clear";
+         : print "You ram the toilet brush into the pipe and work it back and forth. A foul slurry of debris clears through. Water begins to flow again.";
+         : add var="score" value="5";
+      }
+   }
+
+   #### radio / codes ####
+
+   : if_examine "radio" {
+      : if (external_door_unlocked) {
+         : print "The radio crackles softly. Both codes have been transmitted - someone out there heard you.";
+      }
+      : else_if (radio_on) {
+         : print "The radio crackles with static and a carrier wave. Ready to transmit.";
+      }
+      : else_if (electricity_on) {
+         : print "A military-grade communications radio. Power is restored - you could switch it on.";
+      }
+      : else {
+         : print "A chunky military-grade communications radio, dusty but intact. It needs power before it can broadcast anything.";
+      }
+   }
+
+   : match "turn radio" {
+      : if (electricity_on == false) {
+         : print "The radio needs power before it will work.";
+      }
+      : else_if (radio_on) {
+         : print "The radio is already on.";
+      }
+      : else {
+         : set_true "radio_on";
+         : print "You switch on the radio. It crackles to life, filling the room with static and a carrier wave.";
+      }
+   }
+
+   : match "type code;type door;type signal;type -" {
+      : if (is_at "control_room" == false) {
+         : print "There is nothing here to type a code into.";
+      }
+      : else_if (electricity_on == false) {
+         : print "The control room has no power.";
+      }
+      : else_if (radio_on == false) {
+         : print "Turn the radio on first.";
+      }
+      : else_if (is_carried "code_book" == false) {
+         : print "You need the code book to know what to type.";
+      }
+      : else_if (signal_sent == false) {
+         : set_true "signal_sent";
+         : print "You key in the emergency signal code. Static crackles, then a distant acknowledgement tone - someone is receiving your signal.";
+         : add var="score" value="5";
+      }
+      : else_if (external_door_unlocked == false) {
+         : set_true "external_door_unlocked";
+         : print "You enter the external door release code. A muffled clunk echoes down the corridor - the blast door is unlocked.";
+         : add var="score" value="10";
+      }
+      : else {
+         : print "Both codes have already been entered.";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 5: Shelf, rats/armoury, weapon, windows
+##########################################################################
+
+
+   #### armoury door ####
+
+   : if_examine "armoury_door" {
+      : if (rats_cleared) {
+         : print "The door to the armoury stands ready to open - whatever was making that racket is gone now.";
+      }
+      : else {
+         : print "You press your ear to the door and hear scurrying, scratching noises on the other side. Something in there is not happy.";
+      }
+   }
+
+   #### shelf ####
+
+   : match "pull shelf" {
+      : if (is_at "library" == false) {
+         : print "There's nothing here to pull.";
+      }
+      : else_if (shelf_pulled) {
+         : print "You've already pulled the shelf loose.";
+      }
+      : else {
+         : set_true "shelf_pulled";
+         : print "You pull the loose shelf away from the wall. It comes free with a shower of plaster dust.";
+      }
+   }
+
+   : match "get shelf" {
+      : if (shelf_pulled == false) {
+         : print "The shelf is fixed to the wall - try pulling it loose first.";
+      }
+      : else {
+         : get "wooden_shelf";
+      }
+   }
+
+   : match "lean shelf" {
+      : if (is_carried "wooden_shelf" == false) {
+         : print "You need to be carrying the shelf.";
+      }
+      : else_if (is_at "control_room" == false) {
+         : print "This is not the right place to lean the shelf.";
+      }
+      : else_if (shelf_leaned) {
+         : print "The shelf is already leaned against the armoury door.";
+      }
+      : else {
+         : set_true "shelf_leaned";
+         : destroy "wooden_shelf";
+         : print "You lean the shelf against the lip of the armoury door, creating a ramp. The bot should be able to cross now.";
+      }
+   }
+
+   #### windows ####
+
+   : if_examine "gen_window" {
+      : if (window_broken) {
+         : print "The window has been shot out, leaving a jagged opening into the pump room. You could climb through.";
+      }
+      : else {
+         : print "A small window set into the east wall, looking into the flooded pump room beyond. The door beside it is sealed by water pressure - this window may be the only way in.";
+      }
+   }
+
+   : if_examine "pump_window" {
+      : if (window_broken) {
+         : print "The window has been shot out - a ragged opening back into the generator room. You could climb through to get out.";
+      }
+      : else {
+         : print "A small window set into the west wall, looking back into the generator room. It looks like it could be shot out from the other side.";
+      }
+   }
+
+   : match "shoot window" {
+      : if (window_broken) {
+         : print "The window is already broken.";
+      }
+      : else_if (is_at "pump_room") {
+         : print "The window looks back into the generator room - shooting it from this side would do nothing useful. It needs to be shot from the other side.";
+      }
+      : else_if (is_at "med_bay") {
+         : print "That porthole looks out over the pump room but is not in a useful position to break from here.";
+      }
+      : else_if (is_at "generator" == false) {
+         : print "There's no window here to shoot.";
+      }
+      : else_if (is_carried "weapon" == false) {
+         : print "You need a weapon to shoot with.";
+      }
+      : else {
+         : set_true "window_broken";
+         : print "You fire at the window. The glass shatters inward, leaving a jagged opening into the pump room.";
+         : add var="score" value="5";
+      }
+   }
+
+   : match "enter window" {
+      : if (window_broken == false) {
+         : print "The window is intact. You cannot climb through it.";
+      }
+      : else_if (is_at "generator") {
+         : goto "pump_room";
+         : print "You squeeze through the broken window frame and drop into the pump room.";
+         : redescribe;
+      }
+      : else_if (is_at "pump_room") {
+         : goto "generator";
+         : print "You haul yourself back through the window into the generator room.";
+         : redescribe;
+      }
+      : else {
+         : print "There's no window here to climb through.";
+      }
+   }
+
+
+##########################################################################
+# ON_COMMAND - Part 6: Score
+##########################################################################
+
+   : match "score _" {
+      : print {( "Your score is " + score + " out of 100." )}
+   }
+}
+
+##########################################################################
+# ON_TICK - air countdown, glow stick, Tibbles, bot-crossing, hazards
+##########################################################################
+
+on_tick {
+
+   #### win condition ####
+   : if (is_at "outside") {
+      : win_game;
+   }
+
+   #### glow stick fade ####
+   : if (stick_turns > 0) {
+      : decrement "stick_turns";
+      : if (stick_turns == 20) {
+         : print "The glow stick is beginning to fade.";
+      }
+      : if (stick_turns == 0) {
+         : print "The glow stick flickers and goes dark.";
+      }
+   }
+
+   #### gas leak - hose detached while the valve is still open ####
+   : if (hose_on_oven == false && valve_open) {
+      : set_true "leak_active";
+   }
+   : else {
+      : set_false "leak_active";
+   }
+
+   : if (leak_active && gas_leaking == false) {
+      : set_true "gas_leaking";
+      : set_integer var="gas_leak_turns" value="0";
+      : print "You hear a hiss - gas is leaking from the disconnected hose.";
+   }
+   : else_if (leak_active && gas_leak_turns == 5) {
+      : increment "gas_leak_turns";
+      : print "The built-up gas finds a spark. The gas erupts in a roaring explosion, taking you with it.";
+      : lose_game;
+   }
+   : else_if (leak_active && gas_leak_turns == 1) {
+      : increment "gas_leak_turns";
+      : print "The smell of gas is getting stronger. This does not seem safe.";
+   }
+   : else_if (leak_active) {
+      : increment "gas_leak_turns";
+   }
+   : else_if (gas_leaking) {
+      : set_false "gas_leaking";
+      : set_integer var="gas_leak_turns" value="0";
+      : print "The hiss of leaking gas stops.";
+   }
+
+   #### Tibbles banter - main corridor, only while power is off ####
+   #### cycles through all six lines in order, never repeating one until the rest have had a turn ####
+   : set_true "tibbles_can_speak";
+   : if (is_at "main_corridor" == false) {
+      : set_false "tibbles_can_speak";
+   }
+   : if (electricity_on) {
+      : set_false "tibbles_can_speak";
+   }
+   : set_false "chance_hit";
+   : if (chance(25)) {
+      : set_true "chance_hit";
+   }
+   : if (chance_hit == false) {
+      : set_false "tibbles_can_speak";
+   }
+   : if (tibbles_can_speak) {
+      : if (tibbles_line == 0) {
+         : print "Tibbles: \"I'm a cleaner, not a magician, but watch this dirt disappear!\"";
+      }
+      : else_if (tibbles_line == 1) {
+         : print "Tibbles: \"Why walk when you can vacuum?\"";
+      }
+      : else_if (tibbles_line == 2) {
+         : print "Tibbles: \"Clean floors, happy life.\"";
+      }
+      : else_if (tibbles_line == 3) {
+         : print "Tibbles: \"I've got the suction, and I'm not afraid to use it.\"";
+      }
+      : else_if (tibbles_line == 4) {
+         : print "Tibbles: \"I'm not just a pretty face, I'm a pretty powerful vacuum too!\"";
+      }
+      : else {
+         : print "Tibbles: \"Dirt, dust, and debris beware, I'm on the prowl!\"";
+      }
+      : increment "tibbles_line";
+      : if (tibbles_line > 5) {
+         : set_integer var="tibbles_line" value="0";
+      }
+   }
+
+   #### bot stuck at the armoury door lip, before the shelf ramp is in place ####
+   : set_true "bot_armed";
+   : if (is_at "control_room" == false) {
+      : set_false "bot_armed";
+   }
+   : if (corridor_door_pried == false) {
+      : set_false "bot_armed";
+   }
+   : if (shelf_leaned) {
+      : set_false "bot_armed";
+   }
+   : if (rats_cleared) {
+      : set_false "bot_armed";
+   }
+
+   : if (bot_armed && bot_bump_shown == false) {
+      : set_true "bot_bump_shown";
+      : print "As you enter, you hear the cleaning bot bump against the doorway to the south, unable to get its wheels over the lip of the armoury door.";
+   }
+   : if (bot_armed == false) {
+      : set_false "bot_bump_shown";
+   }
+
+   #### bot crossing into the armoury, clearing the rats ####
+   : set_true "bot_can_cross";
+   : if (rats_cleared) {
+      : set_false "bot_can_cross";
+   }
+   : if (shelf_leaned == false) {
+      : set_false "bot_can_cross";
+   }
+   : if (corridor_door_pried == false) {
+      : set_false "bot_can_cross";
+   }
+   : if (bot_can_cross) {
+      : increment "bot_wait";
+      : if (bot_wait == 1) {
+         : create "cleaning_bot" target="control_room";
+         : print "The cleaning bot rolls south through the pried door, its sensors scanning.";
+      }
+      : if (bot_wait == 4) {
+         : set_true "rats_cleared";
+         : create "cleaning_bot" target="main_corridor";
+         : print "Sharp electrical zaps drift through from the armoury. Then silence. The bot trundles back.\nTibbles: \"I'm a cleaning superhero, saving the day one room at a time.\"";
+      }
+   }
+
+   #### floodwater ruins an unworn or worn filter left in the flood ####
+   : set_true "filter_at_risk";
+   : if (is_at "pump_room" == false) {
+      : set_false "filter_at_risk";
+   }
+   : if (pipe_clear) {
+      : set_false "filter_at_risk";
+   }
+   : if (charcoal_in_filter == false) {
+      : set_false "filter_at_risk";
+   }
+   : if (is_carried "survival_helmet" == false) {
+      : set_false "filter_at_risk";
+   }
+   : if (filter_at_risk) {
+      : set_false "charcoal_in_filter";
+      : set_false "filter_in_helmet";
+      : print "The floodwater soaks into the helmet's filter, turning the charcoal to mush. Your smoke filter is ruined.";
+   }
+
+   #### the cold water in the reservoir saps you if you linger too long ####
+   : if (is_at "reservoir") {
+      : increment "reservoir_turns";
+   }
+   : if (is_at "reservoir" == false) {
+      : set_integer var="reservoir_turns" value="0";
+   }
+   : if (is_at "reservoir" && reservoir_turns == 3) {
+      : print "The cold water is sapping your strength. You need to get out soon.";
+   }
+   : if (is_at "reservoir" && reservoir_turns == 6) {
+      : print "Exhausted and numb from the cold, you slip beneath the surface and don't come back up.";
+      : lose_game;
+   }
+
+   #### the bot mistakes you for vermin if you wander in the dark without a lit stick ####
+   : set_true "bot_can_zap";
+   : if (electricity_on) {
+      : set_false "bot_can_zap";
+   }
+   : if (stick_turns > 0) {
+      : set_false "bot_can_zap";
+   }
+   : if (is_at "airlock") {
+      : set_false "bot_can_zap";
+   }
+   : if (is_at "main_corridor") {
+      : set_false "bot_can_zap";
+   }
+   : if (is_at "outside") {
+      : set_false "bot_can_zap";
+   }
+   : if (bot_can_zap) {
+      : print "Tibbles: \"I'm the captain of clean. Messes like you should not be seen.\"\nUnable to see your human form in the dark, Tibbles electrocutes you, thinking you must be a large rodent.";
+      : lose_game;
+   }
+
+   #### rats overwhelm you if you push into the armoury before the bot has cleared them ####
+   : if (is_at "armoury" && rats_cleared == false) {
+      : print "The hungry rats find you to be a tasty meal. If only the cleanbot had dealt with them first!";
+      : lose_game;
+   }
+
+   #### air countdown - stops while the finished mask is worn ####
+   : set_true "mask_active";
+   : if (charcoal_in_filter == false) {
+      : set_false "mask_active";
+   }
+   : if (helmet_worn == false) {
+      : set_false "mask_active";
+   }
+
+   : if (mask_active == false) {
+      : decrement "air_turns";
+      : if (air_turns == 40) {
+         : print "The air tastes of smoke. A dull ache is building behind your eyes.";
+      }
+      : if (air_turns == 20) {
+         : print "Your chest is tight and your vision is beginning to blur. You need clean air soon.";
+      }
+      : if (air_turns == 10) {
+         : print "You are struggling to breathe. Every breath burns.";
+      }
+      : if (air_turns == 0) {
+         : print "The smoke finally wins. The air in the bunker runs out before you find a way to fix it. Next time, work faster - or build the filter sooner.";
+         : lose_game;
+      }
+   }
+
+}
+
+assets {
+   graphics {
+      airlock : base64_png "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";
+      armoury : base64_png "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";
+      bunk_room : base64_png "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";
+      bunker_title : base64_png "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";
+      canteen : base64_png "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";
+      control_room : base64_png "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";
+   }
+}
