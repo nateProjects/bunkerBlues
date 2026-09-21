@@ -1,0 +1,17 @@
+001 --> airlock
+002 --> bunker_title
+003 --> canteen
+004 --> bunk_room
+005 --> hydroponics
+007 --> gym
+008 --> med_bay
+009 --> kitchen
+013 --> library
+014 --> lounge
+016 --> control_room
+017 --> workshop
+018 --> tool_room
+019 --> generator
+021 --> reservoir
+022 --> armoury
+023 --> outside

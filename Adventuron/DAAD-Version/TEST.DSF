@@ -1,0 +1,3076 @@
+#ifndef "nomaluva"
+#extern "MALUVA"
+#endif
+/CTL
+_
+
+#ifdef "pcw"
+   #define notspeccy 1
+#endif
+
+#ifdef "c64"
+   #define notspeccy 1
+#endif
+; Flag Defines
+
+#define dark_                                                 0
+#define carry_count_                                          1
+#define internal_door_open_                                   2
+#define external_door_unlocked_                               3
+#define helmet_free_                                          4
+#define filter_in_helmet_                                     5
+#define charcoal_in_filter_                                   6
+#define valve_open_                                           7
+#define oven_on_                                              8
+#define hose_attached_                                        9
+#define dial_turned_                                          10
+#define knob_welded_                                          11
+#define crowbar_lever_                                        12
+#define pump_reversed_                                        13
+#define radio_on_                                             14
+#define signal_sent_                                          15
+#define pipe_clear_                                           16
+#define corridor_door_pried_                                  17
+#define scanner_cleared_                                      18
+#define electricity_on_                                       19
+#define maluva_reserved_20_                                   20
+#define maluva_reserved_21_                                   21
+#define maluva_reserved_22_                                   22
+#define shelf_pulled_                                         23
+#define shelf_leaned_                                         24
+#define rats_cleared_                                         25
+#define window_broken_                                        26
+#define external_door_open_                                   27
+#define dark2_                                                28
+#define turns1_                                               31
+#define turns2_                                               32
+#define verb_                                                 33
+#define noun1_                                                34
+#define adjective1_                                           35
+#define adverb_                                               36
+#define items_carryable_                                      37
+#define player_location_                                      38
+#define proposition_                                          43
+#define noun2_                                                44
+#define adjective2_                                           45
+#define objectprintmode_                                      53
+#define is_done_                                              60
+#define has_done_something_                                   65
+#define gas_leaking_                                          66
+#define hose_on_oven_                                         67
+#define bot_bump_shown_                                       68
+#define helmet_worn_                                          69
+#define leak_active_                                          70
+#define bot_armed_                                            71
+#define tibbles_can_speak_                                    72
+#define bot_can_cross_                                        73
+#define filter_at_risk_                                       74
+#define mask_active_                                          75
+#define chance_hit_                                           76
+#define bot_can_zap_                                          77
+#define air_turns_                                            78
+#define score_                                                79
+#define carry_limit_                                          80
+#define stick_turns_                                          81
+#define bot_wait_                                             82
+#define gas_leak_turns_                                       83
+#define tibbles_line_                                         84
+#define reservoir_turns_                                      85
+#define is_just_entered_                                      87
+#define previous_location_                                    88
+#define has_created_paperclip_                                89
+#define has_created_code_book_                                90
+#define has_created_coffee_filter_                            91
+#define tmp_calc_                                             92
+#define is_mobile_                                            93
+#define inser_paper_or_put_paper_or_attac_paper_or_fit_paper_ 94
+#define x_me_or_x_mysel_or_x_self_                            95
+#define wear_pack_or_remov_pack_or_unwea_pack_                96
+#define attac_crewm_                                          97
+#define remov_helme_or_unwea_helme_                           98
+#define inser_filte_or_put_filte_or_fit_filte_                99
+#define inser_charc_or_put_charc_or_fit_charc_or_pack_charc_  100
+#define turn_switc_                                           101
+#define turn_valve_                                           102
+#define turn_oven_                                            103
+#define put_stick_or_inser_stick_                             104
+#define attac_hose_                                           105
+#define turn_dial_                                            106
+#define attac_crowb_                                          107
+#define turn_knob_                                            108
+#define turn_radio_                                           109
+#define type_code_or_type_door_or_type_signa_or_type___       110
+#define level2_                                               111
+#define level1_                                               112
+
+; Room Defines
+
+#define airlock                                               1
+#define main_corridor                                         2
+#define canteen                                               3
+#define bunk_room                                             4
+#define closet                                                5
+#define latrine                                               6
+#define gym                                                   7
+#define med_bay                                               8
+#define kitchen                                               9
+#define storeroom                                             10
+#define hydroponic                                            11
+#define pantry                                                12
+#define library                                               13
+#define lounge                                                14
+#define we_corridor                                           15
+#define control_room                                          16
+#define workshop                                              17
+#define tool_room                                             18
+#define generator                                             19
+#define pump_room                                             20
+#define reservoir                                             21
+#define armoury                                               22
+#define outside                                               23
+
+; Object Defines
+
+#define emergency_pack                                        1
+#define documents                                             2
+#define paperclip                                             3
+#define panel                                                 4
+#define internal_door                                         5
+#define external_door                                         6
+#define glow_stick                                            7
+#define cleaning_bot                                          8
+#define coffee_maker                                          9
+#define coffee_filter                                         10
+#define bread_knife                                           11
+#define crowbar                                               12
+#define toilet_brush                                          13
+#define jacket                                                14
+#define code_book                                             15
+#define crewmate                                              16
+#define hand_attached                                         17
+#define hand                                                  18
+#define survival_helmet                                       19
+#define pestle                                                20
+#define med_window                                            21
+#define bonsai_tree                                           22
+#define charcoal                                              23
+#define wd40                                                  24
+#define hose                                                  25
+#define valve                                                 26
+#define oven                                                  27
+#define wooden_shelf                                          28
+#define gas_tank                                              29
+#define dial                                                  30
+#define torch                                                 31
+#define fire_door                                             32
+#define radio                                                 33
+#define armoury_door                                          34
+#define scanner                                               35
+#define gen_switch                                            36
+#define gen_window                                            37
+#define knob                                                  38
+#define pump_window                                           39
+#define pipe                                                  40
+#define weapon                                                41
+
+; Process Defines
+
+#define process_anykey                                        47
+
+/VOC
+S      2    noun
+SOUTH  2    noun
+E      3    noun
+EAST   3    noun
+W      4    noun
+WEST   4    noun
+N      5    noun
+NORTH  5    noun
+NW     6    noun
+SE     7    noun
+SW     8    noun
+NE     9    noun
+D      10   noun
+DOWN   10   noun
+U      11   noun
+UP     11   noun
+ENTER  12   noun
+EXIT   13   noun
+LEAVE  13   noun
+I      14   noun
+INV    14   noun
+INVEN  14   noun
+TREE   50   noun
+TREES  50   noun
+WOOD   50   noun
+WOODS  50   noun
+BOOK   51   noun
+BOOKS  51   noun
+CODEB  51   noun
+NOTEB  51   noun
+BODIE  52   noun
+BODY   52   noun
+CORPS  52   noun
+CREWM  52   noun
+DOCUM  53   noun
+NOTIC  53   noun
+ALL    54   noun
+EVERY  54   noun
+PACK   55   noun
+PACKS  55   noun
+PAPER  56   noun
+PANEL  57   noun
+HATCH  58   noun
+DOOR   59   noun
+DOORS  59   noun
+STICK  60   noun
+BOT    61   noun
+BOTS   61   noun
+MAKER  62   noun
+FILTE  63   noun
+KNIFE  64   noun
+CROWB  65   noun
+BRUSH  66   noun
+JACKE  67   noun
+ATTAC  68   noun
+HAND   69   noun
+HANDS  69   noun
+HELME  70   noun
+PESTL  71   noun
+PORTH  72   noun
+CHARC  73   noun
+WD40   74   noun
+HOSE   75   noun
+HOSES  75   noun
+VALVE  76   noun
+OVEN   77   noun
+OVENS  77   noun
+SHELF  78   noun
+TANK   79   noun
+TANKS  79   noun
+DIAL   80   noun
+DIALS  80   noun
+TORCH  81   noun
+RADIO  82   noun
+SCANN  83   noun
+FLICK  84   noun
+FLIP   84   noun
+IGNIT  84   noun
+LIGHT  84   noun
+PRESS  84   noun
+ROTAT  84   noun
+SWITC  84   noun
+THROW  84   noun
+TURN   84   noun
+TWIST  84   noun
+WINDO  85   noun
+KNOB   86   noun
+KNOBS  86   noun
+PIPE   87   noun
+PIPES  87   noun
+RIFLE  88   noun
+ME     89   noun
+MES    89   noun
+MYSEL  90   noun
+SELF   91   noun
+SELFS  91   noun
+CODE   92   noun
+CODES  92   noun
+SIGNA  93   noun
+JIGGL  21   verb
+RATTL  21   verb
+SHAKE  21   verb
+WAVE   21   verb
+CHOP   22   verb
+CUT    22   verb
+HACK   22   verb
+SAW    22   verb
+SEVER  22   verb
+SLICE  22   verb
+APPLY  23   verb
+LUBRI  23   verb
+OIL    23   verb
+SPRAY  23   verb
+SQUIR  23   verb
+FORCE  24   verb
+JIMMY  24   verb
+LEVER  24   verb
+PRISE  24   verb
+PRY    24   verb
+WEDGE  24   verb
+BLAST  25   verb
+FIRE   25   verb
+SHOOT  25   verb
+LEAN   26   verb
+PROP   26   verb
+REST   26   verb
+STAND  26   verb
+PULL   27   verb
+TUG    27   verb
+YANK   27   verb
+BASH   28   verb
+CRUSH  28   verb
+GRIND  28   verb
+MASH   28   verb
+MIX    28   verb
+POUND  28   verb
+SMASH  28   verb
+BOND   29   verb
+BRAZE  29   verb
+FUSE   29   verb
+MELT   29   verb
+SOLDE  29   verb
+WELD   29   verb
+CLEAR  30   verb
+EMPTY  30   verb
+SCRUB  30   verb
+SWEEP  30   verb
+UNBLO  30   verb
+UNCLO  30   verb
+SCAN   31   verb
+TYPE   32   verb
+WRITE  32   verb
+GET    33   verb
+TAKE   33   verb
+DISCA  34   verb
+DROP   34   verb
+OPEN   35   verb
+CLOSE  36   verb
+WEAR   37   verb
+REMOV  38   verb
+UNWEA  38   verb
+INSER  39   verb
+PUT    39   verb
+L      40   verb
+LOOK   40   verb
+R      40   verb
+QUIT   41   verb
+RESTA  41   verb
+FIT    42   verb
+SCORE  43   verb
+LOAD   44   verb
+SAVE   45   verb
+EXAM   46   verb
+EXAMI  46   verb
+X      46   verb
+
+/STX
+
+/0 "\nIt's too dark to see anything.\n"
+/1 "\nYou see "
+/2 ""
+/3 ""
+/4 ""
+/5 ""
+/6 "You don't quite understand that.\n\n"
+/7 "You can't go in that direction.\n\n"
+/8 "You can't do that.\n\n"
+/9 "You are carrying "
+/10 "And you're wearing "
+/11 "Nothing at all.\n"
+/12 "Are you sure?\n\n"
+/13 "\nWould you like another go?\n\n"
+/14 "Goodbye...\n"
+/15 "OK.\n"
+#ifdef "pcw"
+/16 "                                                                                     ..."
+#endif
+#ifdef "c64"
+/16 "                                     ..."
+#endif
+#ifndef "notspeccy"
+/16 "                                       ..."
+#endif
+/17 "\nYou have taken "
+/18 " turn"
+/19 "s"
+/20 "."
+/21 "\nYou have scored "
+/22 "%\n"
+/23 "You're not wearing one of those.\n\n"
+/24 "You can't. You're wearing the _.\n\n"
+/25 "You already have the _.\n\n"
+/26 "There isn't one of those here.\n\n"
+/27 "You can't carry any more things.\n\n"
+/28 "You don't have one of those.\n\n"
+/29 "You're already wearing the _.\n\n"
+/30 "Y"
+/31 "N"
+#ifdef "pcw"
+/32 "                                                                                     ..."
+#endif
+#ifdef "c64"
+/32 "                                     ..."
+#endif
+#ifndef "notspeccy"
+/32 "                                       ..."
+#endif
+/33 ">"
+/34 ">"
+/35 "Time passes...\n"
+/36 "You now have the _.\n\n"
+/37 "You're now wearing the _.\n\n"
+/38 "You've removed the _.\n\n"
+/39 "You've dropped the _.\n\n"
+/40 "You can't wear the _.\n\n"
+/41 "You can't remove the _.\n\n"
+/42 "You can't remove the _. Your hands are full.\n\n"
+/43 "The _ weighs too much for you.\n\n"
+/44 "The _ is in the \n"
+/45 "The _ isn't in the \n"
+/46 ", "
+/47 " and "
+/48 ".\n"
+/49 "You don't have the _.\n\n"
+/50 "You're not wearing the _.\n\n"
+/51 "."
+/52 "There isn't one of those in the"
+/53 "nothing of interest.\n"
+/54 "Type in name of file:\n"
+/55 "File corrupt.\n"
+/56 "I/O Error!  File not Saved!\n"
+/57 "Directory full.\n"
+/58 "Disk full.\n"
+/59 "File name error.\n"
+/60 "Type in name of file.\n"
+/61 "Game Saved\n\n"
+/62 "."
+/63 "You see nothing special.\n\n"
+/64 "Your score is "
+
+/MTX
+
+
+/OTX
+
+/0 ""
+/1 "a battered canvas emergency pack"
+/2 "some documents"
+/3 "a paperclip"
+/4 "a control panel"
+/5 "the internal door"
+/6 "the external door"
+/7 "a glow stick"
+/8 "a cleaning bot"
+/9 "a coffee maker"
+/10 "a coffee filter"
+/11 "a bread knife"
+/12 "a crowbar"
+/13 "a toilet brush"
+/14 "Bob's jacket"
+/15 "a small notebook"
+/16 "a dead crewman"
+/17 "a hand"
+/18 "a severed hand"
+/19 "a survival helmet"
+/20 "a pestle"
+/21 "a small porthole"
+/22 "a bonsai tree"
+/23 "some charcoal"
+/24 "a can of WD40"
+/25 "a hose"
+/26 "a shutoff valve"
+/27 "an oven"
+/28 "a wooden shelf"
+/29 "a gas tank"
+/30 "a dial"
+/31 "a welding torch"
+/32 "a fire door"
+/33 "a radio"
+/34 "the armoury door"
+/35 "a biometric scanner"
+/36 "a master switch"
+/37 "a window"
+/38 "a broken pump handle"
+/39 "a window"
+/40 "a supply pipe"
+/41 "a bolt-action rifle"
+
+/LTX
+
+/0 ""
+/1 "AIRLOCK You are standing in a dimly lit airlock of a fallout shelter. You hear the faint hum of the emergency light, and an acrid smell from the fire you escaped lingers in the air.\n\nAs you look around the otherwise sterile room, you notice a small control panel on the wall to your left, next to the internal door.\n\nExits: N, S"
+/2 "MAIN CORRIDOR \n\nExits: N, S, E, W, SE, SW"
+/3 "CANTEEN Rows of moulded plastic chairs sit askew around bolted-down tables, their surfaces sticky with the residue of years of institutional meals. A serving hatch at the far end stands open, the kitchen beyond cold and still.\n\nExits: S, E"
+/4 "BUNK ROOM Six pairs of metal bunk beds line the walls, their thin mattresses still bearing the impressions of whoever last slept here. A dog-eared paperback and a cracked photograph on one of the bedside shelves are the only signs anyone ever called this home.\n\nExits: S, E, W"
+/5 "CLOSET A cramped storage closet barely wider than your shoulders, its shelves mostly stripped of whatever was once kept here. The air is stale with the smell of old wool and something faintly chemical that you can't quite place.\n\nExits: W"
+/6 "LATRINE A row of lidded steel lavatories and a pair of cracked porcelain sinks occupy this narrow utility room. A persistent drip somewhere keeps time in the silence, and the overhead strip light hums with the effort of staying on.\n\nExits: N"
+/7 "GYM \n\nExits: S, W"
+/8 "MED BAY Banks of white-painted metal cabinets line the walls, most drawers hanging open and rifled through in evident haste. A single examination table sits beneath a surgical light that will never illuminate anything again.\n\nExits: N, S"
+/9 "KITCHEN Stainless steel work surfaces run the length of this institutional kitchen, a few unwashed pots still sitting in the sink where someone left them in a hurry. The pantry to the south and storeroom to the west are a reminder of how large a crew this bunker was built to feed.\n\nExits: N, S, W"
+/10 "STOREROOM Metal shelving units stretch floor to ceiling, most of them bare save for a few tins and supply boxes pushed to the back.\n\nExits: S, E"
+/11 "HYDROPONICS Long hydroponic trays run beneath banks of dead overhead grow-lights, the substrate dry and neglected after what must be weeks without tending. A small bonsai tree in the corner has held on better than the rest, its gnarled trunk evidently tougher than it looks.\n\nExits: N, S, E"
+/12 "PANTRY Shelving units hold an orderly supply of tinned goods and sealed containers, though several racks have been cleared at some point. A gas hose runs from a shutoff valve on the wall down to the oven, and a faint metallic smell hangs in the air.\n\nExits: N, W"
+/13 "LIBRARY Floor-to-ceiling shelves hold a mix of technical manuals and battered paperbacks, a handful of volumes knocked to the floor and left where they fell. One shelf along the far wall has come away from its fittings and hangs at an awkward angle.\n\nExits: S"
+/14 "LOUNGE Sagging sofas and a pair of armchairs are arranged around a low table strewn with old magazines and the scattered pieces of several abandoned board games. A television set is bolted to the wall at head height, its screen long dark.\n\nExits: N, E"
+/15 "WE CORRIDOR \n\nExits: N, S, E, SE, SW"
+/16 "CONTROL ROOM \n\nExits: N, S, E, W"
+/17 "WORKSHOP A long workbench runs down the centre of this well-equipped room, its surface scattered with tools, coils of wire, and half-finished repairs left by whoever was last in here. A portable welding rig stands in one corner - gas tank and nozzle waiting to be connected up.\n\nExits: N, E, W"
+/18 "TOOL ROOM A small utility room lined with pegboard, most of its hooks bare and empty, their tools presumably scattered to various corners of the bunker. A few items remain on the lower shelf, including a few cans of solvent that someone never got round to putting away.\n\nExits: N, E"
+/19 "GENERATOR \n\nExits: N, E, W"
+/20 "PUMP ROOM \n\nExits: W, D"
+/21 "RESERVOIR \n\nExits: U"
+/22 "ARMOURY \n\nExits: N"
+/23 "OUTSIDE You step out into the wasteland. The air, though acrid, fills your lungs. In the distance a rescue vehicle is already closing in - someone heard your signal. You've won!\n\nExits: S"
+
+/CON
+
+/0
+/1 S main_corridor N outside
+/2 N airlock S we_corridor E bunk_room W canteen SE gym SW lounge
+/3 S kitchen E main_corridor
+/4 S latrine E closet W main_corridor
+/5 W bunk_room
+/6 N bunk_room
+/7 S med_bay W main_corridor
+/8 N gym S we_corridor
+/9 N canteen S pantry W storeroom
+/10 S hydroponic E kitchen
+/11 N storeroom S tool_room E pantry
+/12 N kitchen W hydroponic
+/13 S lounge
+/14 N library E main_corridor
+/15 N main_corridor S control_room E med_bay SE generator SW workshop
+/16 N we_corridor S armoury E generator W workshop
+/17 N we_corridor E control_room W tool_room
+/18 N hydroponic E workshop
+/19 N we_corridor E pump_room W control_room
+/20 W generator DOWN reservoir
+/21 UP pump_room
+/22 N control_room
+/23 S airlock
+
+/OBJ
+
+/0     252  1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/1     1    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    PACK  _
+/2     1    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    DOCUM _
+/3     252  1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    PAPER _
+/4     1    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/5     1    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/6     1    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/7     2    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    STICK _
+/8     2    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/9     3    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/10    252  1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    FILTE _
+/11    9    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    KNIFE _
+/12    10   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    CROWB _
+/13    6    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    BRUSH _
+/14    5    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/15    252  1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    BOOK  _
+/16    7    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/17    7    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/18    252  1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    HAND  _
+/19    7    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    HELME _
+/20    8    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    PESTL _
+/21    8    1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/22    11   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    TREE  _
+/23    252  1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    CHARC _
+/24    18   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    WD40  _
+/25    12   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    HOSE  _
+/26    12   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/27    12   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/28    13   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    SHELF _
+/29    17   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/30    17   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/31    252  1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    TORCH _
+/32    15   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/33    16   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/34    16   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/35    19   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/36    19   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/37    19   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/38    20   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/39    20   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/40    21   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _     _
+/41    22   1   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    RIFLE _
+
+/PRO 0
+
+> _       _      AT      0
+                WINDOW 0
+                CLS
+                PROCESS 6
+
+> _       _     WINDOW  0
+; Set the boundries for the main text window
+
+> _       _     WINDOW 1
+#ifdef "pcw"
+                BORDER  0
+#endif
+#ifdef "c64"
+                BORDER  0
+#endif
+#ifndef "notspeccy"
+                BORDER  0
+#endif
+#ifdef "pcw"
+   WINAT   11       0 ;Leave enough space for graphic area + 8 pixels of margin
+#endif
+#ifdef "c64"
+   WINAT   14       0 ; c64 images are always 12 rows
+#endif
+#ifndef "notspeccy"
+   WINAT   11       0 ;Leave enough space for graphic area + 8 pixels of margin
+#endif
+#ifdef "pcw"
+                INK 1
+                PAPER 0
+#endif
+#ifdef "c64"
+                INK 7
+                PAPER 0
+#endif
+#ifndef "notspeccy"
+                INK 1
+                PAPER 0
+#endif
+#ifdef "pcw"
+                WINSIZE 33      127
+#endif
+#ifdef "c64"
+                WINSIZE 25      127
+#endif
+#ifndef "notspeccy"
+                WINSIZE 25      127
+#endif
+                CLS
+
+; Display the location graphics
+
+> _       _     WINDOW 1
+                CLS
+> _       _       WINDOW  1
+#ifdef "c64"
+                XSPLITSCR 1
+#endif
+; XPOPX
+#ifdef "pcw"
+   WINAT   11       0 ;Leave enough space for graphic area + 8 pixels of margin
+#endif
+#ifdef "c64"
+   WINAT   14       0 ; c64 images are always 12 rows
+#endif
+#ifndef "notspeccy"
+   WINAT   11       0 ;Leave enough space for graphic area + 8 pixels of margin
+#endif
+#ifdef "pcw"
+                WINSIZE 33      127
+#endif
+#ifdef "c64"
+                WINSIZE 25      127
+#endif
+#ifndef "notspeccy"
+                WINSIZE 25      127
+#endif
+> _       _     NOTSAME player_location_ previous_location_ ; If we just entered the location
+                SET 113 ; then set the graphic into a dirty state
+> _       _     WINDOW 1
+                EXTERN  @player_location_ 0 ; Draw picture from disk bitmap corresponding to the current location id...
+> _       _     CLEAR 113 ; Clear the dirty flag
+
+
+; Display location text
+
+> _       _       DESC    @player_location_ ; [Player]
+                NEWLINE
+
+; Call the on_describe {} logic here ...
+
+> _       _     PROCESS 3
+
+; Call the main parser event loop here ...
+
+> _       _     PROCESS 1
+
+/PRO 1
+
+> _       _     PROCESS 4
+
+> _       _     PARSE   0
+                PROCESS 2
+                REDO
+
+> _       _     EQ      turns1_   255
+                PLUS    turns2_ 1
+                CLEAR   turns1_
+                SKIP    1
+
+> _       _     PLUS    turns1_   1
+
+> _       _     NEWLINE ; Adds a newline before the response
+
+> _       _     PROCESS 5
+                ISDONE
+                REDO
+
+> _       _     MOVE    player_location_
+                CLS
+                RESTART
+
+> _       _     NEWTEXT
+                LT      verb_    14
+                SYSMESS 7
+                REDO
+
+> _       _     SYSMESS 8
+                REDO
+
+/PRO 2
+
+> _       _     NEWLINE ; Adds a newline before the response
+> _       _     HASAT 87; TIMEOUT
+                SYSMESS 35
+                DONE
+
+> _       _     SYSMESS 6
+
+/PRO 3 ; Adventuron : onDescribe{} , PAW Process Table 1
+
+> _      _    ZERO 86
+              LET valve_open_ 255
+              LET hose_on_oven_ 255
+              LET air_turns_ 100
+              LET carry_limit_ 6
+              LET 86 255
+              LET items_carryable_ 6
+
+> _      _    CLEAR is_done_
+
+> _      _    AT 0
+              SET is_mobile_
+              CLS
+              PROCESS 27
+              SET is_just_entered_
+              COPYFF player_location_ previous_location_
+              LET objectprintmode_ 64
+              GOTO airlock
+              CLS
+              RESTART
+
+> _      _    PROCESS 38
+
+> _      _    AT main_corridor
+              PROCESS 29
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+> _      _    AT gym
+              PROCESS 30
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+> _      _    AT we_corridor
+              PROCESS 31
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+> _      _    AT control_room
+              PROCESS 32
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+> _      _    AT generator
+              PROCESS 33
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+> _      _    AT pump_room
+              PROCESS 34
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+> _      _    AT reservoir
+              PROCESS 35
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+> _      _    AT armoury
+              PROCESS 36
+              NOTZERO is_done_
+              PROCESS 38
+              DONE
+
+
+/PRO 4 ; onTick(), PAW Process table 2
+
+> _      _    CLEAR is_done_
+
+> _      _    CLEAR is_just_entered_
+
+> _      _    NOTSAME player_location_ previous_location_
+              SET is_just_entered_
+
+> _      _    COPYFF player_location_ previous_location_
+
+> _      _    AT outside
+              GOTO 0
+              END
+              DONE
+
+> _      _    GT stick_turns_ 0
+              PROCESS 37
+              NOTZERO is_done_
+              DONE
+
+> _      _    CLEAR level1_
+
+> _      _    ZERO hose_on_oven_
+              NOTZERO valve_open_
+              SET level1_
+              SET leak_active_
+
+> _      _    ZERO level1_
+              CLEAR leak_active_
+
+> _      _    CLEAR level1_
+
+> _      _    NOTZERO leak_active_
+              ZERO gas_leaking_
+              SET level1_
+              SET gas_leaking_
+              LET gas_leak_turns_ 0
+              XMESSAGE "You hear a hiss - gas is leaking from the disconnected hose.\n"
+
+> _      _    ZERO level1_
+              NOTZERO leak_active_
+              EQ gas_leak_turns_ 5
+              SET level1_
+              PLUS gas_leak_turns_ 1
+              XMESSAGE "The built-up gas finds a spark. The gas erupts in a roaring explosion, taking you with it.\n"
+              GOTO 0
+              END
+              DONE
+
+> _      _    ZERO level1_
+              NOTZERO leak_active_
+              EQ gas_leak_turns_ 1
+              SET level1_
+              PLUS gas_leak_turns_ 1
+              XMESSAGE "The smell of gas is getting stronger. This does not seem safe.\n"
+
+> _      _    ZERO level1_
+              NOTZERO leak_active_
+              SET level1_
+              PLUS gas_leak_turns_ 1
+
+> _      _    ZERO level1_
+              NOTZERO gas_leaking_
+              SET level1_
+              CLEAR gas_leaking_
+              LET gas_leak_turns_ 0
+              XMESSAGE "The hiss of leaking gas stops.\n"
+
+> _      _    SET tibbles_can_speak_
+
+> _      _    NOTAT main_corridor
+              CLEAR tibbles_can_speak_
+
+> _      _    NOTZERO electricity_on_
+              CLEAR tibbles_can_speak_
+
+> _      _    CLEAR chance_hit_
+
+> _      _    CHANCE 25
+              SET chance_hit_
+
+> _      _    ZERO chance_hit_
+              CLEAR tibbles_can_speak_
+
+> _      _    NOTZERO tibbles_can_speak_
+              PROCESS 39
+              NOTZERO is_done_
+              DONE
+
+> _      _    SET bot_armed_
+
+> _      _    NOTAT control_room
+              CLEAR bot_armed_
+
+> _      _    ZERO corridor_door_pried_
+              CLEAR bot_armed_
+
+> _      _    NOTZERO shelf_leaned_
+              CLEAR bot_armed_
+
+> _      _    NOTZERO rats_cleared_
+              CLEAR bot_armed_
+
+> _      _    NOTZERO bot_armed_
+              ZERO bot_bump_shown_
+              SET bot_bump_shown_
+              XMESSAGE "As you enter, you hear the cleaning bot bump against the doorway to the south, unable to get its wheels over the lip of the armoury door.\n"
+
+> _      _    ZERO bot_armed_
+              CLEAR bot_bump_shown_
+
+> _      _    SET bot_can_cross_
+
+> _      _    NOTZERO rats_cleared_
+              CLEAR bot_can_cross_
+
+> _      _    ZERO shelf_leaned_
+              CLEAR bot_can_cross_
+
+> _      _    ZERO corridor_door_pried_
+              CLEAR bot_can_cross_
+
+> _      _    NOTZERO bot_can_cross_
+              PROCESS 40
+              NOTZERO is_done_
+              DONE
+
+> _      _    SET filter_at_risk_
+
+> _      _    NOTAT pump_room
+              CLEAR filter_at_risk_
+
+> _      _    NOTZERO pipe_clear_
+              CLEAR filter_at_risk_
+
+> _      _    ZERO charcoal_in_filter_
+              CLEAR filter_at_risk_
+
+> _      _    NOTCARR survival_helmet
+              CLEAR filter_at_risk_
+
+> _      _    NOTZERO filter_at_risk_
+              CLEAR charcoal_in_filter_
+              CLEAR filter_in_helmet_
+              XMESSAGE "The floodwater soaks into the helmet's filter, turning the charcoal to mush. Your smoke filter is ruined.\n"
+
+> _      _    AT reservoir
+              PLUS reservoir_turns_ 1
+
+> _      _    NOTAT reservoir
+              LET reservoir_turns_ 0
+
+> _      _    AT reservoir
+              EQ reservoir_turns_ 3
+              XMESSAGE "The cold water is sapping your strength. You need to get out soon.\n"
+
+> _      _    AT reservoir
+              EQ reservoir_turns_ 6
+              XMESSAGE "Exhausted and numb from the cold, you slip beneath the surface and don't come back up.\n"
+              GOTO 0
+              END
+              DONE
+
+> _      _    SET bot_can_zap_
+
+> _      _    NOTZERO electricity_on_
+              CLEAR bot_can_zap_
+
+> _      _    GT stick_turns_ 0
+              CLEAR bot_can_zap_
+
+> _      _    AT airlock
+              CLEAR bot_can_zap_
+
+> _      _    AT main_corridor
+              CLEAR bot_can_zap_
+
+> _      _    AT outside
+              CLEAR bot_can_zap_
+
+> _      _    NOTZERO bot_can_zap_
+              XMESSAGE "Tibbles: "I'm the captain of clean. Messes like you should not be seen."\nUnable to see your human form in the dark, Tibbles electrocutes you, thinking you must be a large rodent.\n"
+              GOTO 0
+              END
+              DONE
+
+> _      _    AT armoury
+              ZERO rats_cleared_
+              XMESSAGE "The hungry rats find you to be a tasty meal. If only the cleanbot had dealt with them first!\n"
+              GOTO 0
+              END
+              DONE
+
+> _      _    SET mask_active_
+
+> _      _    ZERO charcoal_in_filter_
+              CLEAR mask_active_
+
+> _      _    ZERO helmet_worn_
+              CLEAR mask_active_
+
+> _      _    ZERO mask_active_
+              PROCESS 41
+              NOTZERO is_done_
+              DONE
+
+
+/PRO 5
+
+> I      _    SYSMESS 9
+              LISTAT 254
+              NEWLINE
+              DONE
+
+> S      _    AT airlock
+              ZERO internal_door_open_
+              XMESSAGE "You'll need to find some other way to open the internal door - try examining the panel.\n"
+              DONE
+
+> N      _    AT airlock
+              ZERO external_door_open_
+              XMESSAGE "The blast door is closed.\n"
+              DONE
+
+> E      _    AT generator
+              ZERO pipe_clear_
+              XMESSAGE "The pump room door is sealed - water is pressing hard against it from the other side. You need another way in.\n"
+              DONE
+
+> S      _    AT control_room
+              ZERO corridor_door_pried_
+              XMESSAGE "You push the door open a crack - a seething mass of large, aggressive rodents hurls itself at the gap. You slam it shut.\n"
+              DONE
+
+> _      _    CLEAR has_done_something_
+
+> _      _    CLEAR inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+              CLEAR x_me_or_x_mysel_or_x_self_
+              CLEAR wear_pack_or_remov_pack_or_unwea_pack_
+              CLEAR attac_crewm_
+              CLEAR remov_helme_or_unwea_helme_
+              CLEAR inser_filte_or_put_filte_or_fit_filte_
+              CLEAR inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+              CLEAR turn_switc_
+              CLEAR turn_valve_
+              CLEAR turn_oven_
+              CLEAR put_stick_or_inser_stick_
+              CLEAR attac_hose_
+              CLEAR turn_dial_
+              CLEAR attac_crowb_
+              CLEAR turn_knob_
+              CLEAR turn_radio_
+              CLEAR type_code_or_type_door_or_type_signa_or_type___
+
+> INSER  PAPER SET inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+
+> PUT    PAPER SET inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+
+> _      ATTAC NOUN2 PAPER
+              SET inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+
+> FIT    PAPER SET inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+
+> X      ME   SET x_me_or_x_mysel_or_x_self_
+
+> X      MYSEL SET x_me_or_x_mysel_or_x_self_
+
+> X      SELF SET x_me_or_x_mysel_or_x_self_
+
+> WEAR   PACK SET wear_pack_or_remov_pack_or_unwea_pack_
+
+> REMOV  PACK SET wear_pack_or_remov_pack_or_unwea_pack_
+
+> UNWEA  PACK SET wear_pack_or_remov_pack_or_unwea_pack_
+
+> _      ATTAC NOUN2 CREWM
+              SET attac_crewm_
+
+> REMOV  HELME SET remov_helme_or_unwea_helme_
+
+> UNWEA  HELME SET remov_helme_or_unwea_helme_
+
+> INSER  FILTE SET inser_filte_or_put_filte_or_fit_filte_
+
+> PUT    FILTE SET inser_filte_or_put_filte_or_fit_filte_
+
+> FIT    FILTE SET inser_filte_or_put_filte_or_fit_filte_
+
+> INSER  CHARC SET inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+
+> PUT    CHARC SET inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+
+> FIT    CHARC SET inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+
+> _      PACK NOUN2 CHARC
+              SET inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+
+> _      TURN NOUN2 SWITC
+              SET turn_switc_
+
+> _      TURN NOUN2 VALVE
+              SET turn_valve_
+
+> _      TURN NOUN2 OVEN
+              SET turn_oven_
+
+> PUT    STICK SET put_stick_or_inser_stick_
+
+> INSER  STICK SET put_stick_or_inser_stick_
+
+> _      ATTAC NOUN2 HOSE
+              SET attac_hose_
+
+> _      TURN NOUN2 DIAL
+              SET turn_dial_
+
+> _      ATTAC NOUN2 CROWB
+              SET attac_crowb_
+
+> _      TURN NOUN2 KNOB
+              SET turn_knob_
+
+> _      TURN NOUN2 RADIO
+              SET turn_radio_
+
+> TYPE   CODE SET type_code_or_type_door_or_type_signa_or_type___
+
+> TYPE   DOOR SET type_code_or_type_door_or_type_signa_or_type___
+
+> TYPE   SIGNA SET type_code_or_type_door_or_type_signa_or_type___
+
+> TYPE   _    SET type_code_or_type_door_or_type_signa_or_type___
+
+> X      PANEL PRESENT panel
+              CLEAR is_done_
+              PROCESS 42
+              NOTZERO is_done_
+              DONE
+
+> OPEN   PANEL CLEAR level1_
+
+> OPEN   PANEL NOTZERO internal_door_open_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The panel is already open.\n"
+
+> OPEN   PANEL ZERO level1_
+              SET has_done_something_
+              XMESSAGE "You open the door panel, revealing a circuit board. A wire has burnt out, stopping the door from working.\n"
+
+> _      _    NOTZERO inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+              CLEAR level1_
+
+> _      _    NOTZERO inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+              NOTZERO internal_door_open_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The paperclip already bridges the burnt-out wire.\n"
+
+> _      _    NOTZERO inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+              ZERO level1_
+              NOTCARR paperclip
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You don't have a paperclip.\n"
+
+> _      _    NOTZERO inser_paper_or_put_paper_or_attac_paper_or_fit_paper_
+              ZERO level1_
+              SET has_done_something_
+              SET internal_door_open_
+              DESTROY paperclip
+              XMESSAGE "The paperclip shorts out the broken wire and the door slides slowly open on the dwindling emergency power.\n"
+              PLUS score_ 3
+
+> X      HATCH PRESENT internal_door
+              XMESSAGE "The internal door is made out of metal.\n"
+              DONE
+
+> X      DOOR PRESENT external_door
+              CLEAR is_done_
+              PROCESS 43
+              NOTZERO is_done_
+              DONE
+
+> OPEN   DOOR CLEAR level1_
+
+> OPEN   DOOR AT airlock
+              ZERO electricity_on_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The blast door needs power to operate.\n"
+
+> OPEN   DOOR ZERO level1_
+              AT airlock
+              ZERO external_door_unlocked_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The blast door is locked. It needs the door release code.\n"
+
+> OPEN   DOOR ZERO level1_
+              AT airlock
+              NOTZERO external_door_open_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "It's already open.\n"
+
+> OPEN   DOOR ZERO level1_
+              AT airlock
+              SET level1_
+              SET has_done_something_
+              SET external_door_open_
+              XMESSAGE "You throw the heavy bolts and the blast door swings open, the wasteland visible beyond.\n"
+
+> OPEN   DOOR ZERO level1_
+              AT we_corridor
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The fire door doesn't have a handle on this side - it needs prying open with something.\n"
+
+> OPEN   DOOR ZERO level1_
+              SET has_done_something_
+              XMESSAGE "There is nothing here to open.\n"
+
+> _      _    NOTZERO x_me_or_x_mysel_or_x_self_
+              SET has_done_something_
+              XMESSAGE "You're wearing a heavy-duty survival suit, slightly too large and smelling of must. It offers some protection but leaves your head entirely exposed.\n"
+
+> GET    PACK SET has_done_something_
+              GET emergency_pack
+              LET carry_limit_ 12
+
+> DROP   PACK SET has_done_something_
+              DROP emergency_pack
+              LET carry_limit_ 6
+
+> _      _    NOTZERO wear_pack_or_remov_pack_or_unwea_pack_
+              SET has_done_something_
+              XMESSAGE "There's no need - you've already thrown it on your back.\n"
+
+> X      DOCUM PRESENT documents
+              CLEAR is_done_
+              PROCESS 44
+              NOTZERO is_done_
+              DONE
+
+> X      JACKE PRESENT jacket
+              CLEAR is_done_
+              PROCESS 45
+              NOTZERO is_done_
+              DONE
+
+> X      MAKER PRESENT coffee_maker
+              CLEAR is_done_
+              PROCESS 46
+              NOTZERO is_done_
+              DONE
+
+> SHAKE  STICK CLEAR level1_
+
+> SHAKE  STICK NOTCARR glow_stick
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to pick it up first.\n"
+
+> SHAKE  STICK ZERO level1_
+              GT stick_turns_ 0
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The stick is already lit.\n"
+
+> SHAKE  STICK ZERO level1_
+              SET has_done_something_
+              LET stick_turns_ 150
+              XMESSAGE "You shake the glow stick vigorously. It flares to life.\n"
+
+> X      STICK PRESENT glow_stick
+              CLEAR is_done_
+              PROCESS 7
+              NOTZERO is_done_
+              DONE
+
+> X      CREWM PRESENT crewmate
+              CLEAR is_done_
+              PROCESS 8
+              NOTZERO is_done_
+              DONE
+
+> GET    CREWM SET has_done_something_
+              XMESSAGE "The body is too heavy to move, and there is nothing to be gained by trying.\n"
+
+> _      _    NOTZERO attac_crewm_
+              SET has_done_something_
+              XMESSAGE "He is already dead. You need to stay focused.\n"
+
+> X      HELME PRESENT survival_helmet
+              CLEAR is_done_
+              PROCESS 9
+              NOTZERO is_done_
+              DONE
+
+> GET    HELME CLEAR level1_
+
+> GET    HELME ZERO helmet_free_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The helmet is seized up with rust on the dead crewman. You'll need to free it up first.\n"
+
+> GET    HELME ZERO level1_
+              SET has_done_something_
+              GET survival_helmet
+
+> WEAR   HELME CLEAR level1_
+
+> WEAR   HELME ZERO helmet_free_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The helmet is seized up with rust on the dead crewman. You'll need to free it up first.\n"
+
+> WEAR   HELME ZERO level1_
+              NOTCARR survival_helmet
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be holding the helmet first.\n"
+
+> WEAR   HELME ZERO level1_
+              NOTZERO helmet_worn_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You're already wearing it.\n"
+
+> WEAR   HELME ZERO level1_
+              SET has_done_something_
+              SET helmet_worn_
+              XMESSAGE "You put on the helmet.\n"
+
+> _      _    NOTZERO remov_helme_or_unwea_helme_
+              CLEAR level1_
+
+> _      _    NOTZERO remov_helme_or_unwea_helme_
+              ZERO helmet_worn_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You're not wearing it.\n"
+
+> _      _    NOTZERO remov_helme_or_unwea_helme_
+              ZERO level1_
+              CLEAR is_done_
+              PROCESS 10
+              NOTZERO is_done_
+              DONE
+
+> DROP   HELME SET has_done_something_
+              CLEAR helmet_worn_
+              DROP survival_helmet
+
+> SPRAY  HELME CLEAR level1_
+
+> SPRAY  HELME NOTCARR wd40
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need something to spray with.\n"
+
+> SPRAY  HELME ZERO level1_
+              NOTZERO helmet_free_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The helmet joints are already freed up.\n"
+
+> SPRAY  HELME ZERO level1_
+              SET has_done_something_
+              SET helmet_free_
+              XMESSAGE "You spray WD40 onto the rusted joints. With a series of creaks the helmet comes free from the body.\n"
+              PLUS score_ 5
+
+> _      _    NOTZERO inser_filte_or_put_filte_or_fit_filte_
+              CLEAR level1_
+
+> _      _    NOTZERO inser_filte_or_put_filte_or_fit_filte_
+              ZERO helmet_free_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to free the helmet from the body first.\n"
+
+> _      _    NOTZERO inser_filte_or_put_filte_or_fit_filte_
+              ZERO level1_
+              NOTCARR coffee_filter
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You don't have a coffee filter.\n"
+
+> _      _    NOTZERO inser_filte_or_put_filte_or_fit_filte_
+              ZERO level1_
+              NOTZERO filter_in_helmet_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There is already a filter fitted into the helmet.\n"
+
+> _      _    NOTZERO inser_filte_or_put_filte_or_fit_filte_
+              ZERO level1_
+              SET has_done_something_
+              SET filter_in_helmet_
+              XMESSAGE "You fit the coffee filter into the helmet's breathing port.\n"
+              PLUS score_ 5
+
+> _      _    NOTZERO inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+              CLEAR level1_
+
+> _      _    NOTZERO inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+              ZERO filter_in_helmet_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to fit a filter into the helmet before adding charcoal.\n"
+
+> _      _    NOTZERO inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+              ZERO level1_
+              NOTCARR charcoal
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You don't have any charcoal.\n"
+
+> _      _    NOTZERO inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+              ZERO level1_
+              NOTZERO charcoal_in_filter_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The filter is already packed with charcoal.\n"
+
+> _      _    NOTZERO inser_charc_or_put_charc_or_fit_charc_or_pack_charc_
+              ZERO level1_
+              SET has_done_something_
+              SET charcoal_in_filter_
+              DESTROY charcoal
+              XMESSAGE "You pack the charcoal into the filter. The helmet is now a crude but effective smoke mask.\n"
+              PLUS score_ 5
+
+> X      ATTAC PRESENT hand_attached
+              XMESSAGE "The hand of the dead crewman. You could sever it for use on a biometric scanner.\n"
+              DONE
+
+> X      HAND PRESENT hand
+              XMESSAGE "A severed hand. It might work on a biometric scanner.\n"
+              DONE
+
+> SEVER  HAND CLEAR level1_
+
+> SEVER  HAND NOTCARR bread_knife
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You'll need something sharper than that!\n"
+
+> SEVER  HAND ZERO level1_
+              ISNOTAT hand 252
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You've already got it.\n"
+
+> SEVER  HAND ZERO level1_
+              SET has_done_something_
+              DESTROY hand_attached
+              PLACE hand gym
+              XMESSAGE "It's grisly work but you managed to separate the hand from the body.\n"
+              PLUS score_ 5
+
+> SCAN   HAND CLEAR level1_
+
+> SCAN   HAND NOTAT generator
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There is no scanner here.\n"
+
+> SCAN   HAND ZERO level1_
+              ISAT hand 252
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to sever the hand from the body first.\n"
+
+> SCAN   HAND ZERO level1_
+              NOTCARR hand
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be holding the hand.\n"
+
+> SCAN   HAND ZERO level1_
+              NOTZERO scanner_cleared_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The scanner has already accepted the print.\n"
+
+> SCAN   HAND ZERO level1_
+              SET has_done_something_
+              SET scanner_cleared_
+              XMESSAGE "You press the severed hand against the scanner. It beeps once and a green light blinks on.\n"
+              PLUS score_ 5
+
+> X      SCANN PRESENT scanner
+              CLEAR is_done_
+              PROCESS 11
+              NOTZERO is_done_
+              DONE
+
+> X      SWITC PRESENT gen_switch
+              CLEAR is_done_
+              PROCESS 12
+              NOTZERO is_done_
+              DONE
+
+> _      _    NOTZERO turn_switc_
+              CLEAR level1_
+
+> _      _    NOTZERO turn_switc_
+              ZERO scanner_cleared_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The biometric scanner must be cleared before the switch can be used.\n"
+
+> _      _    NOTZERO turn_switc_
+              ZERO level1_
+              NOTZERO electricity_on_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The generator is already running.\n"
+
+> _      _    NOTZERO turn_switc_
+              ZERO level1_
+              SET has_done_something_
+              SET electricity_on_
+              XMESSAGE "You throw the master switch. The generator roars to life. Lights flicker on throughout the bunker.\n"
+              PLUS score_ 10
+
+> CRUSH  TREE CLEAR level1_
+
+> CRUSH  TREE NOTCARR pestle
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need something to crush it with.\n"
+
+> CRUSH  TREE ZERO level1_
+              NOTCARR bonsai_tree
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be carrying the bonsai tree.\n"
+
+> CRUSH  TREE ZERO level1_
+              ISNOTAT charcoal 252
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You already have enough charcoal.\n"
+
+> CRUSH  TREE ZERO level1_
+              SET has_done_something_
+              DESTROY bonsai_tree
+              CREATE charcoal
+              XMESSAGE "You pound the bonsai wood with the pestle, reducing it to usable chunks of charcoal.\n"
+              PLUS score_ 3
+
+> X      VALVE PRESENT valve
+              CLEAR is_done_
+              PROCESS 13
+              NOTZERO is_done_
+              DONE
+
+> _      _    NOTZERO turn_valve_
+              CLEAR level1_
+
+> _      _    NOTZERO turn_valve_
+              NOTZERO valve_open_
+              SET level1_
+              SET has_done_something_
+              CLEAR valve_open_
+              XMESSAGE "You turn the valve off. The hiss of gas through the pipe stops.\n"
+
+> _      _    NOTZERO turn_valve_
+              ZERO level1_
+              SET has_done_something_
+              SET valve_open_
+              XMESSAGE "You turn the valve on. Gas begins flowing again.\n"
+
+> X      HOSE PRESENT hose
+              CLEAR is_done_
+              PROCESS 14
+              NOTZERO is_done_
+              DONE
+
+> GET    HOSE SET has_done_something_
+              GET hose
+              CLEAR hose_on_oven_
+
+> X      OVEN PRESENT oven
+              CLEAR is_done_
+              PROCESS 15
+              NOTZERO is_done_
+              DONE
+
+> _      _    NOTZERO turn_oven_
+              CLEAR level1_
+
+> _      _    NOTZERO turn_oven_
+              NOTZERO oven_on_
+              SET level1_
+              SET has_done_something_
+              CLEAR oven_on_
+              XMESSAGE "You turn off the oven. The burners die.\n"
+
+> _      _    NOTZERO turn_oven_
+              ZERO level1_
+              ZERO hose_on_oven_
+              NOTZERO valve_open_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The igniter sparks - and the gas leaking into the room from the disconnected hose catches instantly. The pantry erupts in a roaring explosion.\n"
+              GOTO 0
+              END
+              DONE
+
+> _      _    NOTZERO turn_oven_
+              ZERO level1_
+              ZERO hose_on_oven_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The gas hose is not connected - reattach it to the oven before turning it on.\n"
+
+> _      _    NOTZERO turn_oven_
+              ZERO level1_
+              SET has_done_something_
+              SET oven_on_
+              XMESSAGE "You light the oven. The burners catch with a soft whump.\n"
+
+> _      _    NOTZERO put_stick_or_inser_stick_
+              CLEAR level1_
+
+> _      _    NOTZERO put_stick_or_inser_stick_
+              NOTAT pantry
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There's nowhere here to do that.\n"
+
+> _      _    NOTZERO put_stick_or_inser_stick_
+              ZERO level1_
+              ZERO oven_on_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The oven is not on - light it first.\n"
+
+> _      _    NOTZERO put_stick_or_inser_stick_
+              ZERO level1_
+              NOTCARR glow_stick
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be holding the glow stick.\n"
+
+> _      _    NOTZERO put_stick_or_inser_stick_
+              ZERO level1_
+              SET has_done_something_
+              LET stick_turns_ 150
+              XMESSAGE "You hold the glow stick over the hot hob for a moment. It flares back to full brightness.\n"
+
+> _      _    NOTZERO attac_hose_
+              CLEAR level1_
+
+> _      _    NOTZERO attac_hose_
+              AT pantry
+              SET level1_
+              CLEAR is_done_
+              PROCESS 16
+              NOTZERO is_done_
+              DONE
+
+> _      _    CLEAR is_done_
+              PROCESS 17
+              NOTZERO is_done_
+              DONE
+
+> _      _    NOTZERO attac_hose_
+              ZERO level1_
+              SET has_done_something_
+              XMESSAGE "There's nothing here to attach the hose to.\n"
+
+> X      TANK PRESENT gas_tank
+              CLEAR is_done_
+              PROCESS 18
+              NOTZERO is_done_
+              DONE
+
+> X      DIAL PRESENT dial
+              CLEAR is_done_
+              PROCESS 19
+              NOTZERO is_done_
+              DONE
+
+> _      _    NOTZERO turn_dial_
+              CLEAR level1_
+
+> _      _    NOTZERO turn_dial_
+              ZERO hose_attached_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "Attach the hose to the rig first.\n"
+
+> _      _    NOTZERO turn_dial_
+              ZERO level1_
+              NOTZERO dial_turned_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The dial is already set to acetylene.\n"
+
+> _      _    NOTZERO turn_dial_
+              ZERO level1_
+              SET has_done_something_
+              SET dial_turned_
+              XMESSAGE "You turn the dial to acetylene. The rig is primed and ready to weld.\n"
+
+> X      KNOB PRESENT knob
+              CLEAR is_done_
+              PROCESS 20
+              NOTZERO is_done_
+              DONE
+
+> WELD   KNOB CLEAR level1_
+
+> WELD   KNOB NOTAT pump_room
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be at the pump to weld the knob on.\n"
+
+> WELD   KNOB ZERO level1_
+              NOTCARR torch
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need the welding torch to do this.\n"
+
+> WELD   KNOB ZERO level1_
+              ZERO dial_turned_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The welding rig is not ready - attach the hose and set the dial first.\n"
+
+> WELD   KNOB ZERO level1_
+              NOTZERO knob_welded_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The knob is already welded on.\n"
+
+> WELD   KNOB ZERO level1_
+              SET has_done_something_
+              SET knob_welded_
+              XMESSAGE "You touch the torch to the knob stub and weld the knob firmly onto the pump handle.\n"
+              PLUS score_ 5
+
+> _      _    NOTZERO attac_crowb_
+              CLEAR level1_
+
+> _      _    NOTZERO attac_crowb_
+              NOTAT pump_room
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There's nothing to attach the crowbar to here.\n"
+
+> _      _    NOTZERO attac_crowb_
+              ZERO level1_
+              ZERO knob_welded_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to weld the knob back on first.\n"
+
+> _      _    NOTZERO attac_crowb_
+              ZERO level1_
+              NOTCARR crowbar
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be holding the crowbar.\n"
+
+> _      _    NOTZERO attac_crowb_
+              ZERO level1_
+              NOTZERO crowbar_lever_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The crowbar is already slotted onto the knob.\n"
+
+> _      _    NOTZERO attac_crowb_
+              ZERO level1_
+              SET has_done_something_
+              SET crowbar_lever_
+              DESTROY crowbar
+              XMESSAGE "You slot the crowbar onto the knob, giving you enough leverage to turn the pump.\n"
+              PLUS score_ 5
+
+> _      _    NOTZERO turn_knob_
+              CLEAR level1_
+
+> _      _    NOTZERO turn_knob_
+              ZERO knob_welded_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There is no knob - it needs to be welded back on first.\n"
+
+> _      _    NOTZERO turn_knob_
+              ZERO level1_
+              ZERO crowbar_lever_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need a lever attached to the knob to turn it - attach the crowbar.\n"
+
+> _      _    NOTZERO turn_knob_
+              ZERO level1_
+              NOTZERO pump_reversed_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The pump is already reversed.\n"
+
+> _      _    NOTZERO turn_knob_
+              ZERO level1_
+              SET has_done_something_
+              SET pump_reversed_
+              XMESSAGE "With the crowbar as a lever you heave the knob around. The pump reverses with a grinding shudder - clean air begins to circulate.\n"
+              PLUS score_ 15
+
+> X      DOOR PRESENT fire_door
+              CLEAR is_done_
+              PROCESS 21
+              NOTZERO is_done_
+              DONE
+
+> PRY    DOOR CLEAR level1_
+
+> PRY    DOOR NOTAT we_corridor
+              NOTAT control_room
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There's nothing here to pry open.\n"
+
+> PRY    DOOR ZERO level1_
+              NOTCARR crowbar
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need the crowbar to pry that open.\n"
+
+> PRY    DOOR ZERO level1_
+              NOTZERO corridor_door_pried_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The door is already pried open.\n"
+
+> PRY    DOOR ZERO level1_
+              SET has_done_something_
+              SET corridor_door_pried_
+              XMESSAGE "You jam the crowbar into the door frame and heave. The fire door grinds open and stays put.\n"
+              PLUS score_ 5
+
+> X      PIPE PRESENT pipe
+              CLEAR is_done_
+              PROCESS 22
+              NOTZERO is_done_
+              DONE
+
+> UNBLO  PIPE CLEAR level1_
+
+> UNBLO  PIPE NOTCARR toilet_brush
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need something to clear the blockage with.\n"
+
+> UNBLO  PIPE ZERO level1_
+              NOTZERO pipe_clear_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The pipe is already clear.\n"
+
+> UNBLO  PIPE ZERO level1_
+              SET has_done_something_
+              SET pipe_clear_
+              XMESSAGE "You ram the toilet brush into the pipe and work it back and forth. A foul slurry of debris clears through. Water begins to flow again.\n"
+              PLUS score_ 5
+
+> X      RADIO PRESENT radio
+              CLEAR is_done_
+              PROCESS 23
+              NOTZERO is_done_
+              DONE
+
+> _      _    NOTZERO turn_radio_
+              CLEAR level1_
+
+> _      _    NOTZERO turn_radio_
+              ZERO electricity_on_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The radio needs power before it will work.\n"
+
+> _      _    NOTZERO turn_radio_
+              ZERO level1_
+              NOTZERO radio_on_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The radio is already on.\n"
+
+> _      _    NOTZERO turn_radio_
+              ZERO level1_
+              SET has_done_something_
+              SET radio_on_
+              XMESSAGE "You switch on the radio. It crackles to life, filling the room with static and a carrier wave.\n"
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              CLEAR level1_
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              NOTAT control_room
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There is nothing here to type a code into.\n"
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              ZERO level1_
+              ZERO electricity_on_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The control room has no power.\n"
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              ZERO level1_
+              ZERO radio_on_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "Turn the radio on first.\n"
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              ZERO level1_
+              NOTCARR code_book
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need the code book to know what to type.\n"
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              ZERO level1_
+              ZERO signal_sent_
+              SET level1_
+              SET has_done_something_
+              SET signal_sent_
+              XMESSAGE "You key in the emergency signal code. Static crackles, then a distant acknowledgement tone - someone is receiving your signal.\n"
+              PLUS score_ 5
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              ZERO level1_
+              ZERO external_door_unlocked_
+              SET level1_
+              SET has_done_something_
+              SET external_door_unlocked_
+              XMESSAGE "You enter the external door release code. A muffled clunk echoes down the corridor - the blast door is unlocked.\n"
+              PLUS score_ 10
+
+> _      _    NOTZERO type_code_or_type_door_or_type_signa_or_type___
+              ZERO level1_
+              SET has_done_something_
+              XMESSAGE "Both codes have already been entered.\n"
+
+> X      DOOR PRESENT armoury_door
+              CLEAR is_done_
+              PROCESS 24
+              NOTZERO is_done_
+              DONE
+
+> PULL   SHELF CLEAR level1_
+
+> PULL   SHELF NOTAT library
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There's nothing here to pull.\n"
+
+> PULL   SHELF ZERO level1_
+              NOTZERO shelf_pulled_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You've already pulled the shelf loose.\n"
+
+> PULL   SHELF ZERO level1_
+              SET has_done_something_
+              SET shelf_pulled_
+              XMESSAGE "You pull the loose shelf away from the wall. It comes free with a shower of plaster dust.\n"
+
+> GET    SHELF CLEAR level1_
+
+> GET    SHELF ZERO shelf_pulled_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The shelf is fixed to the wall - try pulling it loose first.\n"
+
+> GET    SHELF ZERO level1_
+              SET has_done_something_
+              GET wooden_shelf
+
+> LEAN   SHELF CLEAR level1_
+
+> LEAN   SHELF NOTCARR wooden_shelf
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be carrying the shelf.\n"
+
+> LEAN   SHELF ZERO level1_
+              NOTAT control_room
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "This is not the right place to lean the shelf.\n"
+
+> LEAN   SHELF ZERO level1_
+              NOTZERO shelf_leaned_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The shelf is already leaned against the armoury door.\n"
+
+> LEAN   SHELF ZERO level1_
+              SET has_done_something_
+              SET shelf_leaned_
+              DESTROY wooden_shelf
+              XMESSAGE "You lean the shelf against the lip of the armoury door, creating a ramp. The bot should be able to cross now.\n"
+
+> X      WINDO PRESENT gen_window
+              CLEAR is_done_
+              PROCESS 25
+              NOTZERO is_done_
+              DONE
+
+> X      WINDO PRESENT pump_window
+              CLEAR is_done_
+              PROCESS 26
+              NOTZERO is_done_
+              DONE
+
+> SHOOT  WINDO CLEAR level1_
+
+> SHOOT  WINDO NOTZERO window_broken_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The window is already broken.\n"
+
+> SHOOT  WINDO ZERO level1_
+              AT pump_room
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The window looks back into the generator room - shooting it from this side would do nothing useful. It needs to be shot from the other side.\n"
+
+> SHOOT  WINDO ZERO level1_
+              AT med_bay
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "That porthole looks out over the pump room but is not in a useful position to break from here.\n"
+
+> SHOOT  WINDO ZERO level1_
+              NOTAT generator
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "There's no window here to shoot.\n"
+
+> SHOOT  WINDO ZERO level1_
+              NOTCARR weapon
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need a weapon to shoot with.\n"
+
+> SHOOT  WINDO ZERO level1_
+              SET has_done_something_
+              SET window_broken_
+              XMESSAGE "You fire at the window. The glass shatters inward, leaving a jagged opening into the pump room.\n"
+              PLUS score_ 5
+
+> ENTER  WINDO CLEAR level1_
+
+> ENTER  WINDO ZERO window_broken_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The window is intact. You cannot climb through it.\n"
+
+> ENTER  WINDO ZERO level1_
+              AT generator
+              SET level1_
+              SET has_done_something_
+              GOTO pump_room
+              XMESSAGE "You squeeze through the broken window frame and drop into the pump room.\n"
+              CLS
+              RESTART
+
+> ENTER  WINDO ZERO level1_
+              AT pump_room
+              SET level1_
+              SET has_done_something_
+              GOTO generator
+              XMESSAGE "You haul yourself back through the window into the generator room.\n"
+              CLS
+              RESTART
+
+> ENTER  WINDO ZERO level1_
+              SET has_done_something_
+              XMESSAGE "There's no window here to climb through.\n"
+
+> SCORE  _    SET has_done_something_
+              SYSMESS 64
+              PRINT score_
+              XMESSAGE " out of 100.\n"
+
+> X      PACK ZERO has_done_something_
+              PRESENT emergency_pack
+              XMESSAGE "A battered canvas emergency pack with worn straps. Carrying it gives you considerably more carrying capacity.\n"
+              DONE
+
+> X      DOCUM ZERO has_done_something_
+              PRESENT documents
+              XMESSAGE "Emergency procedures for shelter personnel. In the event of fire, seal the airlock and await rescue. The external door release code is held by the senior officer. To request evacuation, transmit on the emergency frequency using the signal codes from the senior officer's notebook.\n"
+              DONE
+
+> X      PAPER ZERO has_done_something_
+              PRESENT paperclip
+              XMESSAGE "A small metal paperclip.\n"
+              DONE
+
+> X      STICK ZERO has_done_something_
+              PRESENT glow_stick
+              XMESSAGE "A chemical glow stick. Shake it to activate; reheat it on the oven when it fades.\n"
+              DONE
+
+> X      BOT  ZERO has_done_something_
+              PRESENT cleaning_bot
+              XMESSAGE "A squat cleaning bot, its sensor array sweeping slowly. It zaps anything it reads as vermin - carrying a lit glow stick marks you as crew, not a target.\n"
+              DONE
+
+> X      MAKER ZERO has_done_something_
+              PRESENT coffee_maker
+              XMESSAGE "It's just an ordinary coffee maker.\n"
+              DONE
+
+> X      FILTE ZERO has_done_something_
+              PRESENT coffee_filter
+              XMESSAGE "A circular paper coffee filter, slightly damp from the machine. It could be fitted into a helmet's breathing port to filter out particulates.\n"
+              DONE
+
+> X      KNIFE ZERO has_done_something_
+              PRESENT bread_knife
+              XMESSAGE "A long serrated bread knife with a wooden handle, still reasonably sharp despite its age.\n"
+              DONE
+
+> X      CROWB ZERO has_done_something_
+              PRESENT crowbar
+              XMESSAGE "A solid steel crowbar, reassuringly heavy. Useful for prying things open and, in a pinch, as a lever.\n"
+              DONE
+
+> X      BRUSH ZERO has_done_something_
+              PRESENT toilet_brush
+              XMESSAGE "A long-handled toilet brush, not particularly pleasant to handle but sturdy enough to clear a blocked pipe.\n"
+              DONE
+
+> X      JACKE ZERO has_done_something_
+              PRESENT jacket
+              XMESSAGE "It is Bob's jacket. You miss Bob.\n"
+              DONE
+
+> X      BOOK ZERO has_done_something_
+              PRESENT code_book
+              XMESSAGE "A small, well-thumbed notebook containing radio signal codes and door access codes, written in a cramped but legible hand.\n"
+              DONE
+
+> X      CREWM ZERO has_done_something_
+              PRESENT crewmate
+              XMESSAGE "A dead crewman pinned under fallen gym equipment.\n"
+              DONE
+
+> X      ATTAC ZERO has_done_something_
+              PRESENT hand_attached
+              XMESSAGE "The hand of the dead crewman. You could sever it for use on a biometric scanner.\n"
+              DONE
+
+> X      HAND ZERO has_done_something_
+              PRESENT hand
+              XMESSAGE "A severed hand. It might work on a biometric scanner.\n"
+              DONE
+
+> X      HELME ZERO has_done_something_
+              PRESENT survival_helmet
+              XMESSAGE "A sealed helmet, seized up with rust on the dead crewman. It could be freed with WD40.\n"
+              DONE
+
+> X      PESTL ZERO has_done_something_
+              PRESENT pestle
+              XMESSAGE "A heavy pestle, good for crushing things.\n"
+              DONE
+
+> X      PORTH ZERO has_done_something_
+              PRESENT med_window
+              XMESSAGE "A small porthole-style window set into the south wall, looking out toward the pump room. You note it as a potential entry point - but not from this side. You'd need to access the pump room from the generator level.\n"
+              DONE
+
+> X      TREE ZERO has_done_something_
+              PRESENT bonsai_tree
+              XMESSAGE "A small but surprisingly dense bonsai tree, its gnarled trunk and compact branches ideal for reducing to charcoal with a good pounding.\n"
+              DONE
+
+> X      CHARC ZERO has_done_something_
+              PRESENT charcoal
+              XMESSAGE "Lumps of charcoal crushed from the bonsai wood. Insert into the helmet filter to scrub smoke.\n"
+              DONE
+
+> X      WD40 ZERO has_done_something_
+              PRESENT wd40
+              XMESSAGE "A well-used aerosol can of WD40, still with enough left to free up a seized joint or two.\n"
+              DONE
+
+> X      HOSE ZERO has_done_something_
+              PRESENT hose
+              XMESSAGE "A rubber gas hose connecting the oven to the supply pipe.\n"
+              DONE
+
+> X      SHELF ZERO has_done_something_
+              PRESENT wooden_shelf
+              XMESSAGE "A solid wooden shelf, roughly a metre long. Sturdy enough to act as a ramp if leaned against something.\n"
+              DONE
+
+> X      TORCH ZERO has_done_something_
+              PRESENT torch
+              XMESSAGE "A welding torch nozzle, the business end of the portable rig.\n"
+              DONE
+
+> X      RIFLE ZERO has_done_something_
+              PRESENT weapon
+              XMESSAGE "A bolt-action rifle, the finish worn but the mechanism well-maintained. There are a few rounds in the magazine - enough for what you need.\n"
+              DONE
+
+> _      _    LT verb_ 13
+              NOTDONE
+
+> _      _    ZERO has_done_something_
+              PROCESS 28
+
+> _      _    ZERO has_done_something_
+              NOTDONE
+
+
+/PRO 6 ; The startup routine (DAAD)
+
+; Set the boundries for the main text window
+
+> _       _     WINDOW 1
+#ifdef "pcw"
+                BORDER  0
+#endif
+#ifdef "c64"
+                BORDER  0
+#endif
+#ifndef "notspeccy"
+                BORDER  0
+#endif
+#ifdef "pcw"
+   WINAT   11       0 ;Leave enough space for graphic area + 8 pixels of margin
+#endif
+#ifdef "c64"
+   WINAT   14       0 ; c64 images are always 12 rows
+#endif
+#ifndef "notspeccy"
+   WINAT   11       0 ;Leave enough space for graphic area + 8 pixels of margin
+#endif
+#ifdef "pcw"
+                INK 1
+                PAPER 0
+#endif
+#ifdef "c64"
+                INK 7
+                PAPER 0
+#endif
+#ifndef "notspeccy"
+                INK 1
+                PAPER 0
+#endif
+#ifdef "pcw"
+                WINSIZE 33      127
+#endif
+#ifdef "c64"
+                WINSIZE 25      127
+#endif
+#ifndef "notspeccy"
+                WINSIZE 25      127
+#endif
+                CLS
+
+                CLEAR   255
+
+> _       _     NOTEQ   255     29 ; 29 = GFlags
+                CLEAR   @255
+
+> _       _     PLUS    255     1
+                LT      255     255
+                SKIP    -2
+
+> _       _     RESET
+                LET 113 255 ; Mark the graphics view as dirty
+                LET     52 10 ; Strength
+                LET     items_carryable_  10 ; Max Carry
+                SET     46 ; CPNoun
+                SET     47 ; CPAdject
+                GOTO    0
+
+/PRO 7
+
+> _      _    CLEAR level2_
+
+> _      _    GT stick_turns_ 0
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A chemical glow stick, giving off a faint light.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A chemical glow stick. Shake it to activate; reheat it on the oven when it fades.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 8
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO helmet_free_
+              ISNOTAT hand 252
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The crewman lies pinned under the weight cage, helmetless and missing a hand. There is nothing more to take from him.\n"
+
+> _      _    ZERO level2_
+              NOTZERO helmet_free_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The crewman lies pinned under the weight cage, helmetless now. One hand remains - you could sever it if you need it for the biometric scanner.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A dead crewman pinned under fallen gym equipment, still wearing his sealed helmet. The joints are seized with rust - something might free them up.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 9
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO charcoal_in_filter_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The helmet has a charcoal-packed coffee filter fitted - a crude but effective smoke mask.\n"
+
+> _      _    ZERO level2_
+              NOTZERO filter_in_helmet_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The helmet has a coffee filter fitted into its breathing port. Pack it with charcoal to complete the mask.\n"
+
+> _      _    ZERO level2_
+              NOTZERO helmet_free_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A sealed helmet, freed from the body. Fit a filter to make it a smoke mask.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A sealed helmet, seized up with rust on the dead crewman. It could be freed with WD40.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 10
+
+> _      _    SET has_done_something_
+              CLEAR helmet_worn_
+              XMESSAGE "You take off the helmet.\n"
+
+> _      _    NOTZERO charcoal_in_filter_
+              XMESSAGE "The smoke immediately starts catching at your throat again.\n"
+
+
+/PRO 11
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO scanner_cleared_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The biometric scanner glows green - cleared and satisfied.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A biometric hand scanner securing the generator controls. It needs a valid hand print.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 12
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO electricity_on_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The master switch is thrown. The generator is running.\n"
+
+> _      _    ZERO level2_
+              NOTZERO scanner_cleared_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The master switch. The scanner is cleared - you can use it now.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A master power switch. The biometric scanner must be cleared before it can be used.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 13
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO valve_open_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A gas shutoff valve on the wall. It is currently open - gas is flowing to the oven.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A gas shutoff valve on the wall. It is currently closed - gas is off.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 14
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO valve_open_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A rubber gas hose connecting the oven to the supply pipe. Turn the valve off before detaching it.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A rubber gas hose, disconnected from the oven's gas fitting.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 15
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO oven_on_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A battered institutional gas oven, its enamel stained and chipped. The burners are lit and the hob is hot.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A battered institutional gas oven, its enamel stained and chipped. The rubber hose connecting it to the supply pipe snakes out from behind.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 16
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO hose_on_oven_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The hose is already connected to the oven.\n"
+
+> _      _    ZERO level2_
+              NOTCARR hose
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "You need to be holding the hose.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              PLACE hose pantry
+              SET hose_on_oven_
+              XMESSAGE "You reconnect the rubber hose to the oven's gas fitting. The oven is ready to use again.\n"
+
+
+/PRO 17
+
+> _      _    CLEAR level1_
+
+> _      _    NOTCARR hose
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "You need to be holding the hose.\n"
+
+> _      _    ZERO level1_
+              NOTZERO hose_attached_
+              SET level1_
+              SET has_done_something_
+              XMESSAGE "The hose is already connected to the rig.\n"
+
+> _      _    ZERO level1_
+              SET has_done_something_
+              SET hose_attached_
+              DESTROY hose
+              PLACE torch 254
+              XMESSAGE "You connect the hose between the gas tank and the nozzle, forming a portable welding torch. You pick up the torch head.\n"
+              PLUS score_ 5
+
+
+/PRO 18
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO hose_attached_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A pressurised gas tank, the hose now connected between it and the nozzle.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A pressurised gas tank. The hose can be attached to connect it to the nozzle.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 19
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO dial_turned_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A dial controlling the gas mix, set to acetylene. The rig is primed and ready to weld.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A dial controlling the gas mix. Set it to acetylene to prime the rig for welding.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 20
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO crowbar_lever_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The knob is welded back onto the pump handle, with the crowbar slotted on as a lever. Ready to turn.\n"
+
+> _      _    ZERO level2_
+              NOTZERO knob_welded_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The knob has been welded back onto the pump handle. You need a lever to turn it - attach the crowbar.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A broken air-pump handle stub - the knob has snapped off. It could be welded back on.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 21
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO corridor_door_pried_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The fire door hangs open, pried back with the crowbar.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A heavy fire door wedged shut. Pry it open with the crowbar so the bot can follow.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 22
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO pipe_clear_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The supply pipe runs clear now, water flowing properly through.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "The main water supply pipe, its outlet packed solid with sediment and debris. It needs clearing before water can flow again.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 23
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO external_door_unlocked_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The radio crackles softly. Both codes have been transmitted - someone out there heard you.\n"
+
+> _      _    ZERO level2_
+              NOTZERO radio_on_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The radio crackles with static and a carrier wave. Ready to transmit.\n"
+
+> _      _    ZERO level2_
+              NOTZERO electricity_on_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A military-grade communications radio. Power is restored - you could switch it on.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A chunky military-grade communications radio, dusty but intact. It needs power before it can broadcast anything.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 24
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO rats_cleared_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The door to the armoury stands ready to open - whatever was making that racket is gone now.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "You press your ear to the door and hear scurrying, scratching noises on the other side. Something in there is not happy.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 25
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO window_broken_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The window has been shot out, leaving a jagged opening into the pump room. You could climb through.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A small window set into the east wall, looking into the flooded pump room beyond. The door beside it is sealed by water pressure - this window may be the only way in.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 26
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO window_broken_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The window has been shot out - a ragged opening back into the generator room. You could climb through to get out.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A small window set into the west wall, looking back into the generator room. It looks like it could be shot out from the other side.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 27
+
+> _      _    PAUSE 50
+              XMESSAGE "BUNKER BLUES\nby Nate Taylor, with thanks to David Etherton\n"
+              PROCESS process_anykey
+              MESSAGE "You wake up alone, surrounded by the metal walls of the airlock, with only the dim emergency light overhead.\n\nYou're not sure how many hours it has been since Joe pushed you in the airlock, and you passed out from the smoke of the fire. He said he was still going to try to put it out, and deal with the damage from the earthquake that started it, but you worry now that he might not have made it.\n\nBut the air in here won't last forever, the survival suit you threw on had no helmet, and there is no way to open the external door without electricity, even if you dared to enter the wasteland without more protection.\n"
+
+
+/PRO 28
+
+> I      _    SET has_done_something_
+              NEWLINE
+              OK
+              NEWLINE
+
+> LOOK   _    SET has_done_something_
+              CLS
+              RESTART
+
+> X      _    SET has_done_something_
+              SYSMESS 63
+              DONE
+
+> GET    ALL  DOALL 255
+
+> GET    _    SET has_done_something_
+              AUTOG
+              DONE
+
+> DROP   _    SET has_done_something_
+              AUTOD
+              DONE
+
+> DROP   ALL  DOALL 254
+
+> QUIT   _    SET has_done_something_
+              QUIT 
+              GOTO 0
+              END
+              DONE
+
+> SAVE   _    SET has_done_something_
+              XSAVE 0
+              RESTART
+
+> LOAD   _    SET has_done_something_
+              XLOAD 0
+              RESTART
+
+> LOOK   _    SET has_done_something_
+              PLUS 29 128
+              CLS
+              RESTART
+
+
+/PRO 29
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO electricity_on_
+              SET level2_
+              XMESSAGE "The main corridor runs the full length of the bunker under steady, bright fluorescent light - a relief after the emergency flicker. Rows of painted-steel doors line each side, their stencilled numbers sharp and clear.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "Fluorescent strips flicker overhead, casting a sickly pallor over the metal-lined corridor. Rows of identical painted-steel doors line each side, their stencilled numbers faded to near-illegibility.\n"
+
+
+/PRO 30
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO helmet_free_
+              ISNOTAT hand 252
+              SET level2_
+              XMESSAGE "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman's body remains pinned beneath the weight cage - helmetless, one hand severed at the wrist.\n"
+
+> _      _    ZERO level2_
+              NOTZERO helmet_free_
+              SET level2_
+              XMESSAGE "A compact exercise room, weight racks still overturned, the treadmill on its side. The crewman lies pinned beneath the weight cage, helmetless now.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "A compact exercise room that took the worst of the earthquake - weight racks overturned, a treadmill on its side, rubber matting buckled and torn. In the far corner a dead crewman lies pinned beneath a toppled cage of weights, still wearing his helmet.\n"
+
+
+/PRO 31
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO corridor_door_pried_
+              SET level2_
+              XMESSAGE "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. The heavy fire door to the south hangs open, pried back with the crowbar.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "A secondary east-west corridor crossing the lower level, the concrete walls streaked with old damp stains and a faded hazard sign nobody ever heeded. A heavy fire door to the south is wedged shut - the bot will not be able to follow until it is pried open.\n"
+
+
+/PRO 32
+
+> _      _    CLEAR level2_
+
+> _      _    ZERO electricity_on_
+              SET level2_
+              XMESSAGE "Banks of monitors and instrument panels cover every surface, most of them dark, a handful still cycling through error messages or static. This room controlled everything - communications, life support, security - and it will again, once the power is back on.\n"
+
+> _      _    ZERO level2_
+              NOTZERO radio_on_
+              SET level2_
+              XMESSAGE "The control room hums with restored power, monitors glowing across every surface. The radio crackles from its corner console.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "The control room hums with restored power, monitors cycling through system readings. The radio sits silent on its console.\n"
+
+> _      _    CLEAR level2_
+
+> _      _    ZERO rats_cleared_
+              NOTZERO shelf_leaned_
+              SET level2_
+              XMESSAGE "A door to the south leads toward the armoury - the bot is still working the gap you ramped for it, scratching and skittering sounds coming from beyond.\n"
+
+> _      _    ZERO level2_
+              ZERO rats_cleared_
+              SET level2_
+              XMESSAGE "A door to the south leads toward the armoury, but a scrabbling, chittering noise from the gap beneath it warns you not to just open it - something would need to be dealt with first, and the low gap under the door looks like it would take a ramp of some kind for anything to cross it.\n"
+
+
+/PRO 33
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO electricity_on_
+              SET level2_
+              XMESSAGE "The generator fills the room with a steady roar, its cables and conduits alive with current. The master switch is thrown; lights burn throughout the bunker.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "The bunker's main generator dominates this room, its bulk trailing cables and conduits that run up to the ceiling and along every wall. A master switch and a biometric hand scanner are mounted on a panel nearby, both dormant without power.\n"
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO window_broken_
+              SET level2_
+              XMESSAGE "The window in the east wall has been shot out, leaving a jagged opening into the pump room.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "A small window is set into the east wall, looking into the flooded pump room beyond.\n"
+
+
+/PRO 34
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO pump_reversed_
+              SET level2_
+              XMESSAGE "The pump room hums with purpose, the reversed pump cycling clean air through the bunker's ventilation. The floor is dry.\n"
+
+> _      _    ZERO level2_
+              NOTZERO pipe_clear_
+              SET level2_
+              XMESSAGE "Pipework and pumping machinery crowd this damp room. The floor has drained since the pipe was cleared. The air pump stands at the centre, waiting to be turned.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "Pipework and pumping machinery crowd this damp utility room. The floor is under several inches of murky water from the burst pipe. The main air pump stands at the centre, its control knob snapped clean off.\n"
+
+
+/PRO 35
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO pipe_clear_
+              SET level2_
+              XMESSAGE "A low-ceilinged chamber beneath the pump room, mostly occupied by the concrete cistern. The supply pipe runs clear now, water flowing properly.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "A low-ceilinged chamber directly beneath the pump room, almost entirely occupied by a large concrete cistern fed by pipes from above. The main supply pipe runs along the base of the wall, its outlet visibly choked with accumulated sediment and debris.\n"
+
+
+/PRO 36
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO rats_cleared_
+              SET level2_
+              XMESSAGE "The armoury is quiet now, the infestation cleared. Heavy-gauge mesh covers stripped weapons racks - someone left in a hurry. Gnaw marks and droppings remain on every surface, but the rats are gone.\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "A small secure room with heavy-gauge mesh panels over the shelving, most of the weapons racks stripped bare in what must have been a considerable hurry. Whatever infestation drove everyone out has left its mark - droppings and gnaw marks cover every surface.\n"
+
+
+/PRO 37
+
+> _      _    MINUS stick_turns_ 1
+
+> _      _    EQ stick_turns_ 20
+              XMESSAGE "The glow stick is beginning to fade.\n"
+
+> _      _    EQ stick_turns_ 0
+              XMESSAGE "The glow stick flickers and goes dark.\n"
+
+
+/PRO 38
+
+> _      _    ZERO dark_
+              ABSENT 0
+              LISTOBJ
+
+> _      _    PRESENT 0
+              LISTOBJ
+
+> _      _    NEWLINE
+
+
+/PRO 39
+
+> _      _    CLEAR level2_
+
+> _      _    EQ tibbles_line_ 0
+              SET level2_
+              XMESSAGE "Tibbles: "I'm a cleaner, not a magician, but watch this dirt disappear!"\n"
+
+> _      _    ZERO level2_
+              EQ tibbles_line_ 1
+              SET level2_
+              XMESSAGE "Tibbles: "Why walk when you can vacuum?"\n"
+
+> _      _    ZERO level2_
+              EQ tibbles_line_ 2
+              SET level2_
+              XMESSAGE "Tibbles: "Clean floors, happy life."\n"
+
+> _      _    ZERO level2_
+              EQ tibbles_line_ 3
+              SET level2_
+              XMESSAGE "Tibbles: "I've got the suction, and I'm not afraid to use it."\n"
+
+> _      _    ZERO level2_
+              EQ tibbles_line_ 4
+              SET level2_
+              XMESSAGE "Tibbles: "I'm not just a pretty face, I'm a pretty powerful vacuum too!"\n"
+
+> _      _    ZERO level2_
+              XMESSAGE "Tibbles: "Dirt, dust, and debris beware, I'm on the prowl!"\n"
+
+> _      _    PLUS tibbles_line_ 1
+
+> _      _    GT tibbles_line_ 5
+              LET tibbles_line_ 0
+
+
+/PRO 40
+
+> _      _    PLUS bot_wait_ 1
+
+> _      _    EQ bot_wait_ 1
+              PLACE cleaning_bot control_room
+              XMESSAGE "The cleaning bot rolls south through the pried door, its sensors scanning.\n"
+
+> _      _    EQ bot_wait_ 2
+              SET rats_cleared_
+              XMESSAGE "Sharp electrical zaps drift through from the armoury. Then silence.\nTibbles: "I'm a cleaning superhero, saving the day one room at a time."\n"
+
+> _      _    EQ bot_wait_ 4
+              PLACE cleaning_bot main_corridor
+              XMESSAGE "The cleaning bot trundles back through the pried door.\n"
+
+
+/PRO 41
+
+> _      _    MINUS air_turns_ 1
+
+> _      _    EQ air_turns_ 40
+              XMESSAGE "The air tastes of smoke. A dull ache is building behind your eyes.\n"
+
+> _      _    EQ air_turns_ 20
+              XMESSAGE "Your chest is tight and your vision is beginning to blur. You need clean air soon.\n"
+
+> _      _    EQ air_turns_ 10
+              XMESSAGE "You are struggling to breathe. Every breath burns.\n"
+
+> _      _    EQ air_turns_ 0
+              XMESSAGE "The smoke finally wins. The air in the bunker runs out before you find a way to fix it. Next time, work faster - or build the filter sooner.\n"
+              GOTO 0
+              END
+              DONE
+
+
+/PRO 42
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO internal_door_open_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The panel hangs open. A paperclip is fused to the circuit board, providing power to the inner door.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A small control panel on the wall next to the internal door. It is closed.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 43
+
+> _      _    CLEAR level2_
+
+> _      _    NOTZERO external_door_open_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "The blast door stands open, the wasteland visible beyond.\n"
+
+> _      _    ZERO level2_
+              NOTZERO external_door_unlocked_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A heavy blast door leading out to the wasteland. It is powered and unlocked - you could open it.\n"
+
+> _      _    ZERO level2_
+              NOTZERO electricity_on_
+              SET level2_
+              SET has_done_something_
+              XMESSAGE "A heavy blast door leading out to the wasteland. The electronic lock is powered but locked. It needs the door release code.\n"
+
+> _      _    ZERO level2_
+              SET has_done_something_
+              XMESSAGE "A heavy blast door leading out to the wasteland. The electronic lock needs power to operate.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 44
+
+> _      _    SET has_done_something_
+              XMESSAGE "Emergency procedures for shelter personnel. In the event of fire, seal the airlock and await rescue. The external door release code is held by the senior officer. To request evacuation, transmit on the emergency frequency using the signal codes from the senior officer's notebook.\n"
+
+> _      _    ZERO has_created_paperclip_
+              PLACE paperclip airlock
+              SET has_created_paperclip_
+              XMESSAGE "As you look through the documents, the paperclip holding them together falls to the floor.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 45
+
+> _      _    SET has_done_something_
+              XMESSAGE "It is Bob's jacket. You miss Bob.\n"
+
+> _      _    ZERO has_created_code_book_
+              PLACE code_book closet
+              SET has_created_code_book_
+              XMESSAGE "As you look inside the jacket a small notebook falls from one of the pockets.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 46
+
+> _      _    SET has_done_something_
+              XMESSAGE "It's just an ordinary coffee maker.\n"
+
+> _      _    ZERO has_created_coffee_filter_
+              PLACE coffee_filter canteen
+              SET has_created_coffee_filter_
+              XMESSAGE "Examining the coffee maker reveals a circular paper coffee filter.\n"
+
+> _      _    SET is_done_
+              DONE
+
+
+/PRO 47; will clear down the press any key row after key is pressed
+
+> _       _   SAVEAT
+              ANYKEY
+              BACKAT
+              SAVEAT
+#ifdef "pcw"
+              MESSAGE "                                                                                        "
+#endif
+#ifdef "c64"
+              MESSAGE "                                        "
+#endif
+#ifndef "notspeccy"
+              MESSAGE "                                          "
+#endif
+              BACKAT
+/END

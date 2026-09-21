@@ -1,121 +1,110 @@
-Note: adjectives and synonyms may be used, but this is the simple verb noun solution.
-Also this is the quickest solution for testing purpose, so is out of order with how a player would learn what he would need and why.
-
-Airlock
-	EXAMINE (emergency) BAG
-	TAKE PAPERS
-	READ PAPERS
-	WEAR BAG
-	TAKE PAPERCLIP
-	EXAMINE PANEL
-	INSERT PAPERCLIP (into panel - door opens)
-S (Main Corridor)
-	TAKE (glow) STICK (without light the bot will think you are vermin)
-	SHAKE STICK (will need to reheat later)
-E (Bunk Room)
-E (Closet)
-	EXAMINE JACKET
-	TAKE (code) BOOK
-W, S (Latrine)
-	TAKE (toilet) BRUSH
-N, W, W (Canteen)
-	EXAMINE (coffee) MAKER
-	TAKE FILTER
-S (Kitchen)
-	TAKE (bread) KNIFE
-S (Pantry)
-	EXAMINE HOSE
-	TURN (off) VALVE
-	TAKE HOSE
-W (Hydroponics)
-	TAKE (bonsai) TREE
-S (Tool Room)
-	TAKE WD40 (or generic name)
-N, N (Storeroom)
-	TAKE CROWBAR
-E, N, E, SW (Lounge)
-N (Library)
-	PULL (out loose) SHELF
-	TAKE SHELF
-
-S, E, SE (Gym - Dead body here, trapped under equipment)
-	EXAMINE BODY
-	SPRAY HELMET
-	TAKE HELMET
-	INSERT FILTER
-	WEAR HELMET
-	CUT (off) HAND
-	TAKE HAND
-S (Med Bay)
-	TAKE PESTLE
-	CRUSH WOOD
-	TAKE CHARCOAL
-	INSERT CHARCOAL (into filter)
-	EXAMINE WINDOW
-N, W (Main Corridor)
-	EXAMINE (clean) BOT
-S (WE Corridor)
-	PRY DOOR (with crowbar to let in bot)	
-S (Control Room)
-	LEAN SHELF (maybe dropping should be sufficient)
-	WAIT
-S (Armoury - after bot has exterminated radioactive mutant rats)
-	TAKE WEAPON
-N, E, E (Pump Room)
-	SHOOT WINDOW
-	REMOVE HELMET (or otherwise filter turns to mush!)
-	ENTER WINDOW
-	UNBLOCK PIPE (with brush)
-U, W, W, W (Workshop)
-	ATTACH HOSE (to nozzle and tank)
-	TURN DIAL (to acetylene - note can be used as air source too)
-E, E (Generator)
-	SCAN HAND
-	TURN SWITCH (lights and electricity now come on)
-E (Pump Room)
-	TAKE KNOB
-	WELD KNOB
-	ATTACH CROWBAR
-	TURN KNOB (air is now safe)
-W, W (Control Room)
-	TURN RADIO (on)
-	TYPE (signal) CODE
-	TYPE (door) CODE
-N, N, N (Airlock)
-	OPEN (external) DOOR
-N (Outside - where you are rescued)
-
-Optional -
-
-When glow stick begins to fade - Attach hose to oven, Turn on oven, Place stick on hob, Take stick (it will now last for x turns again)
-
-If mask filter is damaged you can temporarily fill suit with air from gas tank (if you have the hose, after turning dial to oxygen)
-
-If you don’t carry the emergency bag you are limited to carrying 4 items (hard mode), which takes more steps to complete the game
-
-If you don't use charcoal in the mask just the filter will last for half as long? But you’ll need to replace it?
-
-
-Quick version -
+## ZMachine Walkthrough
 
 open pack. examine paper. take paperclip. take pack
 open panel. examine panel. insert paperclip into panel
-open internal door. s. take stick. shake stick. e. e
+open internal door. s. take stick. shake stick. 
+e. e
 examine jacket. take book. w. s. take brush
-n. w. w. examine maker. take filter
-s. take knife. s. examine hose. turn valve. take hose
-w. take tree. s. take wd40. n. n. take crowbar
-e. n. e. sw. n. pull shelf. take shelf
-s. e. se. examine body. spray helmet. take helmet
+n. w. w. 
+examine maker. take filter
+s. 
+take knife. 
+s. 
+examine hose. turn valve. take hose
+w. take tree. 
+s. 
+take wd40. 
+n. n. 
+take crowbar
+e. n. e. sw. n. 
+pull shelf. take shelf
+s. e. se. 
+examine body. spray helmet. take helmet
 insert filter into helmet. wear helmet. cut hand
 take hand. s. take pestle. crush wood. take charcoal 
-insert charcoal into helmet. examine window. n. w
-examine bot. s. pry door. s. lean shelf. wait. s
-take weapon. n. e. e. shoot window
-remove helmet. drop helmet. enter window. d
-unblock pipe. u. w. take helmet. wear helmet
-w. w. attach hose. turn dial. e. e
-scan hand. turn switch. e. take knob. weld knob
-attach crowbar. turn knob. w. w
+insert charcoal into helmet. examine window. 
+n. w. s. 
+pry door. 
+lean shelf. wait. 
+s.
+take weapon. 
+n. e. e. 
+shoot window
+remove helmet. drop helmet. enter window. 
+d
+unblock pipe. 
+u. w. 
+take helmet. wear helmet
+w. w. 
+attach hose. turn dial. 
+e. e
+scan hand. turn switch. 
+e. 
+take knob. weld knob
+attach crowbar. turn knob. 
+w. w
 turn radio. type signal code. type door code.
-n. n. n. open external door. n
+n. n. n. 
+open external door. 
+n
+
+## Web Version Walkthrough
+
+take pack. wear pack
+examine documents, take paperclip
+examine panel. open panel
+insert paperclip into panel
+s
+take stick. shake stick
+w
+examine maker. take filter
+s
+take knife
+w. s
+take tree 
+s
+take wd40 
+e. e. n. e. n
+examine body. spray helmet
+drop wd40. take helmet 
+insert filter into helmet 
+wear helmet. cut hand
+drop knife. take hand
+s
+take pestle. crush wood. drop pestle
+take charcoal. insert charcoal into helmet
+n. w. sw. n 
+pull shelf. take shelf
+s. e. w. s. w
+take crowbar 
+e. n. e. s. s 
+pry door. lean shelf. wait
+s
+take rifle
+n. e
+examine window. shoot window. drop rifle. 
+n. n. e. s
+take brush
+n. w. s. s. e
+remove helmet. drop helmet 
+enter window. 
+d
+unblock pipe. drop brush 
+u. w
+take helmet. wear helmet 
+w. n. n. w. s. s 
+turn oven. insert stick
+examine hose. turn valve. take hose - test death again
+n. n. e. s. s. e. w. w
+attach hose. turn dial 
+e. e.	e
+weld knob. attach crowbar. turn knob 
+w
+scan hand. drop hand. turn switch
+w. n. n. e. e
+examine jacket. take book
+w. w. s. s
+turn radio. type signal code. type door code 
+n. n. n
+open external door 
+n
